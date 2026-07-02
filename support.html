@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support &amp; FAQ — Ammonite</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    .faq-item { border-bottom: 1px solid var(--border); padding: 14px 0; }
+    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .faq-item:first-child { padding-top: 0; }
+    .faq-q { font-size: 1rem; font-weight: 600; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .faq-q:hover { color: var(--brand-primary); }
+    .faq-arrow { font-size: 0.8rem; transition: transform .2s; flex-shrink: 0; }
+    .faq-a { margin-top: 0.6rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; display: none; }
+    .faq-a ul { margin: 0.4rem 0 0 1.25rem; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; margin-top: 1rem; }
+    .contact-card { background: var(--bg-inline); padding: 1.25rem; border-radius: var(--radius); text-align: center; }
+    .contact-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .contact-card strong { display: block; color: var(--text-primary); margin-bottom: 0.4rem; }
+    .contact-card p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+  </style>
+</head>
+<body>
+<header class="site-header"><button class="sidebar-toggle">&#9776;</button><a class="site-logo" href="/">Ammonite</a></header>
+<div class="site-body"><aside class="sidebar"></aside><div class="sidebar-backdrop"></div>
+<main class="content"><div class="content-inner">
+  <div class="breadcrumb"><a href="/">Home</a> &#8250; Support &amp; FAQ</div>
+  <div class="page-header"><h1>Support &amp; FAQ</h1><p>Frequently asked questions, troubleshooting, and how to get help.</p></div>
+  <a class="btn-invite" href="https://discord.gg/dcmsbXU5Yf" target="_blank" rel="noopener">Join Support Server</a>
+  <br><br>
+  <div class="doc-section">
+    <h2>Getting Help</h2>
+    <div class="contact-grid">
+      <div class="contact-card"><div class="icon">&#128172;</div><strong>Support Server</strong><p>Join the support Discord server for live help from community and bot staff.</p></div>
+      <div class="contact-card"><div class="icon">&#129302;</div><strong>In-Bot Help</strong><p>Use <code>/help</code> or <code>/help &lt;command&gt;</code> for command usage info.</p></div>
+      <div class="contact-card"><div class="icon">&#128204;</div><strong>Error Codes</strong><p>Use <code>/error [code]</code> to look up an error and how to fix it.</p></div>
+      <div class="contact-card"><div class="icon">&#128231;</div><strong>Direct Contact</strong><p>DM the bot owner on Discord for urgent issues or data requests.</p></div>
+    </div>
+  </div>
+
+  <div class="doc-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why aren't slash commands showing up? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Global slash commands can take up to <strong>1 hour</strong> to propagate after registration. If commands still don't appear:</p><ul>
+        <li>Ensure the bot was invited with the <code>applications.commands</code> scope.</li>
+        <li>Try kicking and re-inviting the bot with the correct scopes.</li>
+        <li>Check that the bot is online (use the support server to verify).</li>
+      </ul></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I enable economy or leveling? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Economy and leveling are <strong>disabled by default</strong>. Enable them with:</p><ul>
+        <li><code>/points enable</code> — enables the economy system</li>
+        <li><code>/levels enable</code> — enables the leveling system</li>
+      </ul><p>Or run <code>/autoconfig</code> to use the guided setup wizard.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I set up an announcement channel? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Open <code>/settings</code> to open the settings panel, then click the <strong>📢 Announce Ch</strong> button. Enter a channel mention, name, or ID. The bot owner can then broadcast announcements to all servers that have this configured.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do permissions work? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Ammonite uses a node-based permission system. Most commands are denied by default. Admins must grant permissions to roles or users.</p>
+        <p>Example: <code>/permissions role-set @Moderator mod.* true</code> grants all moderation permissions to the Moderator role.</p>
+        <p>See the full <a href="permissions">Permissions documentation</a> for details.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I use multiple prefix styles? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Yes! Ammonite supports both <strong>slash commands</strong> (recommended) and <strong>prefix commands</strong>. Configure the prefix with <code>/prefix set &lt;prefix&gt;</code>. Slash commands always work regardless of prefix settings.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does global chat work? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Global chat links channels across different servers. One admin creates a channel with <code>/globalchat create &lt;name&gt;</code> and shares the join code. Other server admins use <code>/globalchat join &lt;code&gt;</code> to link their channel. Messages relay via webhooks with a <code>[GC]</code> prefix. Rate limiting (3s/user) and content limits (2000 chars, 5 attachments) are enforced.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I delete my data? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Use <code>/deletedata</code> anywhere. You'll see exactly what will be deleted and must confirm. Deleted data includes economy, leveling, warnings, moderation logs, suspicious account records, and all proxy members. <strong>This action is irreversible.</strong> See our <a href="privacy">Privacy Policy</a> for details.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What does the proxy system do? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>The proxy system lets users send messages as different identities via webhooks. Designed for plural systems, roleplay, or anyone who wants to use alternative personas. Create members with <code>/proxy create</code>, set tags, and your messages automatically send through webhooks with that member's name and avatar.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is the economy real money? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p><strong>No.</strong> All currency is virtual and has absolutely no real-world monetary value. It cannot be exchanged for real money, goods, or services. Gambling features are purely for entertainment. See the <a href="terms">Terms of Service</a> for details.</p></div>
+    </div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">The bot says "insufficient permissions" — what do I do? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>You likely lack the bot's permission node for that command. Ask a server admin to check with <code>/permissions check @You &lt;node&gt;</code> and grant the needed node. Required nodes are listed on the <a href="commands">Commands page</a>.</p>
+        <p>If the <strong>bot itself</strong> lacks Discord permissions, ensure it has the necessary Discord role permissions (e.g., Ban Members for /ban).</p></div>
+    </div>
+  </div>
+
+  <div class="doc-section">
+    <h2>Common Error Codes</h2>
+    <p>Use <code>/error &lt;code&gt;</code> in Discord for detailed info. Common codes:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Code</th><th>Meaning</th><th>Solution</th></tr></thead>
+      <tbody>
+        <tr><td><code>403</code></td><td>Missing bot permissions</td><td>Ensure the bot has the required Discord permission (e.g., Ban Members)</td></tr>
+        <tr><td><code>703</code></td><td>Data operation failed</td><td>Retry the command. If persistent, check bot logs for disk issues.</td></tr>
+        <tr><td><code>710</code></td><td>Proxy member not found</td><td>Check the member name/ID with <code>/proxy list</code></td></tr>
+        <tr><td><code>429</code></td><td>Rate limited</td><td>You're sending commands too quickly. Wait a few seconds and retry.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="doc-section">
+    <h2>Troubleshooting</h2>
+    <div class="highlight"><strong>Bot is offline / not responding?</strong><ul>
+      <li>Check if the bot process is running on the host machine.</li>
+      <li>Verify the bot token in <code>config.json</code> is correct and hasn't been regenerated.</li>
+      <li>Check the <code>logs/</code> directory for error messages.</li>
+      <li>Ensure the host machine has internet access.</li>
+    </ul></div>
+    <div class="highlight"><strong>Global chat messages not relaying?</strong><ul>
+      <li>Confirm both servers are linked (<code>/globalchat info</code>).</li>
+      <li>Check that neither server is muted.</li>
+      <li>Ensure the bot has <strong>Manage Webhooks</strong> permission in the linked channels.</li>
+      <li>Verify the sending user has the <code>globalchat.use</code> permission.</li>
+    </ul></div>
+    <div class="highlight"><strong>Economy / leveling data not saving?</strong><ul>
+      <li>Ensure the bot has write access to the <code>data/</code> directory on the host machine.</li>
+      <li>Check the bot logs for any file write errors.</li>
+      <li>Confirm the feature is enabled for your server (<code>/points status</code> or <code>/levels status</code>).</li>
+    </ul></div>
+  </div>
+
+  <div class="page-nav"></div>
+</div></main></div>
+<script src="site.js"></script>
+<script>AmDoc.init("support");</script>
+<script>
+function toggleFaq(el) {
+  var item = el.parentElement;
+  item.classList.toggle("open");
+}
+</script>
+</body></html>

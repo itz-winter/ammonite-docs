@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embed Builder — Ammonite</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    /* Layout */
+    .eb-root {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 1.5rem 1.5rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .eb-form-col {
+      flex: 1 1 480px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .eb-preview-col {
+      flex: 1 1 420px;
+      min-width: 0;
+      position: sticky;
+      top: 1rem;
+    }
+
+    /* Cards / sections */
+    .eb-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.4rem;
+    }
+    .eb-card h3 {
+      margin: 0 0 1rem;
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+
+    /* Form controls */
+    .eb-field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      margin-bottom: .85rem;
+    }
+    .eb-field:last-child { margin-bottom: 0; }
+    .eb-field label {
+      font-size: .8rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .eb-field input[type="text"],
+    .eb-field input[type="url"],
+    .eb-field textarea,
+    .eb-field input[type="color"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: .45rem .65rem;
+      font-family: inherit;
+      font-size: .9rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color .15s;
+    }
+    .eb-field input:focus,
+    .eb-field textarea:focus {
+      outline: none;
+      border-color: var(--brand-primary);
+    }
+    .eb-field textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+    .eb-field input[type="color"] {
+      padding: .2rem .35rem;
+      height: 36px;
+      cursor: pointer;
+    }
+    .eb-field-row {
+      display: flex;
+      gap: .75rem;
+    }
+    .eb-field-row .eb-field {
+      flex: 1;
+    }
+
+    /* Embed fields list */
+    .eb-fields-list {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-bottom: .5rem;
+    }
+    .eb-embed-field-row {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .eb-embed-field-row .ef-top {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+    }
+    .eb-embed-field-row .ef-top input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      padding: .35rem .55rem;
+      font-size: .85rem;
+    }
+    .eb-embed-field-row .ef-top input:focus { outline: none; border-color: var(--brand-primary); }
+    .eb-embed-field-row .ef-inline-label {
+      font-size: .75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .eb-embed-field-row .ef-value {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      padding: .3rem .55rem;
+      font-size: .85rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .eb-embed-field-row .ef-value:focus { outline: none; border-color: var(--brand-primary); }
+    .eb-remove-field {
+      background: none;
+      border: none;
+      color: var(--danger, #f04747);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 .2rem;
+      line-height: 1;
+    }
+
+    /* Action buttons */
+    .eb-actions {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+    .eb-btn {
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      font-size: .875rem;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .eb-btn:hover { opacity: .85; }
+    .eb-btn-primary { background: var(--brand-primary); color: #fff; }
+    .eb-btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .eb-btn-danger { background: var(--danger, #f04747); color: #fff; }
+
+    /* JSON output */
+    .eb-json-output {
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #e2e2e2;
+      font-family: "Consolas", "Fira Code", monospace;
+      font-size: .8rem;
+      padding: .75rem 1rem;
+      white-space: pre;
+      overflow-x: auto;
+      min-height: 80px;
+      max-height: 280px;
+      overflow-y: auto;
+      resize: vertical;
+    }
+
+    /* Discord embed preview */
+    .eb-preview-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .dc-embed-wrapper {
+      background: #313338;
+      border-radius: 8px;
+      padding: 1.25rem;
+      min-height: 80px;
+    }
+    .dc-embed {
+      display: flex;
+      gap: .75rem;
+      background: #2b2d31;
+      border-radius: 4px;
+      overflow: hidden;
+      border-left: 4px solid var(--embed-color, #5865f2);
+      font-family: "gg sans", "Noto Sans", sans-serif;
+    }
+    .dc-embed-inner {
+      padding: .75rem 1rem .75rem .85rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .dc-author {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      margin-bottom: .4rem;
+    }
+    .dc-author-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .dc-author-name {
+      font-size: .8rem;
+      font-weight: 600;
+      color: #e0e1e5;
+    }
+    .dc-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e1e5;
+      margin-bottom: .4rem;
+      word-break: break-word;
+    }
+    .dc-title a { color: #00b0f4; text-decoration: none; }
+    .dc-title a:hover { text-decoration: underline; }
+    .dc-description {
+      font-size: .875rem;
+      color: #b5bac1;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: .6rem;
+    }
+    .dc-fields {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem .6rem;
+      margin-bottom: .6rem;
+    }
+    .dc-field {
+      flex: 0 0 calc(33.33% - .45rem);
+    }
+    .dc-field.full { flex: 0 0 100%; }
+    .dc-field-name {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #e0e1e5;
+      margin-bottom: .2rem;
+    }
+    .dc-field-value {
+      font-size: .8rem;
+      color: #b5bac1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .dc-image img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin-top: .6rem;
+    }
+    .dc-footer {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      margin-top: .6rem;
+    }
+    .dc-footer-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .dc-footer-text {
+      font-size: .75rem;
+      color: #80848e;
+    }
+    .dc-thumbnail {
+      padding: .6rem .75rem .6rem 0;
+      flex-shrink: 0;
+    }
+    .dc-thumbnail img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .dc-embed-empty {
+      text-align: center;
+      color: #80848e;
+      font-size: .85rem;
+      padding: 1.5rem 0;
+    }
+
+    /* Discord markdown rendering */
+    .dc-description, .dc-field-value { white-space: normal; }
+    .dc-md-h1 { font-size: 1.5rem; font-weight: 700; color: #e0e1e5; margin: .4rem 0 .2rem; line-height: 1.2; }
+    .dc-md-h2 { font-size: 1.25rem; font-weight: 700; color: #e0e1e5; margin: .35rem 0 .15rem; line-height: 1.2; }
+    .dc-md-h3 { font-size: 1.05rem; font-weight: 700; color: #e0e1e5; margin: .3rem 0 .1rem; line-height: 1.2; }
+    .dc-md-bq { border-left: 3px solid #4e5058; padding: .1rem 0 .1rem .65rem; color: #b5bac1; margin: .2rem 0; display: block; }
+    .dc-md-cb { background: #1e1f22; border-radius: 4px; padding: .45rem .75rem; font-family: "Consolas","Fira Code",monospace; font-size: .82rem; color: #d4d7dc; margin: .3rem 0; display: block; overflow-x: auto; white-space: pre; }
+    .dc-md-ic { background: #1e1f22; border-radius: 3px; padding: .1rem .3rem; font-family: "Consolas","Fira Code",monospace; font-size: .82rem; color: #d4d7dc; }
+    .dc-md-sp { background: #202225; color: transparent; border-radius: 3px; cursor: pointer; user-select: none; transition: color .15s, background .15s; }
+    .dc-md-sp.revealed { background: #4f545c; color: inherit; }
+    .dc-md-sub { font-size: .72rem; color: #80848e; }
+    .dc-md-ul { margin: .2rem 0 .2rem 1.1rem; padding: 0; list-style: disc; }
+    .dc-md-ul li { margin: .1rem 0; font-size: inherit; color: inherit; }
+    .dc-md-a { color: #00aff4; text-decoration: none; }
+    .dc-md-a:hover { text-decoration: underline; }
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+    .color-picker-row input[type="color"] {
+      width: 44px !important;
+      height: 36px;
+      padding: .2rem .25rem;
+      flex-shrink: 0;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .color-picker-row input[type="text"] {
+      width: 96px !important;
+      font-family: "Consolas", "Fira Code", monospace;
+      letter-spacing: .04em;
+    }
+    .color-swatches {
+      display: flex;
+      gap: .35rem;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      padding: 0;
+      transition: transform .12s, border-color .12s;
+    }
+    .color-swatch:hover { transform: scale(1.2); }
+    .color-swatch.active { border-color: var(--text); }
+
+    /* Button rows (components builder) */
+    .eb-btns-list {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      margin-bottom: .6rem;
+    }
+    .eb-btn-row-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .7rem .85rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .eb-btn-row-item .bri-top {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .eb-btn-row-item select,
+    .eb-btn-row-item input[type="text"],
+    .eb-btn-row-item input[type="url"] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      padding: .35rem .55rem;
+      font-size: .85rem;
+      font-family: inherit;
+    }
+    .eb-btn-row-item select:focus,
+    .eb-btn-row-item input:focus { outline: none; border-color: var(--brand-primary); }
+    .bri-style { width: 110px; flex-shrink: 0; }
+    .bri-label { flex: 1; min-width: 80px; }
+    .bri-emoji { width: 80px; flex-shrink: 0; }
+    .bri-bottom {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .bri-url, .bri-custom-id { flex: 1; min-width: 120px; }
+    .bri-disabled-label {
+      font-size: .78rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .eb-remove-btn {
+      background: none;
+      border: none;
+      color: var(--danger, #f04747);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 .2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* Discord button preview */
+    .dc-components {
+      margin-top: .6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .dc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .35rem .85rem;
+      border-radius: 4px;
+      font-family: "gg sans", "Noto Sans", sans-serif;
+      font-size: .875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      line-height: 1.3;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .dc-btn-1 { background: #5865f2; color: #fff; }
+    .dc-btn-2 { background: #4e5058; color: #fff; }
+    .dc-btn-3 { background: #2d7d46; color: #fff; }
+    .dc-btn-4 { background: #c53030; color: #fff; }
+    .dc-btn-5 { background: #4e5058; color: #fff; }
+    .dc-btn.disabled { opacity: .45; cursor: not-allowed; }
+    .dc-btn-emoji { font-size: 1rem; line-height: 1; }
+    #eb-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(3rem);
+      background: var(--brand-primary);
+      color: #fff;
+      padding: .55rem 1.2rem;
+      border-radius: 999px;
+      font-size: .875rem;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+      transition: transform .25s ease, opacity .25s ease;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #eb-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .eb-root { flex-direction: column; }
+      .eb-preview-col { position: static; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar">&#9776;</button>
+  <a class="site-logo" href="/">Ammonite</a>
+</header>
+<div class="site-body">
+  <aside class="sidebar"></aside>
+  <div class="sidebar-backdrop"></div>
+  <main class="content">
+    <h1 class="page-title">&#128247; Embed Builder</h1>
+    <p style="color:var(--muted);margin-top:-.5rem;margin-bottom:1.5rem;">
+      Build, preview, and export Discord embed JSON. Paste the JSON into any <code>/embed</code> command or bot integration.
+    </p>
+
+    <div class="eb-root">
+
+      <!-- ══ LEFT: FORM ══════════════════════════════════════════ -->
+      <div class="eb-form-col">
+
+        <!-- Color -->
+        <div class="eb-card">
+          <h3>Embed Color</h3>
+          <div class="eb-field">
+            <label>Color</label>
+            <div class="color-picker-row">
+              <input type="color" id="f-color" value="#5865F2">
+              <input type="text" id="f-color-hex" placeholder="#5865F2" maxlength="7" spellcheck="false">
+              <div class="color-swatches" id="color-swatches">
+                <button class="color-swatch active" style="background:#5865F2" data-color="#5865F2" title="Blurple"></button>
+                <button class="color-swatch" style="background:#57F287" data-color="#57F287" title="Green"></button>
+                <button class="color-swatch" style="background:#FEE75C" data-color="#FEE75C" title="Yellow"></button>
+                <button class="color-swatch" style="background:#EB459E" data-color="#EB459E" title="Fuchsia"></button>
+                <button class="color-swatch" style="background:#ED4245" data-color="#ED4245" title="Red"></button>
+                <button class="color-swatch" style="background:#00b0f4" data-color="#00b0f4" title="Cyan"></button>
+                <button class="color-swatch" style="background:#f47fff" data-color="#f47fff" title="Pink"></button>
+                <button class="color-swatch" style="background:#FF8C00" data-color="#FF8C00" title="Orange"></button>
+                <button class="color-swatch" style="background:#FFFFFF;border-color:var(--border)" data-color="#FFFFFF" title="White"></button>
+                <button class="color-swatch" style="background:#1a1a1a;border-color:var(--border)" data-color="#1a1a1a" title="Black"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Author -->
+        <div class="eb-card">
+          <h3>Author</h3>
+          <div class="eb-field"><label>Author Name</label><input type="text" id="f-author-name" placeholder="Author name"></div>
+          <div class="eb-field"><label>Author Icon URL</label><input type="url" id="f-author-icon" placeholder="https://..."></div>
+          <div class="eb-field"><label>Author URL</label><input type="url" id="f-author-url" placeholder="https://..."></div>
+        </div>
+
+        <!-- Body -->
+        <div class="eb-card">
+          <h3>Body</h3>
+          <div class="eb-field"><label>Title</label><input type="text" id="f-title" placeholder="Embed title"></div>
+          <div class="eb-field"><label>Title URL</label><input type="url" id="f-title-url" placeholder="https://..."></div>
+          <div class="eb-field"><label>Description</label><textarea id="f-description" placeholder="Embed description…"></textarea></div>
+        </div>
+
+        <!-- Thumbnail & Image -->
+        <div class="eb-card">
+          <h3>Images</h3>
+          <div class="eb-field"><label>Thumbnail URL</label><input type="url" id="f-thumbnail" placeholder="https://..."></div>
+          <div class="eb-field"><label>Image URL</label><input type="url" id="f-image" placeholder="https://..."></div>
+        </div>
+
+        <!-- Fields -->
+        <div class="eb-card">
+          <h3>Fields <span style="font-weight:400;font-size:.75rem;color:var(--muted)">(up to 25)</span></h3>
+          <div class="eb-fields-list" id="fields-list"></div>
+          <button class="eb-btn eb-btn-secondary" id="btn-add-field" style="width:100%">+ Add Field</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="eb-card">
+          <h3>Footer</h3>
+          <div class="eb-field"><label>Footer Text</label><input type="text" id="f-footer-text" placeholder="Footer text"></div>
+          <div class="eb-field"><label>Footer Icon URL</label><input type="url" id="f-footer-icon" placeholder="https://..."></div>
+          <div class="eb-field">
+            <label>Timestamp</label>
+            <div class="eb-field-row" style="align-items:center">
+              <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;text-transform:none;letter-spacing:0;font-size:.875rem;color:var(--text)">
+                <input type="checkbox" id="f-timestamp"> Include current timestamp
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="eb-card">
+          <h3>Buttons <span style="font-weight:400;font-size:.75rem;color:var(--muted)">(up to 5 per row · 5 rows · non-embed component)</span></h3>
+          <div class="eb-btns-list" id="btns-list"></div>
+          <button class="eb-btn eb-btn-secondary" id="btn-add-button" style="width:100%">+ Add Button</button>
+        </div>
+
+        <!-- Actions -->
+        <div class="eb-actions">
+          <button class="eb-btn eb-btn-primary" id="btn-copy-json">&#128203; Copy JSON</button>
+          <button class="eb-btn eb-btn-secondary" id="btn-import-json">&#128229; Import JSON</button>
+          <button class="eb-btn eb-btn-danger" id="btn-clear">&#128465; Clear All</button>
+        </div>
+
+        <!-- JSON output -->
+        <div class="eb-card">
+          <h3>JSON Output</h3>
+          <div class="eb-json-output" id="json-output"></div>
+        </div>
+
+      </div><!-- /eb-form-col -->
+
+      <!-- ══ RIGHT: PREVIEW ══════════════════════════════════════ -->
+      <div class="eb-preview-col">
+        <div class="eb-preview-label">&#128065; Live Preview</div>
+        <div class="dc-embed-wrapper" id="dc-preview">
+          <div class="dc-embed-empty">Start filling in fields to see a preview.</div>
+          <div class="dc-components" id="dc-btn-preview"></div>
+        </div>
+      </div>
+
+    </div><!-- /eb-root -->
+
+    <div class="page-nav"></div>
+    <footer class="site-footer">
+      &copy; 2026 Ammonite &bull; <a href="privacy">Privacy</a> &bull; <a href="terms">Terms</a> &bull; <a href="support">Support</a>
+    </footer>
+  </main>
+</div>
+
+<div id="eb-toast"></div>
+
+<script src="site.js"></script>
+<script>AmDoc.init("embedbuilder");</script>
+<script>
+(function () {
+  "use strict";
+
+  /* State */
+  let fieldCount = 0;
+  let btnCount   = 0;
+
+  /* Shorthand helpers */
+  function $i(id) { return document.getElementById(id); }
+  function val(id) { return $i(id) ? $i(id).value.trim() : ""; }
+
+  /* Toast */
+  function showToast(msg) {
+    const t = $i("eb-toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(function () { t.classList.remove("show"); }, 2200);
+  }
+
+  /* Color picker ↔ hex sync */
+  const colorPicker = $i("f-color");
+  const colorHexIn  = $i("f-color-hex");
+
+  function setColor(hex) {
+    // Normalise: ensure it's a valid 6-digit hex
+    const clean = hex.replace(/^#/, "").padEnd(6, "0").slice(0, 6);
+    const full  = "#" + clean;
+    colorPicker.value = full;
+    colorHexIn.value  = full;
+    // Update swatch active state
+    document.querySelectorAll(".color-swatch").forEach(function (s) {
+      s.classList.toggle("active", s.dataset.color.toLowerCase() === full.toLowerCase());
+    });
+    update();
+  }
+
+  colorPicker.addEventListener("input", function () {
+    setColor(colorPicker.value);
+  });
+
+  colorHexIn.addEventListener("input", function () {
+    let v = colorHexIn.value.trim();
+    if (!v.startsWith("#")) v = "#" + v;
+    if (/^#[0-9a-fA-F]{6}$/.test(v)) setColor(v);
+    else update(); // still update preview with whatever parse we can do
+  });
+  colorHexIn.addEventListener("blur", function () {
+    // On blur snap to nearest valid
+    let v = colorHexIn.value.trim().replace(/^#/, "");
+    if (v.length === 3) v = v[0]+v[0]+v[1]+v[1]+v[2]+v[2];
+    if (/^[0-9a-fA-F]{6}$/.test(v)) setColor("#" + v);
+    else setColor(colorPicker.value); // revert
+  });
+
+  document.querySelectorAll(".color-swatch").forEach(function (s) {
+    s.addEventListener("click", function () { setColor(s.dataset.color); });
+  });
+
+  // Init hex display
+  colorHexIn.value = colorPicker.value;
+
+  /* Build embed object from form */
+  function buildEmbed() {
+    let colorHex = colorPicker.value.replace("#", "");
+    if (!/^[0-9a-fA-F]{6}$/.test(colorHex)) colorHex = "5865F2";
+    const colorInt = parseInt(colorHex, 16);
+
+    const embed = { color: colorInt };
+
+    const authorName = val("f-author-name");
+    const authorIcon = val("f-author-icon");
+    const authorUrl  = val("f-author-url");
+    if (authorName || authorIcon || authorUrl) {
+      embed.author = {};
+      if (authorName) embed.author.name     = authorName;
+      if (authorIcon) embed.author.icon_url = authorIcon;
+      if (authorUrl)  embed.author.url      = authorUrl;
+    }
+
+    const title    = val("f-title");
+    const titleUrl = val("f-title-url");
+    if (title)    embed.title = title;
+    if (titleUrl) embed.url   = titleUrl;
+
+    const desc = val("f-description");
+    if (desc) embed.description = desc;
+
+    const thumbnail = val("f-thumbnail");
+    if (thumbnail) embed.thumbnail = { url: thumbnail };
+
+    const image = val("f-image");
+    if (image) embed.image = { url: image };
+
+    // Embed fields
+    const rows = document.querySelectorAll(".eb-embed-field-row");
+    if (rows.length) {
+      embed.fields = [];
+      rows.forEach(function (row) {
+        const n      = row.querySelector(".ef-name").value.trim();
+        const v      = row.querySelector(".ef-value").value.trim();
+        const inline = row.querySelector(".ef-inline").checked;
+        if (n || v) embed.fields.push({ name: n || "\u200b", value: v || "\u200b", inline: inline });
+      });
+      if (!embed.fields.length) delete embed.fields;
+    }
+
+    const footerText = val("f-footer-text");
+    const footerIcon = val("f-footer-icon");
+    if (footerText || footerIcon) {
+      embed.footer = {};
+      if (footerText) embed.footer.text     = footerText;
+      if (footerIcon) embed.footer.icon_url = footerIcon;
+    }
+
+    if ($i("f-timestamp").checked) embed.timestamp = new Date().toISOString();
+
+    return embed;
+  }
+
+  /* Build components (buttons) array */
+  function buildComponents() {
+    const btnRows = document.querySelectorAll(".eb-btn-row-item");
+    if (!btnRows.length) return [];
+
+    const buttons = [];
+    btnRows.forEach(function (row) {
+      const style    = parseInt(row.querySelector(".bri-style").value, 10);
+      const label    = row.querySelector(".bri-label").value.trim();
+      const emojiRaw = row.querySelector(".bri-emoji").value.trim();
+      const disabled = row.querySelector(".bri-disabled").checked;
+      const urlEl    = row.querySelector(".bri-url");
+      const idEl     = row.querySelector(".bri-custom-id");
+      const url      = urlEl ? urlEl.value.trim() : "";
+      const customId = idEl  ? idEl.value.trim()  : "";
+
+      const btn = { type: 2, style: style };
+      if (label)    btn.label    = label;
+      if (emojiRaw) btn.emoji    = parseEmoji(emojiRaw);
+      if (disabled) btn.disabled = true;
+
+      if (style === 5) {
+        // Link button — requires url
+        if (url) btn.url = url;
+        else btn.url = "https://example.com";
+      } else {
+        btn.custom_id = customId || ("btn_" + Math.random().toString(36).slice(2, 8));
+      }
+
+      buttons.push(btn);
+    });
+
+    if (!buttons.length) return [];
+
+    // Chunk into action rows of max 5
+    const components = [];
+    for (let i = 0; i < buttons.length; i += 5) {
+      components.push({ type: 1, components: buttons.slice(i, i + 5) });
+    }
+    return components;
+  }
+
+  function parseEmoji(raw) {
+    // Unicode emoji (e.g. "🎉") or custom "<:name:id>" or just ":name:"
+    const customMatch = raw.match(/^<a?:([^:]+):(\d+)>$/);
+    if (customMatch) return { name: customMatch[1], id: customMatch[2] };
+    const nameMatch = raw.match(/^:([^:]+):$/);
+    if (nameMatch) return { name: nameMatch[1] };
+    // Plain unicode
+    return { name: raw };
+  }
+
+  /* Build full message payload */
+  function buildPayload() {
+    const embed      = buildEmbed();
+    const components = buildComponents();
+    const payload    = { embeds: [embed] };
+    if (components.length) payload.components = components;
+    return payload;
+  }
+
+  /* Render embed preview */
+  function renderPreview(embed) {
+    const wrap = $i("dc-preview");
+    const isEmpty = !embed.title && !embed.description &&
+                    !(embed.author && embed.author.name) &&
+                    !(embed.fields && embed.fields.length) &&
+                    !embed.image && !embed.footer;
+
+    let html = "";
+
+    if (!isEmpty) {
+      const colorHex = embed.color
+        ? "#" + embed.color.toString(16).padStart(6, "0")
+        : "#5865f2";
+
+      html += '<div class="dc-embed" style="--embed-color:' + colorHex + '">';
+      html += '<div class="dc-embed-inner">';
+
+      if (embed.author) {
+        html += '<div class="dc-author">';
+        if (embed.author.icon_url)
+          html += "<img class='dc-author-icon' src='" + esc(embed.author.icon_url) + "' onerror='this.style.display=\"none\"'>";
+        html += '<span class="dc-author-name">';
+        if (embed.author.url) html += '<a href="' + esc(embed.author.url) + '" target="_blank">';
+        html += esc(embed.author.name || "");
+        if (embed.author.url) html += '</a>';
+        html += '</span></div>';
+      }
+
+      if (embed.title) {
+        html += '<div class="dc-title">';
+        if (embed.url) html += '<a href="' + esc(embed.url) + '" target="_blank">' + esc(embed.title) + '</a>';
+        else html += esc(embed.title);
+        html += '</div>';
+      }
+
+      if (embed.description)
+        html += '<div class="dc-description">' + renderMarkdown(embed.description) + '</div>';
+
+      if (embed.fields && embed.fields.length) {
+        html += '<div class="dc-fields">';
+        embed.fields.forEach(function (f) {
+          html += '<div class="' + (f.inline ? "dc-field" : "dc-field full") + '">';
+          html += '<div class="dc-field-name">' + renderMarkdown(f.name) + '</div>';
+          html += '<div class="dc-field-value">' + renderMarkdown(f.value) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      if (embed.image && embed.image.url)
+        html += "<div class='dc-image'><img src='" + esc(embed.image.url) + "' onerror='this.style.display=\"none\"'></div>";
+
+      if (embed.footer) {
+        html += '<div class="dc-footer">';
+        if (embed.footer.icon_url)
+          html += "<img class='dc-footer-icon' src='" + esc(embed.footer.icon_url) + "' onerror='this.style.display=\"none\"'>";
+        html += '<span class="dc-footer-text">' + esc(embed.footer.text || "");
+        if (embed.timestamp) html += ' &bull; ' + new Date(embed.timestamp).toLocaleString();
+        html += '</span></div>';
+      } else if (embed.timestamp) {
+        html += '<div class="dc-footer"><span class="dc-footer-text">' + new Date(embed.timestamp).toLocaleString() + '</span></div>';
+      }
+
+      html += '</div>'; // dc-embed-inner
+
+      if (embed.thumbnail && embed.thumbnail.url) {
+        html += "<div class='dc-thumbnail'><img src='" + esc(embed.thumbnail.url) + "' onerror='this.style.display=\"none\"'></div>";
+      }
+
+      html += '</div>'; // dc-embed
+    } else {
+      html = '<div class="dc-embed-empty">Start filling in fields to see a preview.</div>';
+    }
+
+    wrap.innerHTML = html;
+  }
+
+  /* Render button components preview */
+  function renderButtonPreview(components) {
+    const wrap = $i("dc-preview");
+    // Remove existing buttons preview if any
+    let existing = wrap.querySelector(".dc-components");
+    if (existing) existing.remove();
+
+    if (!components.length) return;
+
+    const styleNames = { 1: "Primary", 2: "Secondary", 3: "Success", 4: "Danger", 5: "Link" };
+
+    let html = '<div class="dc-components">';
+    components.forEach(function (row) {
+      row.components.forEach(function (btn) {
+        const s   = btn.style || 2;
+        const dis = btn.disabled ? " disabled" : "";
+        const tag = s === 5 ? "a" : "button";
+        const href = s === 5 ? ' href="' + esc(btn.url || "#") + '" target="_blank"' : "";
+        html += '<' + tag + ' class="dc-btn dc-btn-' + s + dis + '"' + href + '>';
+        if (btn.emoji && btn.emoji.name) {
+          // If it has an id it's a custom emoji — just show the name as text for preview
+          if (btn.emoji.id) {
+            html += '<span class="dc-btn-emoji">:' + esc(btn.emoji.name) + ':</span>';
+          } else {
+            html += '<span class="dc-btn-emoji">' + esc(btn.emoji.name) + '</span>';
+          }
+        }
+        html += esc(btn.label || "");
+        if (s === 5) html += ' <span style="font-size:.7rem;opacity:.7">↗</span>';
+        html += '</' + tag + '>';
+      });
+    });
+    html += '</div>';
+
+    wrap.insertAdjacentHTML("beforeend", html);
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  /* Discord markdown renderer */
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function renderMarkdown(rawStr) {
+    if (!rawStr) return "";
+    let s = rawStr;
+
+    // 1. Extract fenced code blocks (``` ... ```)
+    const codeBlocks = [];
+    s = s.replace(/```(\w*)\n?([\s\S]*?)```/g, function(_, lang, code) {
+      const i = codeBlocks.length;
+      codeBlocks.push('<code class="dc-md-cb">' + escHtml(code.replace(/^\n|\n$/g, "")) + "</code>");
+      return "\x02CB" + i + "\x02";
+    });
+
+    // 2. Extract inline code (` ... `)
+    const inlines = [];
+    s = s.replace(/`([^`\n]+)`/g, function(_, code) {
+      const i = inlines.length;
+      inlines.push('<code class="dc-md-ic">' + escHtml(code) + "</code>");
+      return "\x02IC" + i + "\x02";
+    });
+
+    // 3. Block-level markup — operate on raw text before HTML-escaping
+    // Headings
+    s = s.replace(/^### (.+)$/gm, "\x02H3S\x02$1\x02H3E\x02");
+    s = s.replace(/^## (.+)$/gm,  "\x02H2S\x02$1\x02H2E\x02");
+    s = s.replace(/^# (.+)$/gm,   "\x02H1S\x02$1\x02H1E\x02");
+    // Subtext (-# small grey text)
+    s = s.replace(/^-# (.+)$/gm, "\x02STS\x02$1\x02STE\x02");
+    // Blockquote >>> multi-line (must come before single >)
+    s = s.replace(/^>>> ([\s\S]+)/m, "\x02BQS\x02$1\x02BQE\x02");
+    // Blockquote > single line
+    s = s.replace(/^> (.+)$/gm, "\x02BQS\x02$1\x02BQE\x02");
+    // Unordered lists — group consecutive list lines
+    s = s.replace(/((?:^[ \t]*[*\-] .+$\n?)+)/gm, function(match) {
+      const items = match.trimEnd().split("\n").map(function(line) {
+        return "\x02LIS\x02" + line.replace(/^[ \t]*[*\-] /, "") + "\x02LIE\x02";
+      });
+      return "\x02ULS\x02" + items.join("") + "\x02ULE\x02";
+    });
+
+    // 4. HTML-escape only the non-placeholder text segments
+    s = s.split(/(\x02[A-Z0-9]+\x02)/).map(function(part) {
+      return /^\x02[A-Z0-9]+\x02$/.test(part) ? part : escHtml(part);
+    }).join("");
+
+    // 5. Inline markdown (order: *** before ** before *, __ before _)
+    s = s.replace(/\*\*\*(.+?)\*\*\*/gs, "<strong><em>$1</em></strong>");
+    s = s.replace(/\*\*(.+?)\*\*/gs,     "<strong>$1</strong>");
+    s = s.replace(/__(.+?)__/gs,         "<u>$1</u>");
+    s = s.replace(/\*(.+?)\*/gs,         "<em>$1</em>");
+    s = s.replace(/(?:^|\s)_([^_\n]+)_(?=\s|$|[.,!?;:])/gm, function(m, inner) { return m.replace("_" + inner + "_", "<em>" + inner + "</em>"); });
+    s = s.replace(/~~(.+?)~~/gs,         "<s>$1</s>");
+    s = s.replace(/\|\|(.+?)\|\|/gs,     "<span class='dc-md-sp' onclick=\"this.classList.toggle('revealed')\">$1</span>");
+
+    // 6. Links — [text](url) and auto-links
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, "<a class='dc-md-a' href='$2' target='_blank' rel='noopener'>$1</a>");
+    // Auto-links (don't re-link already-anchored text)
+    s = s.replace(/(?<!href='|href=")(https?:\/\/[^\s<>"'\x02]+)/g, "<a class='dc-md-a' href='$1' target='_blank' rel='noopener'>$1</a>");
+
+    // 7. Newlines → <br>
+    s = s.replace(/\n/g, "<br>");
+
+    // 8. Restore structural block markers as HTML
+    s = s.replace(/\x02H1S\x02([\s\S]*?)\x02H1E\x02/g, "<span class='dc-md-h1'>$1</span>");
+    s = s.replace(/\x02H2S\x02([\s\S]*?)\x02H2E\x02/g, "<span class='dc-md-h2'>$1</span>");
+    s = s.replace(/\x02H3S\x02([\s\S]*?)\x02H3E\x02/g, "<span class='dc-md-h3'>$1</span>");
+    s = s.replace(/\x02STS\x02([\s\S]*?)\x02STE\x02/g, "<span class='dc-md-sub'>$1</span>");
+    s = s.replace(/\x02BQS\x02([\s\S]*?)\x02BQE\x02/g, "<span class='dc-md-bq'>$1</span>");
+    s = s.replace(/\x02ULS\x02([\s\S]*?)\x02ULE\x02/g, "<ul class='dc-md-ul'>$1</ul>");
+    s = s.replace(/\x02LIS\x02([\s\S]*?)\x02LIE\x02/g, "<li>$1</li>");
+
+    // 9. Restore extracted code
+    inlines.forEach(function(code, i) { s = s.split("\x02IC" + i + "\x02").join(code); });
+    codeBlocks.forEach(function(block, i) { s = s.split("\x02CB" + i + "\x02").join(block); });
+
+    return s;
+  }
+  function renderJson(payload) {
+    $i("json-output").textContent = JSON.stringify(payload, null, 2);
+  }
+
+  /* Full update */
+  function update() {
+    const payload    = buildPayload();
+    const embed      = payload.embeds[0];
+    const components = payload.components || [];
+    renderPreview(embed);
+    renderButtonPreview(components);
+    renderJson(payload);
+  }
+
+  /* Add embed field row */
+  function addField(name, value, inline) {
+    const list = $i("fields-list");
+    if (list.querySelectorAll(".eb-embed-field-row").length >= 25) {
+      showToast("Maximum 25 fields allowed.");
+      return;
+    }
+    ++fieldCount;
+    const row = document.createElement("div");
+    row.className = "eb-embed-field-row";
+    row.innerHTML =
+      '<div class="ef-top">' +
+        '<input class="ef-name" type="text" placeholder="Field name" value="' + esc(name || "") + '">' +
+        '<label class="ef-inline-label"><input class="ef-inline" type="checkbox"' + (inline ? " checked" : "") + '> Inline</label>' +
+        '<button class="eb-remove-field" title="Remove field">&times;</button>' +
+      '</div>' +
+      '<input class="ef-value" type="text" placeholder="Field value" value="' + esc(value || "") + '">';
+    row.querySelector(".eb-remove-field").addEventListener("click", function () { row.remove(); update(); });
+    row.querySelectorAll("input").forEach(function (el) {
+      el.addEventListener("input", update);
+      el.addEventListener("change", update);
+    });
+    list.appendChild(row);
+    update();
+  }
+
+  /* Add button row */
+  function addButton(opts) {
+    opts = opts || {};
+    const list = $i("btns-list");
+    // Max 25 buttons total (5 rows × 5)
+    if (list.querySelectorAll(".eb-btn-row-item").length >= 25) {
+      showToast("Maximum 25 buttons allowed.");
+      return;
+    }
+    ++btnCount;
+    const style    = opts.style    || 1;
+    const label    = opts.label    || "";
+    const emoji    = opts.emoji    || "";
+    const url      = opts.url      || "";
+    const customId = opts.customId || "";
+    const disabled = opts.disabled || false;
+    const isLink   = style === 5;
+
+    const row = document.createElement("div");
+    row.className = "eb-btn-row-item";
+    row.innerHTML =
+      '<div class="bri-top">' +
+        '<select class="bri-style">' +
+          '<option value="1"' + (style===1?" selected":"") + '>Primary</option>' +
+          '<option value="2"' + (style===2?" selected":"") + '>Secondary</option>' +
+          '<option value="3"' + (style===3?" selected":"") + '>Success</option>' +
+          '<option value="4"' + (style===4?" selected":"") + '>Danger</option>' +
+          '<option value="5"' + (style===5?" selected":"") + '>Link</option>' +
+        '</select>' +
+        '<input class="bri-label" type="text" placeholder="Label" value="' + esc(label) + '">' +
+        '<input class="bri-emoji" type="text" placeholder="Emoji (🎉)" title="Unicode emoji or :name: or <:name:id>" value="' + esc(emoji) + '">' +
+        '<button class="eb-remove-btn" title="Remove button">&times;</button>' +
+      '</div>' +
+      '<div class="bri-bottom">' +
+        (isLink
+          ? '<input class="bri-url"       type="url"  placeholder="URL (required for Link)" value="' + esc(url) + '">'
+          : '<input class="bri-custom-id" type="text" placeholder="custom_id"                value="' + esc(customId) + '">') +
+        '<label class="bri-disabled-label"><input class="bri-disabled" type="checkbox"' + (disabled ? " checked" : "") + '> Disabled</label>' +
+      '</div>';
+
+    // Toggle URL vs custom_id when style changes
+    row.querySelector(".bri-style").addEventListener("change", function () {
+      const s = parseInt(this.value, 10);
+      const bottom = row.querySelector(".bri-bottom");
+      const oldInput = bottom.querySelector(".bri-url, .bri-custom-id");
+      const newInput = document.createElement("input");
+      newInput.type = s === 5 ? "url" : "text";
+      newInput.className = s === 5 ? "bri-url" : "bri-custom-id";
+      newInput.placeholder = s === 5 ? "URL (required for Link)" : "custom_id";
+      newInput.addEventListener("input", update);
+      if (oldInput) bottom.replaceChild(newInput, oldInput);
+      update();
+    });
+
+    row.querySelector(".eb-remove-btn").addEventListener("click", function () { row.remove(); update(); });
+    row.querySelectorAll("input, select").forEach(function (el) {
+      el.addEventListener("input", update);
+      el.addEventListener("change", update);
+    });
+
+    list.appendChild(row);
+    update();
+  }
+
+  /* Import JSON */
+  function importJson() {
+    const raw = prompt("Paste embed JSON (full message payload or bare embed object):");
+    if (!raw) return;
+    let parsed;
+    try { parsed = JSON.parse(raw); } catch (e) { showToast("Invalid JSON."); return; }
+
+    let embed      = parsed;
+    let components = [];
+    if (parsed.embeds && Array.isArray(parsed.embeds) && parsed.embeds.length) {
+      embed      = parsed.embeds[0];
+      components = parsed.components || [];
+    }
+
+    // Clear
+    $i("fields-list").innerHTML = "";
+    $i("btns-list").innerHTML   = "";
+    fieldCount = 0;
+    btnCount   = 0;
+
+    // Color
+    if (embed.color !== undefined) {
+      const hex = "#" + (embed.color >>> 0).toString(16).padStart(6, "0");
+      setColor(hex);
+    }
+
+    const a = embed.author || {};
+    $i("f-author-name").value = a.name     || "";
+    $i("f-author-icon").value = a.icon_url || "";
+    $i("f-author-url").value  = a.url      || "";
+
+    $i("f-title").value       = embed.title       || "";
+    $i("f-title-url").value   = embed.url         || "";
+    $i("f-description").value = embed.description || "";
+
+    $i("f-thumbnail").value = (embed.thumbnail && embed.thumbnail.url) || "";
+    $i("f-image").value     = (embed.image     && embed.image.url)     || "";
+
+    if (embed.fields && embed.fields.length)
+      embed.fields.forEach(function (f) { addField(f.name, f.value, f.inline); });
+
+    const fo = embed.footer || {};
+    $i("f-footer-text").value = fo.text     || "";
+    $i("f-footer-icon").value = fo.icon_url || "";
+    $i("f-timestamp").checked = !!embed.timestamp;
+
+    // Buttons
+    components.forEach(function (row) {
+      if (row.type !== 1) return;
+      (row.components || []).forEach(function (btn) {
+        if (btn.type !== 2) return;
+        const emojiStr = btn.emoji
+          ? (btn.emoji.id ? "<:" + btn.emoji.name + ":" + btn.emoji.id + ">" : btn.emoji.name || "")
+          : "";
+        addButton({
+          style:    btn.style    || 1,
+          label:    btn.label    || "",
+          emoji:    emojiStr,
+          url:      btn.url      || "",
+          customId: btn.custom_id || "",
+          disabled: !!btn.disabled
+        });
+      });
+    });
+
+    update();
+    showToast("JSON imported!");
+  }
+
+  /* Wire up static listeners */
+  document.querySelectorAll(
+    "#f-author-name,#f-author-icon,#f-author-url," +
+    "#f-title,#f-title-url,#f-description,#f-thumbnail,#f-image," +
+    "#f-footer-text,#f-footer-icon,#f-timestamp"
+  ).forEach(function (el) {
+    el.addEventListener("input", update);
+    el.addEventListener("change", update);
+  });
+
+  $i("btn-add-field").addEventListener("click", function () { addField("", "", true); });
+  $i("btn-add-button").addEventListener("click", function () { addButton(); });
+
+  $i("btn-copy-json").addEventListener("click", function () {
+    const text = $i("json-output").textContent;
+    if (!text) { showToast("Nothing to copy yet."); return; }
+    navigator.clipboard.writeText(text).then(function () {
+      showToast("JSON copied to clipboard!");
+    }).catch(function () { prompt("Copy this JSON:", text); });
+  });
+
+  $i("btn-import-json").addEventListener("click", importJson);
+
+  $i("btn-clear").addEventListener("click", function () {
+    if (!confirm("Clear all fields?")) return;
+    document.querySelectorAll(
+      "#f-author-name,#f-author-icon,#f-author-url," +
+      "#f-title,#f-title-url,#f-description,#f-thumbnail,#f-image," +
+      "#f-footer-text,#f-footer-icon"
+    ).forEach(function (el) { el.value = ""; });
+    setColor("#5865F2");
+    $i("f-timestamp").checked = false;
+    $i("fields-list").innerHTML = "";
+    $i("btns-list").innerHTML   = "";
+    fieldCount = 0;
+    btnCount   = 0;
+    update();
+  });
+
+  // Initial render
+  update();
+})();
+</script>
+</body>
+</html>

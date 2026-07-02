@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Ammonite</title>
+  <link rel="stylesheet" href="common.css">
+</head>
+<body>
+<header class="site-header"><button class="sidebar-toggle">&#9776;</button><a class="site-logo" href="/"> Ammonite</a></header>
+<div class="site-body"><aside class="sidebar"></aside><div class="sidebar-backdrop"></div>
+<main class="content"><div class="content-inner">
+  <div class="breadcrumb"><a href="/">Home</a> &#8250; Privacy Policy</div>
+  <div class="page-header"><h1>Privacy Policy</h1><p>Ammonite is committed to protecting your privacy. Last updated: February 2026.</p></div>
+  <div class="doc-section"><h2>Data We Collect</h2><p>Ammonite collects only the minimum data necessary:</p><ul>
+    <li><strong>User IDs</strong> — to track economy, levels, warnings, and permissions.</li>
+    <li><strong>Guild IDs</strong> — to store per-server configuration and settings.</li>
+    <li><strong>Message Content</strong> — processed in real-time for commands, proxy tag matching, global chat, prefix commands, and auto-moderation. <strong>Not stored persistently</strong> unless part of a moderation action.</li>
+    <li><strong>Moderation Records</strong> — warning reasons, ban/mute durations, moderator IDs, timestamps.</li>
+    <li><strong>Economy Data</strong> — wallet and bank balances, transaction history.</li>
+    <li><strong>Leveling Data</strong> — XP totals, level progress, leaderboard rankings.</li>
+    <li><strong>Proxy Data</strong> — proxy member names, display names, tags, and avatar URLs (all user-provided).</li>
+    <li><strong>Role Persistence Data</strong> — role IDs stored for users who leave so roles can be reassigned on rejoin.</li>
+    <li><strong>Suspicious Account Records</strong> — user IDs flagged by automated detection, with notes.</li>
+  </ul></div>
+  <div class="doc-section"><h2>How Data Is Stored</h2>
+    <p>All data is stored locally on the bot host machine as JSON files in the <code>data/</code> directory. Cached in memory using ConcurrentHashMaps and periodically written to disk.</p>
+    <div class="callout callout-tip"><strong>Key Guarantees</strong>Data is <strong>never</strong> shared with third parties, never sold or used for advertising. No data is sent to external services beyond Discord's own API. No analytics or telemetry.</div>
+  </div>
+  <div class="doc-section"><h2>Data Retention</h2><ul>
+    <li><strong>Economy and leveling data</strong> is kept as long as the bot is active in the server.</li>
+    <li><strong>Moderation records</strong> are kept indefinitely for server admin reference.</li>
+    <li><strong>Proxy data</strong> is kept until the user manually deletes it or uses <code>/deletedata</code>.</li>
+    <li><strong>Role persistence data</strong> expires after the server-configured period.</li>
+    <li><strong>Server configuration</strong> data is retained even if the bot is removed. Server owners may request deletion by contacting the bot owner.</li>
+  </ul></div>
+  <div class="doc-section"><h2>Your Rights</h2><ul>
+    <li><strong>View</strong> your data — economy balances, levels, warnings, and proxy members are all visible through bot commands.</li>
+    <li><strong>Request deletion</strong> using <code>/deletedata</code>. This permanently removes your economy data, leveling progress, warnings, moderation logs, suspicious account records, and all proxy members/groups.</li>
+    <li><strong>Opt out</strong> of features — ask a server admin to adjust your permissions (e.g., deny <code>globalchat.use</code>).</li>
+  </ul><div class="callout callout-note"><strong>Server Administrators</strong>Can request bulk data deletion by removing the bot and contacting the bot owner directly.</div></div>
+  <div class="doc-section"><h2>Privileged Gateway Intents</h2><ul>
+    <li><strong>Guild Members (GUILD_MEMBERS)</strong> — required for role persistence, suspicious account detection, welcome messages, and member cache for moderation.</li>
+    <li><strong>Message Content (MESSAGE_CONTENT)</strong> — required for proxy tag matching, prefix command parsing, global chat forwarding, and auto-moderation filtering.</li>
+    <li><strong>Presence (GUILD_PRESENCES)</strong> — required for suspicious account detection (analyzing account age and presence patterns).</li>
+  </ul><p>Non-privileged intents used: <code>GUILD_MESSAGES</code>, <code>GUILD_MESSAGE_REACTIONS</code>, <code>DIRECT_MESSAGES</code>.</p></div>
+  <div class="doc-section"><h2>Global Chat &amp; Webhooks</h2>
+    <p>The Global Chat feature relays messages between linked channels via Discord webhooks. Relayed messages have a <code>[GC]</code> prefix. Messages are rate-limited and content-capped. Message content is forwarded in real-time and <strong>not stored</strong> after relay.</p>
+  </div>
+  <div class="doc-section"><h2>Proxy System &amp; Webhooks</h2>
+    <p>The Proxy system sends messages via webhooks using user-configured display names and avatars. Servers can enable a <code>[proxied]</code> indicator. All proxy data can be deleted at any time by the user.</p>
+  </div>
+  <div class="doc-section"><h2>Contact</h2><ul>
+    <li>Use <code>/deletedata</code> to erase your personal data at any time.</li>
+    <li>Contact the bot owner through the support server or Discord DM.</li>
+    <li>Server owners can contact the bot owner for server-level data requests.</li>
+  </ul></div>
+  <div class="page-nav"></div>
+</div></main></div>
+<script src="site.js"></script><script>AmDoc.init("privacy");</script>
+</body></html>
