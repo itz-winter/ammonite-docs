@@ -77,7 +77,7 @@
       <a href="#cat-tickets">Tickets</a>
       <a href="#cat-globalchat">Global Chat</a>
       <a href="#cat-utility">Utility</a>
-      <a href="#cat-owner">Owner Only</a>
+      <a href="#cat-context">Context Menus</a>
     </div>
   </div>
 
@@ -1396,6 +1396,11 @@
                 <h4>Examples</h4>
                 <div class="example-block"><code>/echo Hello World</code></div>
                 <div class="example-block"><code>/echo Welcome to the server! embed:true</code></div>
+                <h4>Related</h4>
+                <ul>
+                    <li><strong>Prefix:</strong> <code>!echo &lt;message&gt;</code> — the command message is automatically deleted. If you reply to a message with <code>!echo</code>, the bot will send the text as a direct reply to that message.</li>
+                    <li><strong>Context menu:</strong> Right-click any message → Apps → <strong>Echo Message</strong> to re-send its content to the same channel.</li>
+                </ul>
             </div>
         </div>
 
@@ -1465,7 +1470,7 @@
         <div class="cmd-row" data-cmd="pride">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/pride<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Apply pride flag overlays to avatars or images</span>
+                <span class="cmd-desc">Apply pride flag overlays to avatars or images · User-installable</span>
                 <span class="cmd-perm">—</span>
             </div>
             <div class="cmd-detail">
@@ -1488,12 +1493,13 @@
                 <div class="example-block"><code>/pride flag:trans</code> — Apply trans flag border to your avatar</div>
                 <div class="example-block"><code>/pride flag:pride user:@friend style:overlay opacity:60</code> — Pride flag overlay on a friend's avatar</div>
                 <div class="example-block"><code>/pride flag:lesbian image_url:https://example.com/img.png style:border border_style:frame border_thickness:30</code></div>
-                <div class="example-block"><code>/pride custom_flag:<upload> image:<upload> style:overlay</code> — Use a custom flag design on an uploaded image</div>
+                <div class="example-block"><code>/pride custom_flag:&lt;upload&gt; image:&lt;upload&gt; style:overlay</code> — Use a custom flag design on an uploaded image</div>
                 <h4>Details</h4>
                 <ul>
                     <li>If no user/image/image_url is specified, applies to your own avatar.</li>
                     <li>Built-in flags are loaded from the bot's assets — use <code>/flags</code> to see all available.</li>
                     <li>Upload a <code>custom_flag</code> to use any image as the flag pattern instead of built-in flags.</li>
+                    <li><strong>User-installable</strong> — works in DMs and group chats when Ammonite is installed to your account.</li>
                 </ul>
             </div>
         </div>
@@ -1593,9 +1599,161 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- OWNER ONLY -->
+    <!-- CONTEXT MENUS -->
     <!-- ============================================================ -->
-    <div class="category-section" id="cat-owner" data-category="owner">
+    <div class="category-section" id="cat-context" data-category="context">
+        <h2 class="category-title">Context Menu Commands</h2>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1rem;">
+          Right-click (or long-press on mobile) a <strong>message</strong> or <strong>user</strong> → <em>Apps</em> to access these commands.
+        </p>
+
+        <!-- Echo Message -->
+        <div class="cmd-row" data-cmd="echo-message">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Echo Message<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Re-send a message's text to the same channel as the bot</span>
+                <span class="cmd-perm">utility.echo · Message menu</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any message → Apps → <strong>Echo Message</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>Requires the <code>utility.echo</code> permission (same as <code>/echo</code>).</li>
+                    <li>Sends the selected message's plain text content to the current channel.</li>
+                    <li>Only guild channels are supported — not usable in DMs.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Report Message -->
+        <div class="cmd-row" data-cmd="report-message">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Report Message<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Report a message to the server's moderation log channel</span>
+                <span class="cmd-perm">Everyone · Message menu</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any message → Apps → <strong>Report Message</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>No special permissions required — any server member can use this.</li>
+                    <li>Sends a report embed to the configured log channel (<code>/log channel</code>).</li>
+                    <li>Report includes: reporter, message author, channel, message content, and a jump link.</li>
+                    <li>If no log channel is configured, the user is notified to ask an admin to set one up.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Get Avatar -->
+        <div class="cmd-row" data-cmd="get-avatar">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Get Avatar<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Show a user's avatar at full resolution</span>
+                <span class="cmd-perm">Everyone · User menu · User-installable</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any user → Apps → <strong>Get Avatar</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>No special permissions required.</li>
+                    <li>Returns the avatar at up to 4096 px. Animated avatars include links to both GIF and PNG versions.</li>
+                    <li><strong>User-installable</strong> — works outside of servers (DMs, group chats) when you install Ammonite to your account.</li>
+                    <li>Also available as the slash command <code>/avatar [@user]</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Warn -->
+        <div class="cmd-row" data-cmd="quick-warn">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Quick Warn<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Issue an instant warning to a user from the right-click menu</span>
+                <span class="cmd-perm">mod.warn · User menu</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any user → Apps → <strong>Quick Warn</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>Requires the <code>mod.warn</code> permission.</li>
+                    <li>Increments the user's warning count and fires the same DM notification as <code>/warn</code>.</li>
+                    <li>Reason is automatically set to <em>"Warned via context menu by &lt;moderator&gt;"</em>.</li>
+                    <li>Respects role hierarchy — cannot warn users with equal or higher roles.</li>
+                    <li>For a custom reason, use <code>/warn &lt;user&gt; [reason]</code> instead.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Kick -->
+        <div class="cmd-row" data-cmd="quick-kick">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Quick Kick<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Kick a user from the right-click menu</span>
+                <span class="cmd-perm">mod.kick · User menu</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any user → Apps → <strong>Quick Kick</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>Requires the <code>mod.kick</code> permission.</li>
+                    <li>Logs the action to the configured mod log channel via AutoLog.</li>
+                    <li>Sends a punishment DM if enabled.</li>
+                    <li>Respects role hierarchy.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Ban -->
+        <div class="cmd-row" data-cmd="quick-ban">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">Quick Ban<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">Permanently ban a user from the right-click menu</span>
+                <span class="cmd-perm">mod.ban · User menu</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>How to use</h4>
+                <p>Right-click any user → Apps → <strong>Quick Ban</strong>.</p>
+                <h4>Details</h4>
+                <ul>
+                    <li>Requires the <code>mod.ban</code> permission.</li>
+                    <li>Issues a <strong>permanent</strong> ban and deletes messages from the last 7 days.</li>
+                    <li>Logs the action and sends a punishment DM if enabled.</li>
+                    <li>For timed bans, use <code>/ban &lt;user&gt; [duration] [reason]</code> instead.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+  <div class="page-nav"></div>
+</div></main></div>
+<script src="site.js"></script>
+<script>AmDoc.init("commands");</script>
+<script>
+function toggleCmd(el) {
+  var row = el.closest('.cmd-row');
+  row.classList.toggle('open');
+}
+function filterCommands() {
+  var query = document.getElementById('cmdSearch').value.toLowerCase();
+  var anyVisible = false;
+  document.querySelectorAll('.cmd-row').forEach(function(row) {
+    var match = row.textContent.toLowerCase().includes(query);
+    row.style.display = match ? '' : 'none';
+    if (match) anyVisible = true;
+  });
+  document.querySelectorAll('.category-section').forEach(function(section) {
+    var hasVisible = Array.from(section.querySelectorAll('.cmd-row')).some(function(r) { return r.style.display !== 'none'; });
+    section.style.display = hasVisible ? '' : 'none';
+  });
+  document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
+}
+</script>
+</body>
+</html>
         <h2 class="category-title">Owner Only</h2>
 
         <div class="cmd-row" data-cmd="statusmsg">

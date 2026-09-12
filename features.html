@@ -19,7 +19,7 @@
       <div class="breadcrumb"><a href="/">Home</a> &#8250; Features</div>
       <div class="page-header"><h1>Features</h1><p>An in-depth look at everything Ammonite can do.</p></div>
       <div class="highlight"><strong>Jump to:</strong>
-        <a href="#moderation">Moderation</a> &bull; <a href="#economy">Economy</a> &bull; <a href="#leveling">Leveling</a> &bull; <a href="#games">Games</a> &bull; <a href="#proxy">Proxy</a> &bull; <a href="#globalchat">Global Chat</a> &bull; <a href="#tickets">Tickets</a> &bull; <a href="#automod">Auto-Mod</a> &bull; <a href="#logging">Logging</a> &bull; <a href="#welcome">Welcome</a> &bull; <a href="#suspicious">Suspicious</a> &bull; <a href="#owner">Owner Tools</a> &bull; <a href="#misc">More</a>
+        <a href="#moderation">Moderation</a> &bull; <a href="#economy">Economy</a> &bull; <a href="#leveling">Leveling</a> &bull; <a href="#games">Games</a> &bull; <a href="#proxy">Proxy</a> &bull; <a href="#globalchat">Global Chat</a> &bull; <a href="#tickets">Tickets</a> &bull; <a href="#automod">Auto-Mod</a> &bull; <a href="#logging">Logging</a> &bull; <a href="#welcome">Welcome</a> &bull; <a href="#suspicious">Suspicious</a> &bull; <a href="#contextmenus">Context Menus</a> &bull; <a href="#userinst">User Installation</a> &bull; <a href="#misc">More</a>
       </div>
 
       <div class="doc-section" id="moderation">
@@ -35,6 +35,18 @@
           <li><code>/purge</code> - Bulk message deletion</li>
           <li><code>/lockdown</code> - Channel lock/unlock</li>
           <li><code>/softban</code> - Ban + unban to purge messages</li>
+        </ul>
+        <h3>Context Menu Quick Actions</h3>
+        <p>Right-click any user → Apps for instant moderation without typing a command:</p>
+        <ul>
+          <li><strong>Quick Warn</strong> — instantly warn a user</li>
+          <li><strong>Quick Kick</strong> — instantly kick a user</li>
+          <li><strong>Quick Ban</strong> — permanently ban a user (7-day message delete)</li>
+        </ul>
+        <p>Also right-click any message → Apps for message actions:</p>
+        <ul>
+          <li><strong>Report Message</strong> — send a report to the configured log channel (available to everyone)</li>
+          <li><strong>Echo Message</strong> — re-send the message as the bot (requires <code>utility.echo</code>)</li>
         </ul>
         <h3>Moderation History</h3>
         <p>Every moderation action is logged and reviewable with <code>/hist &lt;user&gt;</code>. Warnings can be viewed with <code>/warns [user]</code> and removed with <code>/unwarn</code>.</p>
@@ -217,32 +229,34 @@
         </ul>
       </div>
 
-      <div class="doc-section" id="owner">
-        <h2>Bot Owner Tools</h2>
-        <p>Administrative commands exclusively for the bot owner, hidden from the public slash command list when <code>hide_owner_commands</code> is enabled.</p>
-        <h3>Server &amp; User Blacklist</h3>
-        <p>The blacklist system lets the bot owner permanently or temporarily ban entire servers or individual users from all bot interactions.</p>
+      <div class="doc-section" id="contextmenus">
+        <h2>Right-Click Context Menus</h2>
+        <p>Access bot features instantly without typing a command — right-click (or long-press on mobile) a message or user, then select <strong>Apps</strong>.</p>
+        <h3>Message Context Menus</h3>
         <ul>
-          <li><code>/blacklist server &lt;id&gt; [reason] [duration]</code> - Blacklist a server; the bot leaves it immediately and notifies the owner via DM.</li>
-          <li><code>/blacklist user &lt;id&gt; [reason] [duration]</code> - Blacklist a user across all servers.</li>
-          <li><code>/blacklist remove &lt;id&gt;</code> - Lift a blacklist entry (guild or user).</li>
-          <li><code>/blacklist list [page]</code> - Paginated view of all active blacklist entries.</li>
+          <li><strong>Echo Message</strong> — re-send the selected message's text to the same channel. Requires <code>utility.echo</code> permission.</li>
+          <li><strong>Report Message</strong> — sends a report embed to the configured log channel. Available to all server members.</li>
         </ul>
-        <p>Blacklisted parties receive a DM embed with the reason, duration, and an <strong>Appeal</strong> button. Duration supports shorthand like <code>7d</code>, <code>24h</code>, <code>30m</code>; omitting it creates a permanent entry.</p>
-        <h3>Server List</h3>
+        <h3>User Context Menus</h3>
         <ul>
-          <li><code>/listservers [sort] [page]</code> - Lists all servers the bot is in with their IDs and member counts. Sortable by member count (high/low), name, or ID. 10 servers per page, ephemeral.</li>
+          <li><strong>Get Avatar</strong> — shows the user's avatar at full resolution (up to 4096px). User-installable — works outside servers.</li>
+          <li><strong>Quick Warn</strong> — immediately warns the user. Requires <code>mod.warn</code>. Fires the same DM notification as <code>/warn</code>.</li>
+          <li><strong>Quick Kick</strong> — kicks the user. Requires <code>mod.kick</code>.</li>
+          <li><strong>Quick Ban</strong> — permanently bans the user and deletes 7 days of messages. Requires <code>mod.ban</code>.</li>
         </ul>
-        <h3>Announcements</h3>
+        <p>All moderation context menu actions respect role hierarchy and log to the AutoLog channel.</p>
+      </div>
+
+      <div class="doc-section" id="userinst">
+        <h2>User Installation</h2>
+        <p>Install Ammonite directly to your Discord account — no server required. Once installed, certain commands work anywhere: servers, DMs, and group chats.</p>
+        <h3>User-installable commands</h3>
         <ul>
-          <li><code>/announce</code> - Broadcast an embed announcement to every server that has an announcement channel configured.</li>
+          <li><code>/avatar [@user]</code> — fetch any user's avatar at full resolution</li>
+          <li><code>/pride flag:&lt;flag&gt;</code> — apply pride flag overlays to avatars or images</li>
+          <li><strong>Get Avatar</strong> context menu (right-click a user → Apps)</li>
         </ul>
-        <h3>Error Reports</h3>
-        <ul>
-          <li><code>/reports error [query] [sort] [page]</code> - Review automatically collected command error reports.</li>
-          <li><code>/reports tag &lt;key&gt; &lt;add|remove&gt; &lt;tag&gt;</code> - Tag reports for triage.</li>
-          <li><code>/reports delete &lt;key&gt;</code> - Remove a resolved report.</li>
-        </ul>
+        <div class="callout callout-note"><strong>Note</strong>To install to your account, open the bot's profile and choose <em>Add App → Try it yourself</em>. These commands will then appear in all your Discord contexts.</div>
       </div>
 
       <div class="doc-section" id="misc">
@@ -252,11 +266,12 @@
         <p>Let members self-assign roles by reacting to messages. Create panels with <code>/reactionrole</code>. Supports custom and Unicode emojis.</p>
         <h2>Pride &amp; Inclusivity</h2>
         <ul>
-          <li><code>/pride &lt;flag&gt;</code> - apply pride flag borders/overlays to avatars or images</li>
-          <li><code>/pride custom_flag:&lt;upload&gt;</code> - use your own flag image instead of built-in flags</li>
+          <li><code>/pride &lt;flag&gt;</code> — apply pride flag borders/overlays to avatars or images. <strong>User-installable.</strong></li>
+          <li><code>/pride custom_flag:&lt;upload&gt;</code> — use your own flag image instead of built-in flags</li>
           <li><code>/pride</code> supports border (circular or frame), overlay style, adjustable thickness &amp; opacity</li>
-          <li><code>/flags</code> - list all available pride flags</li>
-          <li><code>/pronouns</code> - set pronoun roles for yourself</li>
+          <li><code>/flags</code> — list all available pride flags</li>
+          <li><code>/pronouns</code> — set pronoun roles for yourself</li>
+          <li><code>/avatar [@user]</code> — fetch any user's avatar at full resolution. <strong>User-installable.</strong></li>
         </ul>
         <h2>Server Backups</h2>
         <p>Create and restore snapshots of your server configuration with <code>/backup create</code> and <code>/backup restore</code>.</p>
