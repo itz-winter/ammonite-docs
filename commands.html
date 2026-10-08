@@ -989,12 +989,13 @@
         <div class="cmd-row" data-cmd="logging">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/logging<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Configure server logging channels</span>
-                <span class="cmd-perm">logging.channel</span>
+                <span class="cmd-desc">Configure channels for moderation, message, and server-change logs</span>
+                <span class="cmd-perm">admin.logging</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/logging <span class="required">&lt;type&gt;</span> <span class="required">&lt;channel&gt;</span></div>
+                <div class="syntax-block">/logging action:<span class="required">set</span> type:<span class="required">&lt;type&gt;</span> channel:<span class="required">&lt;channel&gt;</span></div>
+                <p>Types include moderation, message, member, voice, server, channel, role, emoji, sticker, and webhook. Enable the bot's <strong>View Audit Log</strong> permission to include the user and ID responsible for server changes.</p>
             </div>
         </div>
 
