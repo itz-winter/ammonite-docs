@@ -6,6 +6,14 @@
   <title>Embed Builder — Ammonite</title>
   <link rel="stylesheet" href="common.css">
   <style>
+    :root {
+      --surface: var(--bg-surface);
+      --bg: var(--bg-page);
+      --text: var(--text-primary);
+      --muted: var(--text-muted);
+      --danger: #ed4245;
+    }
+
     /* Layout */
     .eb-root {
       display: flex;
@@ -192,6 +200,35 @@
       overflow-y: auto;
       resize: vertical;
     }
+    .eb-embed-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+    }
+    .eb-embed-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      flex: 1;
+    }
+    .eb-embed-tab {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      padding: .35rem .7rem;
+      cursor: pointer;
+      font-size: .8rem;
+    }
+    .eb-embed-tab.active {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+      box-shadow: 0 0 0 1px var(--brand-primary);
+    }
+    .eb-embed-actions { display: flex; gap: .4rem; }
+    .dc-embed-stack { display: flex; flex-direction: column; gap: .75rem; }
 
     /* Discord embed preview */
     .eb-preview-label {
@@ -499,13 +536,24 @@
   <main class="content">
     <h1 class="page-title">&#128247; Embed Builder</h1>
     <p style="color:var(--muted);margin-top:-.5rem;margin-bottom:1.5rem;">
-      Build, preview, and export Discord embed JSON. Paste the JSON into any <code>/embed</code> command or bot integration.
+      Create, preview, and share up to 10 embeds in a Discord message. Export the message payload as JSON for <code>/embed</code> or another compatible integration.
     </p>
 
     <div class="eb-root">
 
       <!-- ══ LEFT: FORM ══════════════════════════════════════════ -->
       <div class="eb-form-col">
+
+        <div class="eb-card">
+          <h3>Message Embeds <span style="font-weight:400;font-size:.75rem;color:var(--muted)" id="embed-count">1 / 10</span></h3>
+          <div class="eb-embed-toolbar">
+            <div class="eb-embed-tabs" id="embed-tabs" role="tablist" aria-label="Embeds"></div>
+            <div class="eb-embed-actions">
+              <button class="eb-btn eb-btn-secondary" id="btn-add-embed" type="button">Add embed</button>
+              <button class="eb-btn eb-btn-danger" id="btn-remove-embed" type="button">Remove</button>
+            </div>
+          </div>
+        </div>
 
         <!-- Color -->
         <div class="eb-card">
@@ -586,6 +634,7 @@
         <!-- Actions -->
         <div class="eb-actions">
           <button class="eb-btn eb-btn-primary" id="btn-copy-json">&#128203; Copy JSON</button>
+          <button class="eb-btn eb-btn-secondary" id="btn-share-link">Copy share link</button>
           <button class="eb-btn eb-btn-secondary" id="btn-import-json">&#128229; Import JSON</button>
           <button class="eb-btn eb-btn-danger" id="btn-clear">&#128465; Clear All</button>
         </div>
@@ -627,6 +676,8 @@
   /* State */
   let fieldCount = 0;
   let btnCount   = 0;
+  let embedStates = [{}];
+  let activeEmbedIndex = 0;
 
   /* Shorthand helpers */
   function $i(id) { return document.getElementById(id); }
@@ -644,7 +695,7 @@
   const colorPicker = $i("f-color");
   const colorHexIn  = $i("f-color-hex");
 
-  function setColor(hex) {
+  function setColor(hex, skipUpdate) {
     // Normalise: ensure it's a valid 6-digit hex
     const clean = hex.replace(/^#/, "").padEnd(6, "0").slice(0, 6);
     const full  = "#" + clean;
@@ -654,7 +705,7 @@
     document.querySelectorAll(".color-swatch").forEach(function (s) {
       s.classList.toggle("active", s.dataset.color.toLowerCase() === full.toLowerCase());
     });
-    update();
+    if (!skipUpdate) update();
   }
 
   colorPicker.addEventListener("input", function () {
@@ -794,20 +845,19 @@
 
   /* Build full message payload */
   function buildPayload() {
-    const embed      = buildEmbed();
+    embedStates[activeEmbedIndex] = buildEmbed();
     const components = buildComponents();
-    const payload    = { embeds: [embed] };
+    const payload    = { embeds: embedStates };
     if (components.length) payload.components = components;
     return payload;
   }
 
   /* Render embed preview */
-  function renderPreview(embed) {
-    const wrap = $i("dc-preview");
+  function renderSinglePreview(embed) {
     const isEmpty = !embed.title && !embed.description &&
                     !(embed.author && embed.author.name) &&
                     !(embed.fields && embed.fields.length) &&
-                    !embed.image && !embed.footer;
+                    !embed.image && !embed.thumbnail && !embed.footer && !embed.timestamp;
 
     let html = "";
 
@@ -876,7 +926,12 @@
       html = '<div class="dc-embed-empty">Start filling in fields to see a preview.</div>';
     }
 
-    wrap.innerHTML = html;
+    return html;
+  }
+
+  function renderPreview(embeds) {
+    const wrap = $i("dc-preview");
+    wrap.innerHTML = '<div class="dc-embed-stack">' + embeds.map(renderSinglePreview).join("") + '</div>';
   }
 
   /* Render button components preview */
@@ -921,14 +976,16 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   /* Discord markdown renderer */
   function escHtml(s) {
     return String(s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function renderMarkdown(rawStr) {
@@ -1014,11 +1071,97 @@
   /* Full update */
   function update() {
     const payload    = buildPayload();
-    const embed      = payload.embeds[0];
     const components = payload.components || [];
-    renderPreview(embed);
+    renderEmbedTabs();
+    renderPreview(payload.embeds);
     renderButtonPreview(components);
     renderJson(payload);
+  }
+
+  function renderEmbedTabs() {
+    const tabs = $i("embed-tabs");
+    tabs.innerHTML = "";
+    embedStates.forEach(function (embed, index) {
+      const tab = document.createElement("button");
+      tab.type = "button";
+      tab.className = "eb-embed-tab" + (index === activeEmbedIndex ? " active" : "");
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-selected", index === activeEmbedIndex ? "true" : "false");
+      tab.textContent = embed.title || ("Embed " + (index + 1));
+      tab.addEventListener("click", function () { selectEmbed(index); });
+      tabs.appendChild(tab);
+    });
+    $i("embed-count").textContent = embedStates.length + " / 10";
+    $i("btn-add-embed").disabled = embedStates.length >= 10;
+    $i("btn-remove-embed").disabled = embedStates.length === 1;
+  }
+
+  function clearEmbedForm() {
+    document.querySelectorAll(
+      "#f-author-name,#f-author-icon,#f-author-url," +
+      "#f-title,#f-title-url,#f-description,#f-thumbnail,#f-image," +
+      "#f-footer-text,#f-footer-icon"
+    ).forEach(function (el) { el.value = ""; });
+    $i("f-timestamp").checked = false;
+    $i("fields-list").innerHTML = "";
+    fieldCount = 0;
+  }
+
+  function loadEmbedIntoForm(embed) {
+    clearEmbedForm();
+    const color = typeof embed.color === "number"
+      ? "#" + (embed.color >>> 0).toString(16).padStart(6, "0")
+      : (typeof embed.color === "string" ? embed.color : "#5865F2");
+    setColor(color, true);
+    const author = embed.author || {};
+    $i("f-author-name").value = author.name || "";
+    $i("f-author-icon").value = author.icon_url || "";
+    $i("f-author-url").value = author.url || "";
+    $i("f-title").value = embed.title || "";
+    $i("f-title-url").value = embed.url || "";
+    $i("f-description").value = embed.description || "";
+    $i("f-thumbnail").value = urlValue(embed.thumbnail);
+    $i("f-image").value = urlValue(embed.image);
+    (embed.fields || []).slice(0, 25).forEach(function (field) {
+      addField(field.name, field.value, !!field.inline);
+    });
+    const footer = embed.footer || {};
+    $i("f-footer-text").value = footer.text || "";
+    $i("f-footer-icon").value = footer.icon_url || "";
+    $i("f-timestamp").checked = !!embed.timestamp;
+  }
+
+  function urlValue(value) {
+    return typeof value === "string" ? value : (value && value.url) || "";
+  }
+
+  function selectEmbed(index) {
+    if (index === activeEmbedIndex || index < 0 || index >= embedStates.length) return;
+    embedStates[activeEmbedIndex] = buildEmbed();
+    activeEmbedIndex = index;
+    loadEmbedIntoForm(embedStates[activeEmbedIndex]);
+    update();
+  }
+
+  function addEmbed() {
+    if (embedStates.length >= 10) {
+      showToast("Maximum 10 embeds allowed.");
+      return;
+    }
+    embedStates[activeEmbedIndex] = buildEmbed();
+    embedStates.push({ color: 0x5865F2 });
+    activeEmbedIndex = embedStates.length - 1;
+    loadEmbedIntoForm(embedStates[activeEmbedIndex]);
+    update();
+  }
+
+  function removeEmbed() {
+    if (embedStates.length === 1) return;
+    embedStates[activeEmbedIndex] = buildEmbed();
+    embedStates.splice(activeEmbedIndex, 1);
+    activeEmbedIndex = Math.min(activeEmbedIndex, embedStates.length - 1);
+    loadEmbedIntoForm(embedStates[activeEmbedIndex]);
+    update();
   }
 
   /* Add embed field row */
@@ -1112,63 +1255,45 @@
   }
 
   /* Import JSON */
-  function importJson() {
-    const raw = prompt("Paste embed JSON (full message payload or bare embed object):");
+  function importJson(raw) {
+    if (raw === undefined) raw = prompt("Paste embed JSON (message payload, embed array, or bare embed):");
     if (!raw) return;
     let parsed;
     try { parsed = JSON.parse(raw); } catch (e) { showToast("Invalid JSON."); return; }
 
-    let embed      = parsed;
+    let importedEmbeds;
     let components = [];
-    if (parsed.embeds && Array.isArray(parsed.embeds) && parsed.embeds.length) {
-      embed      = parsed.embeds[0];
+    if (Array.isArray(parsed)) {
+      importedEmbeds = parsed;
+    } else if (parsed && Array.isArray(parsed.embeds)) {
+      importedEmbeds = parsed.embeds;
       components = parsed.components || [];
+    } else if (parsed && typeof parsed === "object") {
+      importedEmbeds = [parsed];
+    } else {
+      showToast("JSON must contain one or more embed objects.");
+      return;
+    }
+    if (!importedEmbeds.length || importedEmbeds.length > 10 ||
+        importedEmbeds.some(function (embed) { return !embed || typeof embed !== "object" || Array.isArray(embed); })) {
+      showToast("Provide between 1 and 10 embed objects.");
+      return;
     }
 
-    // Clear
-    $i("fields-list").innerHTML = "";
+    embedStates = importedEmbeds;
+    activeEmbedIndex = 0;
+    loadEmbedIntoForm(embedStates[activeEmbedIndex]);
+
     $i("btns-list").innerHTML   = "";
-    fieldCount = 0;
     btnCount   = 0;
-
-    // Color
-    if (embed.color !== undefined) {
-      const hex = "#" + (embed.color >>> 0).toString(16).padStart(6, "0");
-      setColor(hex);
-    }
-
-    const a = embed.author || {};
-    $i("f-author-name").value = a.name     || "";
-    $i("f-author-icon").value = a.icon_url || "";
-    $i("f-author-url").value  = a.url      || "";
-
-    $i("f-title").value       = embed.title       || "";
-    $i("f-title-url").value   = embed.url         || "";
-    $i("f-description").value = embed.description || "";
-
-    $i("f-thumbnail").value = (embed.thumbnail && embed.thumbnail.url) || "";
-    $i("f-image").value     = (embed.image     && embed.image.url)     || "";
-
-    if (embed.fields && embed.fields.length)
-      embed.fields.forEach(function (f) { addField(f.name, f.value, f.inline); });
-
-    const fo = embed.footer || {};
-    $i("f-footer-text").value = fo.text     || "";
-    $i("f-footer-icon").value = fo.icon_url || "";
-    $i("f-timestamp").checked = !!embed.timestamp;
-
-    // Buttons
     components.forEach(function (row) {
-      if (row.type !== 1) return;
+      if (!row || row.type !== 1) return;
       (row.components || []).forEach(function (btn) {
         if (btn.type !== 2) return;
-        const emojiStr = btn.emoji
-          ? (btn.emoji.id ? "<:" + btn.emoji.name + ":" + btn.emoji.id + ">" : btn.emoji.name || "")
-          : "";
         addButton({
           style:    btn.style    || 1,
           label:    btn.label    || "",
-          emoji:    emojiStr,
+          emoji:    btn.emoji ? (btn.emoji.id ? "<:" + btn.emoji.name + ":" + btn.emoji.id + ">" : btn.emoji.name || "") : "",
           url:      btn.url      || "",
           customId: btn.custom_id || "",
           disabled: !!btn.disabled
@@ -1177,7 +1302,7 @@
     });
 
     update();
-    showToast("JSON imported!");
+    showToast("Message JSON imported!");
   }
 
   /* Wire up static listeners */
@@ -1192,6 +1317,8 @@
 
   $i("btn-add-field").addEventListener("click", function () { addField("", "", true); });
   $i("btn-add-button").addEventListener("click", function () { addButton(); });
+  $i("btn-add-embed").addEventListener("click", addEmbed);
+  $i("btn-remove-embed").addEventListener("click", removeEmbed);
 
   $i("btn-copy-json").addEventListener("click", function () {
     const text = $i("json-output").textContent;
@@ -1202,22 +1329,35 @@
   });
 
   $i("btn-import-json").addEventListener("click", importJson);
+  $i("btn-share-link").addEventListener("click", function () {
+    const payload = buildPayload();
+    const shareUrl = window.location.href.split("#")[0] + "#data=" + encodeURIComponent(JSON.stringify(payload));
+    navigator.clipboard.writeText(shareUrl).then(function () {
+      showToast("Share link copied!");
+    }).catch(function () {
+      prompt("Copy this share link:", shareUrl);
+    });
+  });
 
   $i("btn-clear").addEventListener("click", function () {
     if (!confirm("Clear all fields?")) return;
-    document.querySelectorAll(
-      "#f-author-name,#f-author-icon,#f-author-url," +
-      "#f-title,#f-title-url,#f-description,#f-thumbnail,#f-image," +
-      "#f-footer-text,#f-footer-icon"
-    ).forEach(function (el) { el.value = ""; });
+    embedStates = [{ color: 0x5865F2 }];
+    activeEmbedIndex = 0;
+    clearEmbedForm();
     setColor("#5865F2");
-    $i("f-timestamp").checked = false;
-    $i("fields-list").innerHTML = "";
     $i("btns-list").innerHTML   = "";
-    fieldCount = 0;
     btnCount   = 0;
     update();
   });
+
+  const shareData = new URLSearchParams(window.location.hash.slice(1)).get("data");
+  if (shareData) {
+    try {
+      importJson(shareData);
+    } catch (e) {
+      showToast("The share link contains invalid message data.");
+    }
+  }
 
   // Initial render
   update();
