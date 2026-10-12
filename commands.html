@@ -989,12 +989,13 @@
         <div class="cmd-row" data-cmd="logging">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/logging<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Configure server logging channels</span>
-                <span class="cmd-perm">logging.channel</span>
+                <span class="cmd-desc">Configure channels for moderation, message, and server-change logs</span>
+                <span class="cmd-perm">admin.logging</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/logging <span class="required">&lt;type&gt;</span> <span class="required">&lt;channel&gt;</span></div>
+                <div class="syntax-block">/logging action:<span class="required">set</span> type:<span class="required">&lt;type&gt;</span> channel:<span class="required">&lt;channel&gt;</span></div>
+                <p>Types include moderation, message, member, voice, server, channel, role, emoji, sticker, and webhook. Enable the bot's <strong>View Audit Log</strong> permission to include the user and ID responsible for server changes.</p>
             </div>
         </div>
 
@@ -1407,35 +1408,41 @@
         <div class="cmd-row" data-cmd="embed">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/embed<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Create custom embeds with various styling options</span>
-                <span class="cmd-perm">utility.echo</span>
+                <span class="cmd-desc">Send a message containing up to 10 embeds from Discord message JSON</span>
+                <span class="cmd-perm">moderator permissions</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/embed <span class="required">&lt;type&gt;</span> <span class="required">&lt;title&gt;</span> <span class="required">&lt;description&gt;</span> <span class="optional">[color]</span></div>
+                <div class="syntax-block">/embed <span class="required">json:&lt;message payload or embed JSON&gt;</span> <span class="optional">[channel]</span></div>
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                    <tr><td><code>json</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>Discord-compatible embed object, embed array, or message payload containing up to 10 embeds. Button components are supported.</td></tr>
+                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Destination channel (default: current channel)</td></tr>
+                </table>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/embed type:simple title:Welcome description:Hello everyone! color:#ff0000</code></div>
+                <div class="example-block"><code>/embed json:{"embeds":[{"title":"Welcome","color":5793266},{"description":"Read the rules first."}]}</code></div>
             </div>
         </div>
 
         <div class="cmd-row" data-cmd="embedgui">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/embedgui<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Interactive embed builder with live preview, full controls, JSON export and import</span>
-                <span class="cmd-perm">embed.simple / embed.advanced</span>
+                <span class="cmd-desc">Build, preview, import, and export messages with up to 10 embeds</span>
+                <span class="cmd-perm">Open to everyone; send permission required</span>
             </div>
             <div class="cmd-detail">
                 <h4>Parameters</h4>
                 <table class="param-table">
                     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Channel to send the embed to (default: current)</td></tr>
+                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Channel to send the message to (default: current)</td></tr>
                 </table>
                 <h4>Controls</h4>
                 <ul>
-                    <li>Button-driven interface with a live preview embed</li>
-                    <li>Set title, description, color, author, footer, image, thumbnail, fields, and buttons</li>
-                    <li><strong>Export JSON</strong> — export embed as JSON compatible with <code>/embed json:</code></li>
-                    <li><strong>Import JSON</strong> — paste embed JSON to load it into the builder</li>
+                    <li>Add, remove, and navigate between up to 10 embeds in one message</li>
+                    <li>Set title, description, color, author, footer, image, thumbnail, fields, timestamps, and buttons</li>
+                    <li><strong>Export JSON</strong> — export a Discord message payload compatible with <code>/embed</code> and <code>/talkas</code></li>
+                    <li><strong>Import JSON</strong> — load a Discord message payload or embed array into the builder</li>
                 </ul>
                 <h4>Examples</h4>
                 <div class="example-block"><code>/embedgui</code></div>
@@ -1446,12 +1453,15 @@
         <div class="cmd-row" data-cmd="talkas">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/talkas<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Send a message as a webhook with custom name and avatar</span>
-                <span class="cmd-perm">utility.echo</span>
+                <span class="cmd-desc">Send a message as a webhook with a custom name, avatar, and up to 10 embeds</span>
+                <span class="cmd-perm">talkas.use / proxy.use</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/talkas <span class="required">&lt;name&gt;</span> <span class="required">&lt;message&gt;</span> <span class="optional">[avatar]</span> <span class="optional">[channel]</span></div>
+                <div class="syntax-block">/talkas <span class="required">name:&lt;name&gt;</span> <span class="optional">[message]</span> <span class="optional">[avatar]</span> <span class="optional">[embed_json]</span></div>
+                <p>Provide a message, embed JSON, or both. <code>embed_json</code> accepts a Discord message payload with multiple embeds and button components.</p>
+                <h4>Example</h4>
+                <div class="example-block"><code>/talkas name:Announcements embed_json:{"embeds":[{"title":"Update","description":"New information"}]}</code></div>
             </div>
         </div>
 
