@@ -1071,6 +1071,12 @@
             <div class="cmd-detail">
                 <h4>Syntax</h4>
                 <div class="syntax-block">/reactionrole <span class="required">&lt;action&gt;</span></div>
+                <h4>Subcommands</h4>
+                <ul>
+                    <li><code>create</code>, <code>add</code>, <code>remove</code>, <code>list</code>, and <code>delete</code> manage reaction-role menus.</li>
+                    <li><code>configure</code> sets a menu role limit, configures a locked emoji, or maps an emoji to multiple roles.</li>
+                    <li><code>gui</code> opens the interactive manager for creating, listing, configuring, and deleting menus.</li>
+                </ul>
             </div>
         </div>
 
@@ -1196,7 +1202,25 @@
                 <ul>
                     <li>Create proxy identities that send messages via webhooks with custom names and avatars.</li>
                     <li>Set prefix/suffix proxy tags (e.g., typing <code>{Hello}</code> sends as a proxy member).</li>
+                    <li>Use <code>/system</code> to organize ordered proxy members; proxied messages remain in the original thread.</li>
                     <li>See <a href="features.html#proxy">Proxy Features</a> for a full guide.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="systems">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/systems<span class="cmd-expand-icon">&#9654;</span></span>
+                <span class="cmd-desc">List your proxy systems</span>
+                <span class="cmd-perm">—</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/systems</div>
+                <h4>Details</h4>
+                <ul>
+                    <li>Shows your systems and their ordered proxy members.</li>
+                    <li>Use <code>/system list</code> to inspect members in a specific system.</li>
                 </ul>
             </div>
         </div>

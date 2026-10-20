@@ -44,7 +44,7 @@
   {
     "title": "Proxy System",
     "section": "Commands",
-    "snippet": "/proxy Manage proxy members (PluralKit-style) — create, edit, delete, list — Syntax /proxy <action> Details Create proxy identities that send messages via webhooks with custom names and avatars. Set p",
+    "snippet": "/proxy Manage proxy members (PluralKit-style) — create, edit, delete, list — /system manages ordered proxy systems and /systems lists them. Proxied messages remain in their original thread.",
     "href": "commands.html#proxy-system"
   },
   {
@@ -153,31 +153,31 @@
     "title": "Proxy System",
     "section": "Features",
     "snippet": "A PluralKit-style proxy system that lets users send messages as different identities using webhooks.",
-    "href": "features.html#proxy-system"
+    "href": "features.html#proxy"
   },
   {
     "title": "How It Works",
     "section": "Features",
     "snippet": "Create a proxy member with /proxy create <name> Set proxy tags (prefix/suffix) — e.g., {text} sends as that member Set a custom avatar with /proxy avatar <name> <url> Messages matching your tags are a",
-    "href": "features.html#how-it-works"
+    "href": "features.html#proxy"
   },
   {
     "title": "Cross-Server Global Chat",
     "section": "Features",
     "snippet": "Link channels across multiple servers so messages relay in real-time.",
-    "href": "features.html#cross-server-global-chat"
+    "href": "features.html#globalchat"
   },
   {
     "title": "How It Works",
     "section": "Features",
     "snippet": "Create a channel with /globalchat create <name> Other admins join with /globalchat join <code> Messages relay to all linked channels via webhooks",
-    "href": "features.html#how-it-works"
+    "href": "features.html#globalchat"
   },
   {
     "title": "Safety Features",
     "section": "Features",
-    "snippet": "Attribution — relayed messages prefixed with [GC] Rate limiting — 3-second per-user cooldown Content limits — 2000 chars, max 5 attachments Server muting — mute specific servers from sending or receiv",
-    "href": "features.html#safety-features"
+    "snippet": "Attribution — relayed messages prefixed with [GC] Rate limiting — 3-second per-user cooldown Content limits — 2000 chars, max 5 attachments Server muting — mute specific servers from sending or receiving. Inactive public channels are hidden from discovery, and empty channels are removed after 72 hours.",
+    "href": "features.html#globalchat"
   },
   {
     "title": "Ticket System",
@@ -218,8 +218,14 @@
   {
     "title": "Reaction Roles",
     "section": "Features",
-    "snippet": "Let members self-assign roles by reacting to messages. Create panels with /reactionrole . Supports custom and Unicode emojis.",
-    "href": "features.html#reaction-roles"
+    "snippet": "Let members self-assign roles by reacting to messages. Create panels with /reactionrole . Supports custom and Unicode emojis, per-menu role limits, locked roles, and multi-role emoji mappings.",
+    "href": "features.html#misc"
+  },
+  {
+    "title": "Music Playback",
+    "section": "Features",
+    "snippet": "Play YouTube and other supported sources in voice channels. YouTube recovery tries yt-dlp and then youtubei.js; playback-time failures also attempt yt-dlp recovery.",
+    "href": "features.html#music"
   },
   {
     "title": "Pride & Inclusivity",

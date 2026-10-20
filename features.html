@@ -19,7 +19,7 @@
       <div class="breadcrumb"><a href="/">Home</a> &#8250; Features</div>
       <div class="page-header"><h1>Features</h1><p>An in-depth look at everything Ammonite can do.</p></div>
       <div class="highlight"><strong>Jump to:</strong>
-        <a href="#moderation">Moderation</a> &bull; <a href="#economy">Economy</a> &bull; <a href="#leveling">Leveling</a> &bull; <a href="#games">Games</a> &bull; <a href="#proxy">Proxy</a> &bull; <a href="#globalchat">Global Chat</a> &bull; <a href="#tickets">Tickets</a> &bull; <a href="#automod">Auto-Mod</a> &bull; <a href="#logging">Logging</a> &bull; <a href="#welcome">Welcome</a> &bull; <a href="#suspicious">Suspicious</a> &bull; <a href="#contextmenus">Context Menus</a> &bull; <a href="#userinst">User Installation</a> &bull; <a href="#misc">More</a>
+        <a href="#moderation">Moderation</a> &bull; <a href="#economy">Economy</a> &bull; <a href="#leveling">Leveling</a> &bull; <a href="#games">Games</a> &bull; <a href="#proxy">Proxy</a> &bull; <a href="#globalchat">Global Chat</a> &bull; <a href="#music">Music</a> &bull; <a href="#tickets">Tickets</a> &bull; <a href="#automod">Auto-Mod</a> &bull; <a href="#logging">Logging</a> &bull; <a href="#welcome">Welcome</a> &bull; <a href="#suspicious">Suspicious</a> &bull; <a href="#contextmenus">Context Menus</a> &bull; <a href="#userinst">User Installation</a> &bull; <a href="#misc">More</a>
       </div>
 
       <div class="doc-section" id="moderation">
@@ -52,6 +52,7 @@
         <p>Every moderation action is logged and reviewable with <code>/hist &lt;user&gt;</code>. Warnings can be viewed with <code>/warns [user]</code> and removed with <code>/unwarn</code>.</p>
         <h3>Punishment DM Notifications</h3>
         <p>When enabled via <code>/punishment-dm</code>, users receive a DM when warned, muted, banned, or kicked. Users can also appeal punishments through the built-in appeal system.</p>
+        <p>Blacklist enforcement covers commands, interactive components, and message/reaction handlers. Where a blacklist notice offers an appeal, the appeal is submitted privately and accepted only while the blacklist is active.</p>
       </div>
 
       <div class="doc-section" id="economy">
@@ -129,6 +130,8 @@
           <li><strong>Switch system</strong> - <code>/proxysettings switch &lt;member&gt;</code> to auto-proxy all messages</li>
           <li><strong>Quick Toggle</strong> - <code>/autoproxy</code> to quickly toggle autoproxy on/off without navigating menus</li>
           <li><strong>Proxy indicator</strong> - servers can enable a <code>[proxied]</code> tag for transparency</li>
+          <li><strong>Threads</strong> - proxied messages are sent into the same thread as the original message</li>
+          <li><strong>Systems</strong> - group proxy members, list them in order, and optionally remove their proxies when deleting a system</li>
         </ul>
       </div>
 
@@ -159,7 +162,14 @@
           <li><strong>Content limits</strong> - 2000 chars, max 5 attachments</li>
           <li><strong>Server muting</strong> - mute specific servers from sending or receiving</li>
           <li><strong>Moderation</strong> - owners and moderators can kick, ban, warn, or mute servers</li>
+          <li><strong>Lifecycle</strong> - inactive public channels are hidden from discovery (bot-owner-owned channels remain visible); owners are notified when a channel has no linked servers, and it is removed after 72 hours empty</li>
         </ul>
+      </div>
+
+      <div class="doc-section" id="music">
+        <h2>Music Playback</h2>
+        <p>Play tracks and playlists from YouTube and other supported sources in voice channels. If a YouTube load fails, recovery tries <code>yt-dlp</code> and then <code>youtubei.js</code>; playback-time failures also attempt <code>yt-dlp</code> recovery.</p>
+        <p>The now-playing controls are refreshed after track changes and playback controls. The YouTube recovery sidecar requires Node.js 20 or newer and its dependencies installed from the <code>music-sidecar</code> directory.</p>
       </div>
 
       <div class="doc-section" id="tickets">
@@ -266,7 +276,7 @@
         <h2>Role Persistence</h2>
         <p>When a member leaves and rejoins, their roles are automatically restored. Configurable expiry period. Enable/disable with <code>/rolepersistence</code>.</p>
         <h2>Reaction Roles</h2>
-        <p>Let members self-assign roles by reacting to messages. Create panels with <code>/reactionrole</code>. Supports custom and Unicode emojis.</p>
+        <p>Let members self-assign roles by reacting to messages. Create and manage panels from <code>/reactionrole gui</code> or use its slash subcommands. Supports custom and Unicode emojis, per-menu role limits, locked role reactions, and emojis that assign multiple roles.</p>
         <h2>Pride &amp; Inclusivity</h2>
         <ul>
           <li><code>/pride &lt;flag&gt;</code> — apply pride flag borders/overlays to avatars or images. <strong>User-installable.</strong></li>
