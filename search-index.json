@@ -38,7 +38,7 @@
   {
     "title": "Configuration",
     "section": "Commands",
-    "snippet": "/settings Configure server settings admin.settings Syntax /settings <setting> [value] Examples /settings setting:daily-reward value:100 — Set the daily reward to 100 coins Details Central hub for all ",
+    "snippet": "/settings Configure server settings admin.settings Syntax /settings toggle|set|clear <setting> Examples /settings set daily-reward value:100 — Set the daily reward to 100 coins Details Central hub for all ",
     "href": "commands.html#configuration"
   },
   {

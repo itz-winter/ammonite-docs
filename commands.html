@@ -635,10 +635,10 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/bank <span class="required">&lt;setting&gt;</span> <span class="optional">[action]</span> <span class="optional">[user]</span> <span class="optional">[amount]</span></div>
+                <div class="syntax-block">/bank <span class="required">&lt;setting&gt;</span> <span class="required">&lt;action&gt;</span></div>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/bank setting:balance</code> — View your bank balance</div>
-                <div class="example-block"><code>/bank setting:balance action:add user:@John amount:1000</code> — Admin: add 1000 to John's bank</div>
+                <div class="example-block"><code>/bank balance view</code> — View your bank balance</div>
+                <div class="example-block"><code>/bank balance add user:@John amount:1000</code> — Admin: add 1000 to John's bank</div>
                 <h4>Details</h4>
                 <ul>
                     <li>Bank balance is protected from <code>/rob</code>.</li>
@@ -900,13 +900,13 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/settings <span class="required">&lt;setting&gt;</span> <span class="optional">[value]</span></div>
+                <div class="syntax-block">/settings <span class="required">toggle|set|clear</span> <span class="required">&lt;setting&gt;</span></div>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/settings setting:daily-reward value:100</code> — Set the daily reward to 100 coins</div>
+                <div class="example-block"><code>/settings set daily-reward value:100</code> — Set the daily reward to 100 coins</div>
                 <h4>Details</h4>
                 <ul>
                     <li>Central hub for all server configuration — economy, leveling, moderation, and general settings.</li>
-                    <li>Run without a value to see the current setting.</li>
+                    <li>Use <code>/settings toggle &lt;feature&gt;</code>, <code>/settings set &lt;setting&gt;</code>, or <code>/settings clear &lt;setting&gt;</code>. Use <code>/settings panel</code> for the interactive panel.</li>
                 </ul>
             </div>
         </div>
@@ -937,10 +937,10 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/permissions <span class="required">&lt;target&gt;</span> <span class="required">&lt;action&gt;</span> <span class="optional">[target-entity]</span> <span class="optional">[node]</span> <span class="optional">[value]</span></div>
+                <div class="syntax-block">/permissions <span class="required">view|set|remove</span> <span class="optional">[target]</span> <span class="optional">[node]</span> <span class="optional">[value]</span></div>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/permissions target:user action:set target-entity:@John node:mod.ban value:true</code></div>
-                <div class="example-block"><code>/permissions target:role action:view target-entity:@Moderator</code></div>
+                <div class="example-block"><code>/permissions set target:@John node:mod.ban value:true</code></div>
+                <div class="example-block"><code>/permissions view target:@Moderator</code></div>
                 <h4>Details</h4>
                 <ul>
                     <li>Supports <code>user</code>, <code>role</code>, and <code>everyone</code> targets.</li>
@@ -958,7 +958,7 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/config <span class="optional">[action]</span></div>
+                <div class="syntax-block">/config <span class="required">show|reload</span></div>
             </div>
         </div>
 
@@ -994,7 +994,7 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/logging action:<span class="required">set</span> type:<span class="required">&lt;type&gt;</span> channel:<span class="required">&lt;channel&gt;</span></div>
+                <div class="syntax-block">/logging <span class="required">set|disable|view|exclude|reset</span> [options for that action]</div>
                 <p>Types include moderation, message, member, voice, server, channel, role, emoji, sticker, and webhook. Enable the bot's <strong>View Audit Log</strong> permission to include the user and ID responsible for server changes.</p>
             </div>
         </div>
@@ -1007,7 +1007,7 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/log <span class="required">&lt;type&gt;</span> <span class="required">&lt;message&gt;</span></div>
+                <div class="syntax-block">/log <span class="required">test|moderation|member|message|voice|server</span> <span class="optional">[actiontype]</span></div>
             </div>
         </div>
 
@@ -1019,7 +1019,7 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/automod <span class="required">&lt;action&gt;</span></div>
+                <div class="syntax-block">/automod <span class="required">enable|disable|view</span> feature:<span class="required">&lt;feature&gt;</span></div>
                 <h4>Details</h4>
                 <ul>
                     <li>Configure spam detection, link filtering, mention spam, caps filter, invite blocking, and word blacklists.</li>
@@ -1035,9 +1035,9 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/antispam <span class="required">&lt;setting&gt;</span> <span class="optional">[value]</span></div>
+                <div class="syntax-block">/antispam <span class="required">toggle|set</span> <span class="required">&lt;setting&gt;</span></div>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/antispam setting:message-limit amount:10</code></div>
+                <div class="example-block"><code>/antispam set msg-limit value:10</code></div>
             </div>
         </div>
 
@@ -1049,15 +1049,15 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/welcome <span class="required">&lt;action&gt;</span> <span class="optional">[value]</span></div>
+                <div class="syntax-block">/welcome <span class="required">toggle|set|remove|test|panel</span> <span class="optional">&lt;option&gt;</span></div>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/welcome action:message text:Welcome {user} to {server}!</code></div>
+                <div class="example-block"><code>/welcome set message text:Welcome {user} to {server}!</code></div>
                 <h4>Details</h4>
                 <ul>
-                    <li>Actions: <code>message</code>, <code>color</code>, <code>channel</code>, <code>auto-role</code>, <code>enable</code>, <code>dm-enable</code>, <code>dm-message</code>, <code>test</code>, <code>dm-test</code></li>
+                    <li>Use <code>toggle</code> for channel/DM welcomes, <code>set</code> for message, color, channel, and auto-role settings, <code>remove auto-role</code> to remove a role, and <code>test</code> for previews.</li>
                     <li>Variables: <code>{user}</code>, <code>{username}</code>, <code>{server}</code>, <code>{membercount}</code></li>
-                    <li><strong>Multiple auto-roles</strong> are supported — use <code>action:auto-role role:@Role</code> multiple times to add up to 10 roles. Add <code>remove:true</code> to remove a role. Omit <code>role</code> to clear all.</li>
-                    <li>Run <code>/welcome</code> with no arguments to open the interactive GUI panel.</li>
+                    <li><strong>Multiple auto-roles</strong> are supported — add up to 10 with <code>/welcome set auto-role role:@Role</code>. Use <code>/welcome remove auto-role role:@Role</code> or <code>/welcome set clear-auto-roles</code> to remove roles.</li>
+                    <li>Use <code>/welcome panel</code> to open the interactive GUI panel.</li>
                 </ul>
             </div>
         </div>
