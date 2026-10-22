@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self-Hosting Guide — Ammonite</title>
+  <link rel="stylesheet" href="common.css">
+</head>
+<body>
+<header class="site-header">
+  <button class="sidebar-toggle">&#9776;</button>
+  <a class="site-logo" href="/">Ammonite</a>
+</header>
+<div class="site-body">
+  <aside class="sidebar"></aside>
+  <div class="sidebar-backdrop"></div>
+  <main class="content">
+    <div class="content-inner">
+      <div class="breadcrumb"><a href="/">Home</a> &#8250; Self-Hosting Guide</div>
+      <div class="page-header"><h1>Self-Hosting Guide</h1><p>Host Ammonite on your own infrastructure and customise it to your needs.</p></div>
+      <div class="doc-section">
+        <h2>Self-Hosting Ammonite</h2>
+        <p>Ammonite can be self-hosted on your own server or cloud infrastructure. This allows you to have full control over the bot's functionality, data, and customizations.</p>
+        <h3>Prerequisites</h3>
+        <ul>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">1</span>A server or cloud instance with a supported operating system (Linux, Windows, macOS)</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">2</span>Node.js v14 or higher installed <strong>ONLY REQUIRED IF USING THE NODE.JS VERSION</strong></li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">3</span>A Discord bot token (create a bot in the Discord Developer Portal)</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">4</span>Basic knowledge of command line and server management</li>
+        </ul>
+        <h3>Installation Steps</h3>
+        <ol>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">1</span>Download the latest release of Ammonite from <a href="https://github.com/itz-winter/ammonite-docs/releases/latest/ammonite.jar" target="_blank" rel="noopener">https://github.com/itz-winter/ammonite-docs/releases/latest/ammonite.jar</a>.</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">2</span>Set up a suitable environment for running the bot, such as a Linux server or a cloud instance.</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">3</span>Install the necessary dependencies, including Node.js and any required libraries.</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">4</span>Configure the bot by editing the configuration files to set your desired settings, such as bot token, command prefix, and database connections.</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">5</span>Run the bot using the provided start script or command.</li>
+          <li><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">6</span>Monitor the bot's logs and performance to ensure it is running smoothly.</li>
+        </ol>
+      </div>
+      <div class="doc-section">
+        <h2>Adding Ammonite to Your Server</h2>
+        <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">1</span>Invite the Bot</h3>
+        <p>Use the official invite link to add Ammonite. You must have the <strong>Manage Server</strong> permission in the target server.</p>
+        <p><a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1400150873971359956&scope=bot&permissions=8" target="_blank" rel="noopener">Invite Ammonite</a></p>
+
+        <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">2</span>Grant the Right Permissions</h3>
+        <p>When invited, Ammonite will request the permissions it needs. For full functionality, grant <strong>Administrator</strong>, or at minimum:</p>
+        <ul>
+          <li>Manage Roles, Manage Channels, Manage Messages</li>
+          <li>Ban Members, Kick Members, Moderate Members</li>
+          <li>View Audit Log, Read Message History</li>
+          <li>Send Messages, Embed Links, Attach Files</li>
+          <li>Use External Emojis, Add Reactions</li>
+        </ul>
+        <p>See the <a href="permissions">Permissions page</a> for details on the internal node permission system.</p>
+
+        <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">3</span>Run the Auto-Config Wizard</h3>
+        <p>Once the bot is in your server, run <code>/autoconfig</code> to launch the setup wizard. It will walk you through everything automatically.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Using Commands</h2>
+        <p>Ammonite supports both <strong>slash commands</strong> (recommended) and <strong>prefix commands</strong>.</p>
+        
+        <h3>Slash Commands (Recommended)</h3>
+        <p>Type <code>/</code> in any channel to see all available slash commands. All bot functions are accessible this way.</p>
+        
+        <h3>Prefix Commands</h3>
+        <p>You can also use prefix commands by typing the server's configured prefix (default: <code>!</code>) followed by a command name. For example:</p>
+        <ul>
+          <li><code>!help</code> — Open the help menu</li>
+          <li><code>!ping</code> — Check bot latency</li>
+          <li><code>!balance</code> — Check your economy balance</li>
+          <li><code>!avatar</code> — View your avatar</li>
+          <li><code>!autoproxy</code> — Toggle autoproxy</li>
+          <li><code>!globalchat list</code> — List your global chat channels</li>
+        </ul>
+        <p>Prefix commands silently ignore unknown commands — no error messages shown. Configure the prefix with <code>/prefix</code> slash command.</p>
+        <p>Use <code>px;</code> to access proxy-related commands (e.g. <code>px; list</code>, <code>px; autoproxy</code>).</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>First Steps After Setup</h2>
+        <h3>Auto-Config Wizard</h3>
+        <p>The fastest way to configure your server is the <strong>auto-config wizard</strong>. Run <code>/autoconfig</code> and it will walk you through setting up:</p>
+        <ul>
+          <li>Moderation log channel</li>
+          <li>Message log channel</li>
+          <li>Join/leave log channel</li>
+          <li>Suspicious account notifications</li>
+          <li>Feature toggles (economy, leveling, etc.)</li>
+        </ul>
+
+        <h3>Manual Configuration</h3>
+        <p>Alternatively, configure individual features with these commands:</p>
+        <ul>
+          <li><code>/settings</code> — general server settings (includes economy, leveling, logging, muted role, log channel, and announcement channel)</li>
+          <li><code>/logging</code> — configure log channels</li>
+          <li><code>/levels enable</code> — enable the leveling system</li>
+          <li><code>/points enable</code> — enable the economy system</li>
+          <li><code>/automod config</code> — configure auto-moderation</li>
+          <li><code>/welcome</code> — set up welcome messages</li>
+          <li><code>/permissions</code> — configure permissions</li>
+        </ul>
+
+        <h3>Announcement Channels</h3>
+        <p>Server admins can set an announcement channel via the <code>/settings</code> panel (📢 Announce Ch button). When set, the bot owner can broadcast announcements to all configured channels using the <code>/announce</code> command.</p>
+
+        <h3>Setting Up Permissions</h3>
+        <p>By default, only basic utility commands are available to all users. To grant moderation access to your staff:</p>
+        <pre style="background:var(--bg-inline);padding:1rem;border-radius:var(--radius);font-size:0.85rem;overflow-x:auto;line-height:1.7;color:var(--text-secondary);"># Give moderators all moderation permissions
+/permissions role-set @Moderator mod.* true
+
+# Give admins full config access
+/permissions role-set @Admin admin.* true
+
+# Enable economy for everyone
+/permissions everyone-set economy.* true</pre>
+        <p>See the <a href="permissions">Permissions page</a> for the full node reference.</p>
+      </div>
+
+      <div class="page-nav"></div>
+    </div>
+  </main>
+</div>
+<script src="site.js"></script>
+<script>AmDoc.init("setup");</script>
+</body>
+</html>
