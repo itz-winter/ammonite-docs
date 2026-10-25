@@ -458,13 +458,13 @@
   {
     "title": "Self-Hosting Guide",
     "section": "",
-    "snippet": "Build and run your own Ammonite instance. Requires Java 17 or newer, Apache Maven and a Discord bot token. Linux x86-64 is the included native-library target; Node.js 20 or newer is optional for the YouTube recovery sidecar.",
+    "snippet": "Run your own Ammonite instance from the latest downloadable release. Requires Java 17 or newer and a Discord bot token. The release includes a native library for Linux x86-64.",
     "href": "self-hosting.html"
   },
   {
     "title": "Build and Configure",
     "section": "Self-Hosting Guide",
-    "snippet": "Clone the Ammonite source repository, create a Discord application and bot, enable the Server Members, Message Content and Presence privileged gateway intents, build with mvn clean package, set bot_token in config.json, and run the JAR from the project directory.",
+    "snippet": "Download ammonite.jar, create a Discord application and bot, enable the Server Members, Message Content and Presence privileged gateway intents, set bot_token in config.json, and run java -jar ammonite.jar.",
     "href": "self-hosting.html#build-and-configure"
   },
   {

@@ -21,10 +21,9 @@
       <div class="doc-section">
         <h2 id="before-you-begin">Before You Begin</h2>
         <ul>
-          <li>Git, Java 17 or newer and Apache Maven.</li>
+          <li>Java 17 or newer.</li>
           <li>A Discord application with a bot account and its token.</li>
-          <li>The project includes a native library for Linux x86-64. Other operating systems or processor architectures may need a matching native dependency.</li>
-          <li>Node.js 20 or newer is optional. It is needed only for the YouTube recovery sidecar.</li>
+          <li>The downloadable release includes a native library for Linux x86-64. Other operating systems or processor architectures may need a matching release.</li>
         </ul>
         <p>Self-hosting runs a separate bot instance with its own configuration and local data; it does not copy data from another Ammonite instance.</p>
       </div>
@@ -32,28 +31,22 @@
       <div class="doc-section">
         <h2 id="build-and-configure">Build and Configure</h2>
         <ul>
-          <li>Clone the <a href="https://github.com/itz-winter/kelpyyium-bot" target="_blank" rel="noopener">Ammonite source repository</a> and change into the project directory:
-            <pre><code>git clone https://github.com/itz-winter/kelpyyium-bot.git
-cd kelpyyium-bot</code></pre>
-          </li>
+          <li>Create a folder for the bot on your host and download the <a href="https://github.com/itz-winter/ammonite-docs/releases/latest/download/ammonite.jar" target="_blank" rel="noopener">latest Ammonite release</a> into it. Save the file as <code>ammonite.jar</code>.</li>
           <li>In the Discord Developer Portal, create an application and bot, then copy its token. Enable the <strong>Server Members</strong>, <strong>Message Content</strong> and <strong>Presence</strong> privileged gateway intents. Invite the bot to your server with the <code>bot</code> and <code>applications.commands</code> scopes and the permissions it needs; see the <a href="setup">Setup Guide</a>.</li>
-          <li>Build the executable JAR from the project directory:
-            <pre><code>mvn clean package</code></pre>
-            Maven creates <code>target/discord-server-bot-1.0.0.jar</code>.
+          <li>Open a terminal in the folder containing <code>ammonite.jar</code> and start the bot:
+            <pre><code>java -jar ammonite.jar</code></pre>
+            On its first launch, Ammonite creates <code>config.json</code> and the required data folders. Stop the process after the configuration file has been created.
           </li>
-          <li>Start the bot from the project directory:
-            <pre><code>java -jar target/discord-server-bot-1.0.0.jar</code></pre>
-            If <code>config.json</code> does not exist, the first launch creates it with a placeholder token that cannot authenticate.
-          </li>
-          <li>Open <code>config.json</code> in the project directory, set <code>bot_token</code> to your bot token, save the file, then run the start command again. Keep the token private and never commit it to source control.</li>
+          <li>Open <code>config.json</code>, set <code>bot_token</code> to your bot token, and save the file. Keep the token private.</li>
+          <li>Start the bot again with <code>java -jar ammonite.jar</code>. Keep it running to keep the bot online.</li>
         </ul>
-        <div class="callout callout-note"><strong>Optional music fallback</strong>To enable the YouTube recovery sidecar, install Node.js 20 or newer, then run <code>npm ci</code> in the <code>music-sidecar</code> directory. The bot itself can run without this sidecar.</div>
+        <div class="callout callout-note"><strong>Music fallback</strong>The optional YouTube recovery sidecar requires Node.js 20 or newer and separate sidecar files in a <code>music-sidecar</code> folder beside the JAR. The bot can run without the sidecar.</div>
       </div>
 
       <div class="doc-section">
         <h2 id="keep-it-running">Keep It Running</h2>
         <ul>
-          <li>Run the JAR from the project directory so the bot can find <code>config.json</code>, <code>data/</code>, <code>logs/</code> and the optional sidecar.</li>
+          <li>Always start the JAR from its bot folder so Ammonite can find <code>config.json</code>, <code>data/</code> and <code>logs/</code>.</li>
           <li>Keep the process running with your preferred service manager, and check <code>logs/</code> if the bot does not come online.</li>
           <li>Back up <code>config.json</code> and the bot's data regularly. Store backups securely because configuration may contain secrets.</li>
         </ul>
