@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Support &amp; FAQ — Ammonite</title>
@@ -49,10 +49,10 @@
         <li>Check that the bot is online (use the support server to verify).</li>
       </ul></div>
     </div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I enable economy or leveling? <span class="faq-arrow">&#9660;</span></div>
-      <div class="faq-a"><p>Economy and leveling are <strong>disabled by default</strong>. Enable them with:</p><ul>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I enable economy or levelling? <span class="faq-arrow">&#9660;</span></div>
+      <div class="faq-a"><p>Economy and levelling are <strong>disabled by default</strong>. Enable them with:</p><ul>
         <li><code>/points enable</code> — enables the economy system</li>
-        <li><code>/levels enable</code> — enables the leveling system</li>
+        <li><code>/levels enable</code> — enables the levelling system</li>
       </ul><p>Or run <code>/autoconfig</code> to use the guided setup wizard.</p></div>
     </div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I set up an announcement channel? <span class="faq-arrow">&#9660;</span></div>
@@ -70,7 +70,7 @@
       <div class="faq-a"><p>Global chat links channels across different servers. One admin creates a channel with <code>/globalchat create &lt;name&gt;</code> and shares the join code. Other server admins use <code>/globalchat join &lt;code&gt;</code> to link their channel. Messages relay via webhooks with a <code>[GC]</code> prefix. Rate limiting (3s/user) and content limits (2000 chars, 5 attachments) are enforced.</p></div>
     </div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I delete my data? <span class="faq-arrow">&#9660;</span></div>
-      <div class="faq-a"><p>Use <code>/deletedata</code> anywhere. You'll see exactly what will be deleted and must confirm. Deleted data includes economy, leveling, warnings, moderation logs, suspicious account records, and all proxy members. <strong>This action is irreversible.</strong> See our <a href="privacy">Privacy Policy</a> for details.</p></div>
+      <div class="faq-a"><p>Use <code>/deletedata</code> anywhere. You'll see exactly what will be deleted and must confirm. Deleted data includes economy, levelling, warnings, moderation logs, suspicious account records, and all proxy members. <strong>This action is irreversible.</strong> See our <a href="privacy">Privacy Policy</a> for details.</p></div>
     </div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What does the proxy system do? <span class="faq-arrow">&#9660;</span></div>
       <div class="faq-a"><p>The proxy system lets users send messages as different identities via webhooks. Designed for plural systems, roleplay, or anyone who wants to use alternative personas. Create members with <code>/proxy create</code>, set tags, and your messages automatically send through webhooks with that member's name and avatar.</p></div>
@@ -112,7 +112,7 @@
       <li>Ensure the bot has <strong>Manage Webhooks</strong> permission in the linked channels.</li>
       <li>Verify the sending user has the <code>globalchat.use</code> permission.</li>
     </ul></div>
-    <div class="highlight"><strong>Economy / leveling data not saving?</strong><ul>
+    <div class="highlight"><strong>Economy / levelling data not saving?</strong><ul>
       <li>Ensure the bot has write access to the <code>data/</code> directory on the host machine.</li>
       <li>Check the bot logs for any file write errors.</li>
       <li>Confirm the feature is enabled for your server (<code>/points status</code> or <code>/levels status</code>).</li>

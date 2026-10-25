@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,7 +70,7 @@
     <div class="cat-nav">
       <a href="#cat-moderation">Moderation</a>
       <a href="#cat-economy">Economy</a>
-      <a href="#cat-leveling">Leveling</a>
+      <a href="#cat-leveling">Levelling</a>
       <a href="#cat-games">Games</a>
       <a href="#cat-configuration">Configuration</a>
       <a href="#cat-proxy">Proxy System</a>
@@ -493,7 +493,7 @@
                 <table class="param-table">
                     <tr><th>Subcommand</th><th>Description</th></tr>
                     <tr><td><code>add &lt;pattern&gt;</code></td><td>Add a plain word or regex pattern to the filter (max 100 patterns)</td></tr>
-                    <tr><td><code>remove &lt;pattern&gt;</code></td><td>Remove a pattern by exact text</td></tr>
+                    <tr><td><code>remove &lt;pattern&gt;</code></td><td>Remove a pattern by text, ignoring letter case</td></tr>
                     <tr><td><code>removeat &lt;index&gt;</code></td><td>Remove a pattern by its 1-based list index</td></tr>
                     <tr><td><code>list</code></td><td>Show all current filter patterns, status, and action</td></tr>
                     <tr><td><code>clear</code></td><td>Remove all patterns</td></tr>
@@ -503,8 +503,9 @@
                 </table>
                 <h4>Notes</h4>
                 <ul>
-                    <li>Patterns are matched as <strong>regex</strong> — plain words like <code>badword</code> work too (they're valid regex)</li>
+                    <li>Plain terms match whole words or phrases without case sensitivity. Regex metacharacters enable regex matching.</li>
                     <li>Members with the <code>automod.wordfilter.bypass</code> permission are exempt</li>
+                    <li>The master AutoMod switch in <code>/settings</code> pauses the word filter along with the other checks.</li>
                     <li>Action <code>delete+warn</code> removes the message <em>and</em> issues an automatic warn logged to the moderation log channel</li>
                 </ul>
                 <h4>Examples</h4>
@@ -777,7 +778,7 @@
     <!-- LEVELING -->
     <!-- ============================================================ -->
     <div class="category-section" id="cat-leveling" data-category="leveling">
-        <h2 class="category-title">Leveling</h2>
+        <h2 class="category-title">Levelling</h2>
 
         <div class="cmd-row" data-cmd="rank">
             <div class="cmd-summary" onclick="toggleCmd(this)">
@@ -905,7 +906,7 @@
                 <div class="example-block"><code>/settings set daily-reward value:100</code> — Set the daily reward to 100 coins</div>
                 <h4>Details</h4>
                 <ul>
-                    <li>Central hub for all server configuration — economy, leveling, moderation, and general settings.</li>
+                    <li>Central hub for all server configuration — economy, levelling, moderation, and general settings.</li>
                     <li>Use <code>/settings toggle &lt;feature&gt;</code>, <code>/settings set &lt;setting&gt;</code>, or <code>/settings clear &lt;setting&gt;</code>. Use <code>/settings panel</code> for the interactive panel.</li>
                 </ul>
             </div>
@@ -959,13 +960,19 @@
             <div class="cmd-detail">
                 <h4>Syntax</h4>
                 <div class="syntax-block">/config <span class="required">show|reload</span></div>
+                <h4>Details</h4>
+                <ul>
+                    <li><code>show</code> reports the live feature switches, prefix configuration, join roles, and logging channels.</li>
+                    <li><code>reload</code> reloads the bot application's <code>config.json</code> and is restricted to the bot owner.</li>
+                    <li>Use <code>/automod</code>, <code>/antispam</code>, <code>/welcome</code>, and <code>/logging</code> to change the listed server settings.</li>
+                </ul>
             </div>
         </div>
 
         <div class="cmd-row" data-cmd="levels">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/levels<span class="cmd-expand-icon">&#9654;</span></span>
-                <span class="cmd-desc">Enable or disable the leveling system</span>
+                <span class="cmd-desc">Enable or disable the levelling system</span>
                 <span class="cmd-perm">admin.settings</span>
             </div>
             <div class="cmd-detail">
@@ -1022,7 +1029,10 @@
                 <div class="syntax-block">/automod <span class="required">enable|disable|view</span> feature:<span class="required">&lt;feature&gt;</span></div>
                 <h4>Details</h4>
                 <ul>
-                    <li>Configure spam detection, link filtering, mention spam, caps filter, invite blocking, and word blacklists.</li>
+                    <li>Features: anti-spam, bad words, caps lock, repeated text, mass mentions, and link filtering.</li>
+                    <li><code>view</code> shows whether the selected check and master switch are enabled, its threshold and units, and its enforcement action.</li>
+                    <li>Thresholds can be set when enabling: anti-spam 1–50 messages, caps 1–100%, repeated text 2–20 messages, and mass mentions 1–30.</li>
+                    <li>Bad-word patterns and enforcement actions are managed with <code>/wordfilter</code>.</li>
                 </ul>
             </div>
         </div>
@@ -1202,7 +1212,7 @@
                 <ul>
                     <li>Create proxy identities that send messages via webhooks with custom names and avatars.</li>
                     <li>Set prefix/suffix proxy tags (e.g., typing <code>{Hello}</code> sends as a proxy member).</li>
-                    <li>Use <code>/system</code> to organize ordered proxy members; proxied messages remain in the original thread.</li>
+                    <li>Use <code>/system</code> to organise ordered proxy members; proxied messages remain in the original thread.</li>
                     <li>See <a href="features.html#proxy">Proxy Features</a> for a full guide.</li>
                 </ul>
             </div>

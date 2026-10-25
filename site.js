@@ -6,6 +6,7 @@
     { slug: "commands",     title: "Commands",          href: "commands" },
     { slug: "features",     title: "Features",          href: "features" },
     { slug: "setup",        title: "Setup Guide",       href: "setup" },
+    { slug: "self-hosting", title: "Self-Hosting Guide", href: "self-hosting" },
     { slug: "permissions",  title: "Permissions",       href: "permissions" },
     { slug: "embedbuilder", title: "Embed Builder",     href: "embedbuilder" },
     { slug: "privacy",      title: "Privacy Policy",    href: "privacy" },

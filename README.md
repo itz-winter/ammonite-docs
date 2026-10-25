@@ -1,6 +1,6 @@
 # Ammonite Discord Bot
 
-Ammonite is a feature-rich, Java-based Discord bot built with JDA (Java Discord API). It provides a full suite of moderation, economy, leveling, configuration, utility, games, proxy, and support tools — all manageable through both slash commands and prefix commands.
+Ammonite is a feature-rich, Java-based Discord bot built with JDA (Java Discord API). It provides a full suite of moderation, economy, levelling, configuration, utility, games, proxy, and support tools — all manageable through both slash commands and prefix commands.
 
 ### [Official Website, Guide, Documentation, and more!](https://ammonite.kelpw.ing/)
 

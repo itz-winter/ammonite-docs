@@ -2,13 +2,13 @@
   {
     "title": "Commands",
     "section": "",
-    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Leveling",
+    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Levelling",
     "href": "commands.html"
   },
   {
     "title": "Command Reference",
     "section": "Commands",
-    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Leveling",
+    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Levelling",
     "href": "commands.html#command-reference"
   },
   {
@@ -24,7 +24,7 @@
     "href": "commands.html#economy"
   },
   {
-    "title": "Leveling",
+    "title": "Levelling",
     "section": "Commands",
     "snippet": "/rank Display rank information for a user leveling.rank Syntax /rank [user] Details Shows level, XP, XP needed for next level, and server rank position. /leaderboard Show the XP/level leaderboard leve",
     "href": "commands.html#leveling"
@@ -74,7 +74,7 @@
   {
     "title": "Features",
     "section": "",
-    "snippet": "An in-depth look at everything Ammonite can do. Jump to: Moderation Economy Leveling Games Proxy Global Chat Tickets Auto-Mod Logging Welcome Suspicious More",
+    "snippet": "An in-depth look at everything Ammonite can do. Jump to: Moderation Economy Levelling Games Proxy Global Chat Tickets Auto-Mod Logging Welcome Suspicious More",
     "href": "features.html"
   },
   {
@@ -126,7 +126,7 @@
     "href": "features.html#gambling"
   },
   {
-    "title": "Leveling System",
+    "title": "Levelling System",
     "section": "Features",
     "snippet": "Members earn XP by chatting. XP accumulates and unlocks levels with configurable role rewards. Automatic XP — users earn XP for messages (with cooldowns) Level-based roles — auto-assign roles at speci",
     "href": "features.html#leveling-system"
@@ -200,13 +200,13 @@
   {
     "title": "Welcome System",
     "section": "Features",
-    "snippet": "Welcome messages — customizable messages when members join Auto-roles — automatically assign roles to new members Variable support — placeholders for user names, server names, member counts Configure ",
+    "snippet": "Welcome messages — customisable messages when members join Auto-roles — automatically assign roles to new members Variable support — placeholders for user names, server names, member counts Configure ",
     "href": "features.html#welcome-system"
   },
   {
     "title": "Suspicious Account Detection",
     "section": "Features",
-    "snippet": "Automated system that analyzes new members and flags potentially suspicious accounts. Account age analysis — flags very new accounts Pattern detection — identifies bot-like username patterns Risk scor",
+    "snippet": "Automated system that analyses new members and flags potentially suspicious accounts. Account age analysis — flags very new accounts Pattern detection — identifies bot-like username patterns Risk scor",
     "href": "features.html#suspicious-account-detection"
   },
   {
@@ -300,7 +300,7 @@
     "href": "permissions.html#economy-economy"
   },
   {
-    "title": "Leveling ( leveling.* )",
+    "title": "Levelling ( leveling.* )",
     "section": "Permissions",
     "snippet": "Node Description leveling.rank View own rank leveling.level View levels leveling.xp View XP leveling.leaderboard View XP leaderboard leveling.admin.add Add XP to users leveling.admin.remove Remove XP ",
     "href": "permissions.html#leveling-leveling"
@@ -362,19 +362,19 @@
   {
     "title": "How Data Is Stored",
     "section": "Privacy Policy",
-    "snippet": "All data is stored locally on the bot host machine as JSON files in the data/ directory. Cached in memory using ConcurrentHashMaps and periodically written to disk. Key Guarantees Data is never shared",
+    "snippet": "Bot records are stored locally on the bot host machine, kept in memory while the bot runs and persisted locally. No analytics or telemetry is collected. Music commands send search queries or track URLs to the selected provider; Discord interactions, webhooks and ticket messages use Discord's API.",
     "href": "privacy.html#how-data-is-stored"
   },
   {
     "title": "Data Retention",
     "section": "Privacy Policy",
-    "snippet": "Economy and leveling data is kept as long as the bot is active in the server. Moderation records are kept indefinitely for server admin reference. Proxy data is kept until the user manually deletes it",
+    "snippet": "Economy, levelling, moderation, playlist and preference records remain until deleted with /deletedata or removed by the bot operator. Removing the bot does not erase local files. Role snapshots remain until cleared; closed ticket channels are deleted after 14 days unless archived.",
     "href": "privacy.html#data-retention"
   },
   {
     "title": "Your Rights",
     "section": "Privacy Policy",
-    "snippet": "View your data — economy balances, levels, warnings, and proxy members are all visible through bot commands. Request deletion using /deletedata . This permanently removes your economy data, leveling p",
+    "snippet": "View your data through bot commands. Request deletion with /deletedata to remove stored economy and levelling data, warnings, subject moderation records, linked reports, playlists, preferences, role snapshots and proxy members or groups.",
     "href": "privacy.html#your-rights"
   },
   {
@@ -446,7 +446,7 @@
   {
     "title": "Manual Configuration",
     "section": "Setup Guide",
-    "snippet": "Alternatively, configure individual features with these commands: /settings — general server settings /logging — configure log channels /levels enable — enable the leveling system /points enable — ena",
+    "snippet": "Alternatively, configure individual features with these commands: /settings — general server settings /logging — configure log channels /levels enable — enable the levelling system /points enable — ena",
     "href": "setup.html#manual-configuration"
   },
   {
@@ -454,6 +454,24 @@
     "section": "Setup Guide",
     "snippet": "By default, only basic utility commands are available to all users. To grant moderation access to your staff: # Give moderators all moderation permissions /permissions role-set @Moderator mod.* true #",
     "href": "setup.html#setting-up-permissions"
+  },
+  {
+    "title": "Self-Hosting Guide",
+    "section": "",
+    "snippet": "Build and run your own Ammonite instance. Requires Java 17 or newer, Apache Maven and a Discord bot token. Linux x86-64 is the included native-library target; Node.js 20 or newer is optional for the YouTube recovery sidecar.",
+    "href": "self-hosting.html"
+  },
+  {
+    "title": "Build and Configure",
+    "section": "Self-Hosting Guide",
+    "snippet": "Clone the Ammonite source repository, create a Discord application and bot, enable the Server Members, Message Content and Presence privileged gateway intents, build with mvn clean package, set bot_token in config.json, and run the JAR from the project directory.",
+    "href": "self-hosting.html#build-and-configure"
+  },
+  {
+    "title": "Keep It Running",
+    "section": "Self-Hosting Guide",
+    "snippet": "Run the JAR from the project directory, monitor logs, and securely back up config.json and the bot's local data.",
+    "href": "self-hosting.html#keep-it-running"
   },
   {
     "title": "Support & FAQ",
@@ -500,7 +518,7 @@
   {
     "title": "2. Description of Service",
     "section": "Terms of Service",
-    "snippet": "Ammonite is a Discord bot that provides moderation, economy, leveling, games, proxy messaging, global chat, ticket support, and configuration management. The bot is provided free of charge and on an \"",
+    "snippet": "Ammonite is a Discord bot that provides moderation, economy, levelling, games, proxy messaging, global chat, ticket support, and configuration management. The bot is provided free of charge and on an \"",
     "href": "terms.html#2-description-of-service"
   },
   {
@@ -512,7 +530,7 @@
   {
     "title": "4. Acceptable Use",
     "section": "Terms of Service",
-    "snippet": "When using Ammonite, you agree not to: Violate Discord's Terms of Service or Community Guidelines. Exploit bugs or unintended behavior for personal gain or to disrupt service. Spam, abuse, or overload",
+    "snippet": "When using Ammonite, you agree not to: Violate Discord's Terms of Service or Community Guidelines. Exploit bugs or unintended behaviour for personal gain or to disrupt service. Spam, abuse, or overload",
     "href": "terms.html#4-acceptable-use"
   },
   {
