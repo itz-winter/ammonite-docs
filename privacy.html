@@ -16,9 +16,9 @@
     <li><strong>Guild IDs</strong> — to store per-server configuration and settings.</li>
     <li><strong>Message Content</strong> — processed in real-time for commands, proxy tag matching, global chat, prefix commands, and auto-moderation. It may be stored when part of a moderation action, ticket, or user-submitted report.</li>
     <li><strong>Moderation Records</strong> — warning reasons, ban/mute durations, moderator IDs, timestamps.</li>
-    <li><strong>Economy Data</strong> — wallet and bank balances, transaction history.</li>
+    <li><strong>Economy Data</strong> — wallet balances and guild-specific work cooldown timestamps.</li>
     <li><strong>Levelling Data</strong> — XP totals, level progress, leaderboard rankings.</li>
-    <li><strong>Proxy Data</strong> — proxy member names, display names, tags, and avatar URLs (all user-provided).</li>
+    <li><strong>Proxy Data</strong> — proxy member and group details, proxy settings, avatar URLs, and temporary message tracking used to manage proxied messages.</li>
     <li><strong>Role Persistence Data</strong> — role IDs stored for users who leave so roles can be reassigned on rejoin.</li>
     <li><strong>Suspicious Account Records</strong> — user IDs flagged by automated detection, with notes.</li>
     <li><strong>Music Playlists and Preferences</strong> — playlists you create and command privacy settings.</li>
@@ -36,7 +36,7 @@
   </ul></div>
   <div class="doc-section"><h2>Your Rights</h2><ul>
     <li><strong>View</strong> your data — economy balances, levels, warnings, and proxy members are all visible through bot commands.</li>
-    <li><strong>Request deletion</strong> using <code>/deletedata</code>. This removes your stored economy and levelling data, warnings, moderation records where you are the subject, reports linked to your account, playlists, preferences, role snapshots, and proxy members/groups.</li>
+    <li><strong>Request deletion</strong> using <code>/deletedata</code>. This removes your stored economy and work cooldowns, levelling data, warnings, moderation records where you are the subject, reports linked to your account, playlists, preferences, role snapshots, proxy members and groups, proxy settings, and proxy message tracking. Each category is saved as it completes. If a storage step fails, run <code>/deletedata</code> again and confirm to resume pending categories.</li>
     <li><strong>Opt out</strong> of features — ask a server admin to adjust your permissions (e.g., deny <code>globalchat.use</code>).</li>
   </ul><div class="callout callout-note"><strong>Server Administrators</strong>Ticket conversations remain under server administration; ask an admin to remove a ticket or its transcript. Server administrators can contact the bot owner to request removal of server-specific records.</div></div>
   <div class="doc-section"><h2>Privileged Gateway Intents</h2><ul>

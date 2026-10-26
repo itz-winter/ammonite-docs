@@ -572,7 +572,7 @@
                 <h4>Details</h4>
                 <ul>
                     <li>Generates a random job scenario and reward.</li>
-                    <li>Has a cooldown between uses.</li>
+                    <li>Has a guild-specific cooldown; the reward and cooldown are saved together and survive restarts.</li>
                 </ul>
             </div>
         </div>
@@ -593,7 +593,7 @@
                     <tr><td><code>amount</code></td><td>Integer</td><td><span class="param-required">Yes</span></td><td>Amount of coins to transfer</td></tr>
                 </table>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/pay @John 500</code> — Transfer 500 coins to John</div>
+                <div class="example-block"><code>/pay @John 500</code> or <code>!pay @John 500</code> — Transfer 500 coins to John</div>
             </div>
         </div>
 
@@ -1635,8 +1635,9 @@
                 <div class="syntax-block">/deletedata</div>
                 <h4>Details</h4>
                 <ul>
-                    <li>Permanently deletes all your personal data with a confirmation step.</li>
-                    <li>This action cannot be undone.</li>
+                    <li>Use <code>/deletedata</code> or <code>!deletedata</code>; both use the same confirmation step.</li>
+                    <li>Progress is saved by category. Confirm again after a failure to resume pending categories.</li>
+                    <li>Completed deletion cannot be undone.</li>
                 </ul>
             </div>
         </div>
