@@ -37,10 +37,101 @@
             <pre><code>java -jar ammonite.jar</code></pre>
             On its first launch, Ammonite creates <code>config.json</code> and the required data folders. Stop the process after the configuration file has been created.
           </li>
-          <li>Open <code>config.json</code>, set <code>bot_token</code> to your bot token, and save the file. Keep the token private.</li>
+          <li>Open <code>config.json</code>, set <code>bot_token</code> to your bot token, and save the file. The optional <code>bot_name</code> setting changes the name shown in the startup banner and defaults to <code>Ammonite</code>. Keep the token private.</li>
           <li>Start the bot again with <code>java -jar ammonite.jar</code>. Keep it running to keep the bot online.</li>
         </ul>
         <div class="callout callout-note"><strong>Music fallback</strong>The optional YouTube recovery sidecar requires Node.js 20 or newer and separate sidecar files in a <code>music-sidecar</code> folder beside the JAR. The bot can run without the sidecar.</div>
+      </div>
+
+      <div class="doc-section">
+        <h2 id="optional-features">Optional Commands and Response Lines</h2>
+        <p>Optional slash-command features are disabled by default. Set the matching flags in <code>config.json</code> and restart Ammonite to enable them.</p>
+        <ul>
+          <li><code>custom_command_names_enabled</code> lets you rename <code>/echo</code>, <code>/join</code>, <code>/leave</code>, <code>/rpc</code> and <code>/statusmsg</code> through <code>command_names</code>.</li>
+          <li><code>custom_command_aliases_enabled</code> registers additional names from <code>command_aliases</code>.</li>
+          <li><code>custom_commands_enabled</code> registers commands from the <code>custom_commands</code> map.</li>
+          <li><code>custom_command_actions_enabled</code> allows those commands to pin or react to configured message IDs.</li>
+          <li><code>custom_lines_enabled</code> uses custom join, leave and action response lines from <code>custom_lines</code>. Each action can also define <code>success_line</code> and <code>failure_line</code>.</li>
+        </ul>
+        <pre><code>{
+  "custom_command_names_enabled": false,
+  "custom_command_aliases_enabled": false,
+  "custom_commands_enabled": false,
+  "custom_command_actions_enabled": false,
+  "custom_lines_enabled": false,
+  "command_names": {
+    "echo": "echo", "join": "join", "leave": "leave", "rpc": "rpc", "status": "statusmsg"
+  },
+  "command_aliases": {
+    "echo": ["talk", "say"], "join": ["join-us"], "leave": ["leave-us"],
+    "rpc": [], "status": ["set-status-message"]
+  },
+  "custom_commands": {
+    "pin_notice": {
+      "description": "Pin a configured notice",
+      "response": "Working on it for {user}.",
+      "actions": [
+        {
+          "type": "pin",
+          "channel_id": "111111111111111111",
+          "message_id": "222222222222222222",
+          "success_line": "Pinned {message_id}.",
+          "failure_line": "Could not pin {message_id}."
+        },
+        {
+          "type": "react",
+          "channel_id": "111111111111111111",
+          "message_id": "222222222222222222",
+          "emoji": "✅",
+          "success_line": "Added {emoji} to {message_id}."
+        }
+      ]
+    }
+  },
+  "custom_lines": {
+    "join_success": ["Connected to {channel_name}."],
+    "leave_success": ["I left the voice channel."],
+    "pin_success": ["Pinned {message_id}."],
+    "react_failure": ["Could not react to {message_id}."]
+  }
+}</code></pre>
+        <p>Replace the example IDs before enabling actions. Omit <code>channel_id</code> to use the channel where the slash command was run. The target must be in the same server. The person running an action needs <strong>View Channel</strong> and <strong>Manage Messages</strong> in the target channel. Ammonite needs <strong>View Channel</strong> and <strong>Read Message History</strong> to fetch the message, plus <strong>Manage Messages</strong> to pin or <strong>Add Reactions</strong> to react. Action commands reply privately. Templates support <code>{message_id}</code>, <code>{channel_id}</code>, <code>{emoji}</code>, <code>{user}</code>, <code>{username}</code>, <code>{channel}</code>, <code>{channel_name}</code> and <code>{server}</code>.</p>
+        <p>The names and aliases shown above are prefilled examples. They remain inactive until their respective flags are enabled.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2 id="linux-systemd">Linux systemd Service</h2>
+        <p>The example <a href="examples/ammonite.service" download>systemd unit file</a> starts the Java JAR directly and restarts it if it exits. These commands use <code>/opt/ammonite</code> as the install folder; adjust the paths if you choose another location. If Java is not installed at <code>/usr/bin/java</code>, update <code>ExecStart</code> in the unit file to the path returned by <code>command -v java</code>.</p>
+        <ol>
+          <li>Create a dedicated service account and install the JAR:
+            <pre><code>sudo useradd --system --user-group --no-create-home --home-dir /opt/ammonite --shell /usr/sbin/nologin ammonite
+sudo install -d -o ammonite -g ammonite -m 0750 /opt/ammonite
+sudo install -o ammonite -g ammonite -m 0644 /path/to/ammonite.jar /opt/ammonite/ammonite.jar</code></pre>
+          </li>
+          <li>Run Ammonite once to create its configuration and data folders. Stop it with <code>Ctrl+C</code> after <code>config.json</code> appears:
+            <pre><code>sudo -u ammonite sh -c 'cd /opt/ammonite &amp;&amp; /usr/bin/java -jar ammonite.jar'</code></pre>
+          </li>
+          <li>Set <code>bot_token</code> in the generated config, then restrict access to it:
+            <pre><code>sudoedit /opt/ammonite/config.json
+sudo chown ammonite:ammonite /opt/ammonite/config.json
+sudo chmod 0600 /opt/ammonite/config.json</code></pre>
+          </li>
+          <li>Install and start the unit file:
+            <pre><code>sudo install -o root -g root -m 0644 ~/Downloads/ammonite.service /etc/systemd/system/ammonite.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now ammonite.service
+sudo systemctl status ammonite.service --no-pager</code></pre>
+          </li>
+        </ol>
+        <p>Follow service output with <code>sudo journalctl -u ammonite.service -f</code>. The application also writes logs under <code>/opt/ammonite/logs/</code>. The unit runs with <code>/opt/ammonite</code> as its working directory so the config, logs and relative data folders stay together.</p>
+        <p>After replacing the JAR, restart the service:</p>
+        <pre><code>sudo install -o ammonite -g ammonite -m 0644 /path/to/ammonite.jar /opt/ammonite/ammonite.jar
+sudo systemctl restart ammonite.service</code></pre>
+        <p>Use the relevant command to stop the service, disable automatic startup, or enable it again:</p>
+        <pre><code>sudo systemctl stop ammonite.service
+sudo systemctl disable ammonite.service
+sudo systemctl enable --now ammonite.service</code></pre>
+        <p>Back up <code>config.json</code> and the <code>data/</code> folder. The config contains the bot token.</p>
       </div>
 
       <div class="doc-section">

@@ -458,7 +458,7 @@
   {
     "title": "Self-Hosting Guide",
     "section": "",
-    "snippet": "Run your own Ammonite instance from the latest downloadable release. Requires Java 17 or newer and a Discord bot token. The release includes a native library for Linux x86-64.",
+    "snippet": "Run your own Ammonite instance from the latest downloadable release. Requires Java 17 or newer and a Discord bot token. Configure bot_name and optional commands, actions, and response lines.",
     "href": "self-hosting.html"
   },
   {
@@ -466,6 +466,18 @@
     "section": "Self-Hosting Guide",
     "snippet": "Download ammonite.jar, create a Discord application and bot, enable the Server Members, Message Content and Presence privileged gateway intents, set bot_token in config.json, and run java -jar ammonite.jar.",
     "href": "self-hosting.html#build-and-configure"
+  },
+  {
+    "title": "Optional Commands and Response Lines",
+    "section": "Self-Hosting Guide",
+    "snippet": "Rename slash commands, register aliases and custom commands, configure pin or react actions on message IDs, and customize join, leave, success, and failure response lines. Each feature is disabled by default.",
+    "href": "self-hosting.html#optional-features"
+  },
+  {
+    "title": "Linux systemd Service",
+    "section": "Self-Hosting Guide",
+    "snippet": "Download the example systemd unit, create a service account, configure the bot token, enable the service, view journal logs, and restart after updating the JAR.",
+    "href": "self-hosting.html#linux-systemd"
   },
   {
     "title": "Keep It Running",

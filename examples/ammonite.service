@@ -1,0 +1,22 @@
+[Unit]
+Description=Ammonite Discord Bot
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=ammonite
+Group=ammonite
+WorkingDirectory=/opt/ammonite
+ExecStart=/usr/bin/java -jar /opt/ammonite/ammonite.jar
+Restart=always
+RestartSec=10
+TimeoutStopSec=60
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
