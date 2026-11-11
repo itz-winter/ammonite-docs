@@ -48,9 +48,9 @@
     "href": "commands.html#proxy-system"
   },
   {
-    "title": "Tickets",
+    "title": "Tickets & ModMail",
     "section": "Commands",
-    "snippet": "/ticket Manage support tickets — create, close, add users, panels, categories — Syntax /ticket <action> [options] Details Subcommands: create , close , add , remove , panel , settings , categories Tic",
+    "snippet": "/ticket Manage support tickets. /modmail route member DMs to private staff channels — setup, status, disable, close. Members DM Ammonite and staff reply in the private conversation channel.",
     "href": "commands.html#tickets"
   },
   {
@@ -470,7 +470,7 @@
   {
     "title": "Optional Commands and Response Lines",
     "section": "Self-Hosting Guide",
-    "snippet": "Rename slash commands, register aliases and custom commands, configure pin or react actions on message IDs, and customize join, leave, success, and failure response lines. Each feature is disabled by default.",
+    "snippet": "Rename slash commands, register aliases and custom commands, configure optional embed_json, pin or react to message IDs, and customize response lines. Each feature is disabled by default.",
     "href": "self-hosting.html#optional-features"
   },
   {

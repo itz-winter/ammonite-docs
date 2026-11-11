@@ -74,7 +74,7 @@
       <a href="#cat-games">Games</a>
       <a href="#cat-configuration">Configuration</a>
       <a href="#cat-proxy">Proxy System</a>
-      <a href="#cat-tickets">Tickets</a>
+      <a href="#cat-tickets">Tickets &amp; ModMail</a>
       <a href="#cat-globalchat">Global Chat</a>
       <a href="#cat-utility">Utility</a>
       <a href="#cat-context">Context Menus</a>
@@ -1297,6 +1297,28 @@
                 </ul>
             </div>
         </div>
+
+        <div class="cmd-row" data-cmd="modmail">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/modmail<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Route member DMs to private staff conversation channels</span>
+                <span class="cmd-perm">Manage Server for setup</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/modmail <span class="required">&lt;setup|status|disable|close&gt;</span> <span class="optional">[options]</span></div>
+                <h4>Details</h4>
+                <ul>
+                    <li><code>setup</code> enables ModMail with a staff role and optional channel category.</li>
+                    <li>Members DM Ammonite; staff reply by typing in the private conversation channel.</li>
+                    <li><code>close</code> is available to the configured staff role and server administrators inside an open conversation.</li>
+                    <li>If a member can contact several configured servers, Ammonite asks them to choose the destination before forwarding their message.</li>
+                </ul>
+                <h4>Examples</h4>
+                <div class="example-block"><code>/modmail setup staff_role:@Moderators</code> — enable ModMail</div>
+                <div class="example-block"><code>/modmail close reason:Resolved</code> — close the current conversation</div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================================ -->
@@ -1436,6 +1458,28 @@
                     <li><strong>Prefix:</strong> <code>!echo &lt;message&gt;</code> — the command message is automatically deleted. If you reply to a message with <code>!echo</code>, the bot will send the text as a direct reply to that message.</li>
                     <li><strong>Context menu:</strong> Right-click any message → Apps → <strong>Echo Message</strong> to re-send its content to the same channel.</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="react">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/react<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Add a reaction to a message</span>
+                <span class="cmd-perm">utility.echo</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/react <span class="required">&lt;message-id-or-link&gt;</span> <span class="required">&lt;emoji-or-emoji-id&gt;</span></div>
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                    <tr><td><code>message-id-or-link</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>A message ID in the current channel, or a Discord message link in this server</td></tr>
+                    <tr><td><code>emoji-or-emoji-id</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>A Unicode emoji, custom emoji (such as <code>&lt;:name:id&gt;</code>), or custom emoji ID</td></tr>
+                </table>
+                <h4>Examples</h4>
+                <div class="example-block"><code>/react 123456789012345678 ✅</code></div>
+                <div class="example-block"><code>/react https://discord.com/channels/123/456/789 987654321098765432</code></div>
+                <p>Requires the same <code>utility.echo</code> permission as <code>/echo</code>. The bot also needs access to the channel and permission to add reactions.</p>
             </div>
         </div>
 

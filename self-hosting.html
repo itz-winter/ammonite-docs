@@ -53,6 +53,7 @@
           <li><code>custom_command_actions_enabled</code> allows those commands to pin or react to configured message IDs.</li>
           <li><code>custom_lines_enabled</code> uses custom join, leave and action response lines from <code>custom_lines</code>. Each action can also define <code>success_line</code> and <code>failure_line</code>.</li>
         </ul>
+        <p>Configured custom lines and custom slash-command responses are sent as plain messages. Add <code>embed_json</code> to a custom slash command only when you want an embed.</p>
         <pre><code>{
   "custom_command_names_enabled": false,
   "custom_command_aliases_enabled": false,
@@ -96,6 +97,14 @@
   }
 }</code></pre>
         <p>Replace the example IDs before enabling actions. Omit <code>channel_id</code> to use the channel where the slash command was run. The target must be in the same server. The person running an action needs <strong>View Channel</strong> and <strong>Manage Messages</strong> in the target channel. Ammonite needs <strong>View Channel</strong> and <strong>Read Message History</strong> to fetch the message, plus <strong>Manage Messages</strong> to pin or <strong>Add Reactions</strong> to react. Action commands reply privately. Templates support <code>{message_id}</code>, <code>{channel_id}</code>, <code>{emoji}</code>, <code>{user}</code>, <code>{username}</code>, <code>{channel}</code>, <code>{channel_name}</code> and <code>{server}</code>.</p>
+        <p>Custom command responses are plain text by default. Add an <code>embed_json</code> object to a command only when you want an embed; the regular <code>response</code> stays as message text, and an empty response sends the embed alone:</p>
+        <pre><code>"embed_json": {
+  "title": "Notice for {server}",
+  "description": "Requested by {username}.",
+  "color": 3447003,
+  "footer": { "text": "Ammonite" }
+}</code></pre>
+        <p>The object uses JDA's Discord embed JSON format. Invalid embed data is logged and the response falls back to plain text.</p>
         <p>The names and aliases shown above are prefilled examples. They remain inactive until their respective flags are enabled.</p>
       </div>
 
