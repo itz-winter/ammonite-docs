@@ -169,7 +169,7 @@
 
       <div class="doc-section" id="music">
         <h2>Music Playback</h2>
-        <p>Play tracks and playlists from YouTube and other supported sources in voice channels. Manage saved playlists with <code>/playlist</code>, including JSON export and import for moving playlists between accounts. If a YouTube load fails, recovery tries <code>yt-dlp</code> and then <code>youtubei.js</code>; playback-time failures also attempt <code>yt-dlp</code> recovery.</p>
+        <p>Play tracks and playlists from YouTube and other supported sources in voice channels. Manage saved playlists with <code>/playlist</code>, including JSON export and import for moving playlists between accounts. Remove multiple tracks by entering a range such as <code>position:1:10</code>, or remove from a position to the end with <code>position:7:</code>. If a YouTube load fails, recovery tries <code>yt-dlp</code> and then <code>youtubei.js</code>; playback-time failures also attempt <code>yt-dlp</code> recovery.</p>
         <p>The now-playing controls are refreshed after track changes and playback controls. The YouTube recovery sidecar requires Node.js 20 or newer and its dependencies installed from the <code>music-sidecar</code> directory.</p>
       </div>
 
@@ -183,7 +183,7 @@
           <li><strong>Transcript logging</strong> - ticket conversations can be logged for review</li>
         </ul>
         <h3>ModMail</h3>
-        <p>Members can DM Ammonite to contact staff. Staff reply from a private conversation channel, and users continue the conversation in DMs. Configure it with <code>/modmail setup staff_role:&lt;role&gt;</code>; an optional category can be selected for the conversation channels.</p>
+        <p>Administrators configure a server with <code>/modmail setup staff_role:&lt;role&gt;</code> and an optional category. Members opt in with <code>/modmail start</code> and choose a configured server. While enabled, their DMs go to that server's private staff conversation channel; <code>/modmail stop</code> turns routing off. Ordinary DMs are ignored while ModMail is off.</p>
       </div>
 
       <div class="doc-section" id="automod">

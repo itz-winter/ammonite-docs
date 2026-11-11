@@ -50,7 +50,7 @@
   {
     "title": "Tickets & ModMail",
     "section": "Commands",
-    "snippet": "/ticket Manage support tickets. /modmail route member DMs to private staff channels — setup, status, disable, close. Members DM Ammonite and staff reply in the private conversation channel.",
+    "snippet": "/ticket Manage support tickets. /modmail start lets a member choose a server and opt in to private staff DM routing; /modmail stop turns it off. Server admins use setup, status, disable, close.",
     "href": "commands.html#tickets"
   },
   {

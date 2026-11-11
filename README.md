@@ -19,7 +19,7 @@ Ammonite is a feature-rich, Java-based Discord bot built with JDA (Java Discord 
 - **Economy System**: Per-server economy with balance, bank, daily rewards, gambling (blackjack, dice, slots, coin flip), work, rob, and transactions.
 - **Levelling System**: XP and level tracking with rank cards and a leaderboard.
 - **Ticket System**: Support ticket creation and management.
-- **ModMail**: Let server members contact staff by DM, with private staff conversation channels.
+- **ModMail**: Let members opt in with `/modmail start`, choose a server, and contact its staff by DM; `/modmail stop` turns routing off.
 - **Games**: Blackjack, Poker, Chess, and more.
 - **Music Playback**: Stream music from YouTube and other sources in voice channels via LavaPlayer, including Spotify link support.
 - **Proxy System**: Multi-account proxy/character system for roleplay servers.

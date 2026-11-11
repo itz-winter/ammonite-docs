@@ -1301,20 +1301,23 @@
         <div class="cmd-row" data-cmd="modmail">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/modmail<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Route member DMs to private staff conversation channels</span>
+                <span class="cmd-desc">Opt in to route DMs to a selected server's private staff channel</span>
                 <span class="cmd-perm">Manage Server for setup</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/modmail <span class="required">&lt;setup|status|disable|close&gt;</span> <span class="optional">[options]</span></div>
+                <div class="syntax-block">/modmail <span class="required">&lt;start|stop|setup|status|disable|close&gt;</span> <span class="optional">[options]</span></div>
                 <h4>Details</h4>
                 <ul>
-                    <li><code>setup</code> enables ModMail with a staff role and optional channel category.</li>
-                    <li>Members DM Ammonite; staff reply by typing in the private conversation channel.</li>
+                    <li><code>setup</code> enables a server's ModMail with a staff role and optional channel category.</li>
+                    <li>Members must run <code>start</code> and choose a server before their DMs are forwarded. Ordinary DMs are ignored while ModMail is off.</li>
+                    <li><code>stop</code> disables DM routing. Staff reply by typing in the private conversation channel.</li>
                     <li><code>close</code> is available to the configured staff role and server administrators inside an open conversation.</li>
                     <li>If a member can contact several configured servers, Ammonite asks them to choose the destination before forwarding their message.</li>
                 </ul>
                 <h4>Examples</h4>
+                <div class="example-block"><code>/modmail start</code> — choose a server and enable DM routing</div>
+                <div class="example-block"><code>/modmail stop</code> — turn DM routing off</div>
                 <div class="example-block"><code>/modmail setup staff_role:@Moderators</code> — enable ModMail</div>
                 <div class="example-block"><code>/modmail close reason:Resolved</code> — close the current conversation</div>
             </div>
@@ -1437,21 +1440,23 @@
         <div class="cmd-row" data-cmd="echo">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/echo<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Send a message to a channel as the bot</span>
+                <span class="cmd-desc">Send a message as the bot, optionally as a reply</span>
                 <span class="cmd-perm">utility.echo</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/echo <span class="required">&lt;message&gt;</span> <span class="optional">[channel]</span> <span class="optional">[embed]</span></div>
+                <div class="syntax-block">/echo <span class="required">&lt;message&gt;</span> <span class="optional">[reply-id-or-link]</span> <span class="optional">[channel]</span> <span class="optional">[embed]</span></div>
                 <h4>Parameters</h4>
                 <table class="param-table">
                     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
                     <tr><td><code>message</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>The text to send (max 2000 chars)</td></tr>
-                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Target channel (defaults to current)</td></tr>
+                    <tr><td><code>reply-id-or-link</code></td><td>String</td><td><span class="param-optional">No</span></td><td>Reply to a message ID in the send channel, or use a Discord message link</td></tr>
+                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Target channel (defaults to current, or to the linked message channel when replying by link)</td></tr>
                     <tr><td><code>embed</code></td><td>Boolean</td><td><span class="param-optional">No</span></td><td>Send as an embed instead of plain text</td></tr>
                 </table>
                 <h4>Examples</h4>
                 <div class="example-block"><code>/echo Hello World</code></div>
+                <div class="example-block"><code>/echo message:Hello reply-id-or-link:123456789012345678</code></div>
                 <div class="example-block"><code>/echo Welcome to the server! embed:true</code></div>
                 <h4>Related</h4>
                 <ul>
@@ -1464,22 +1469,23 @@
         <div class="cmd-row" data-cmd="react">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/react<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Add a reaction to a message</span>
+                <span class="cmd-desc">React to the latest or a selected message</span>
                 <span class="cmd-perm">utility.echo</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/react <span class="required">&lt;message-id-or-link&gt;</span> <span class="required">&lt;emoji-or-emoji-id&gt;</span></div>
+                <div class="syntax-block">/react <span class="required">&lt;emoji-or-emoji-id&gt;</span> <span class="optional">[message-id-or-link]</span></div>
                 <h4>Parameters</h4>
                 <table class="param-table">
                     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-                    <tr><td><code>message-id-or-link</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>A message ID in the current channel, or a Discord message link in this server</td></tr>
                     <tr><td><code>emoji-or-emoji-id</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>A Unicode emoji, custom emoji (such as <code>&lt;:name:id&gt;</code>), or custom emoji ID</td></tr>
+                    <tr><td><code>message-id-or-link</code></td><td>String</td><td><span class="param-optional">No</span></td><td>A message ID in the current channel, or a Discord message link in this server. Omit it to react to the latest message in the channel.</td></tr>
                 </table>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/react 123456789012345678 ✅</code></div>
-                <div class="example-block"><code>/react https://discord.com/channels/123/456/789 987654321098765432</code></div>
-                <p>Requires the same <code>utility.echo</code> permission as <code>/echo</code>. The bot also needs access to the channel and permission to add reactions.</p>
+                <div class="example-block"><code>/react emoji-or-emoji-id:✅</code> — react to the latest message</div>
+                <div class="example-block"><code>/react emoji-or-emoji-id:✅ message-id-or-link:123456789012345678</code></div>
+                <div class="example-block"><code>/react emoji-or-emoji-id:✅ message-id-or-link:https://discord.com/channels/123/456/789</code></div>
+                <p>Requires the same <code>utility.echo</code> permission as <code>/echo</code>. The bot also needs access to the channel and permission to add reactions. Leaving out the message target also requires Read Message History so the bot can find the latest message.</p>
             </div>
         </div>
 
