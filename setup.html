@@ -24,17 +24,20 @@
         <h2>Adding Ammonite to Your Server</h2>
         <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">1</span>Invite the Bot</h3>
         <p>Use the official invite link to add Ammonite. You must have the <strong>Manage Server</strong> permission in the target server.</p>
-        <p><a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1400150873971359956&scope=bot&permissions=8" target="_blank" rel="noopener">Invite Ammonite</a></p>
+        <p><a class="btn-invite" href="https://discord.com/oauth2/authorize?client_id=1400150873971359956&scope=bot%20applications.commands&permissions=2253175012060407" target="_blank" rel="noopener">Invite Ammonite</a></p>
 
         <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">2</span>Grant the Right Permissions</h3>
-        <p>When invited, Ammonite will request the permissions it needs. For full functionality, grant <strong>Administrator</strong>, or at minimum:</p>
+        <p>The invite requests only the permissions listed below; it does not request <strong>Administrator</strong>.</p>
         <ul>
-          <li>Manage Roles, Manage Channels, Manage Messages</li>
+          <li>View Channels, Send Messages, Read Message History, Embed Links, Attach Files</li>
+          <li>Manage Roles (channel permission overwrites, including <code>/lockdown</code>), Manage Channels, Manage Messages, Manage Webhooks, Pin Messages</li>
           <li>Ban Members, Kick Members, Moderate Members</li>
-          <li>View Audit Log, Read Message History</li>
-          <li>Send Messages, Embed Links, Attach Files</li>
-          <li>Use External Emojis, Add Reactions</li>
+          <li>View Audit Log</li>
+          <li>Use External Emojis, Add Reactions, Create Instant Invite</li>
+          <li>Connect, Speak, Send Messages in Threads</li>
+          <li>Manage Server is used only for the optional honeypot invite-use detection feature.</li>
         </ul>
+        <p>The bot does not need Administrator. You can remove Manage Server if you do not enable honeypot invite-use detection.</p>
         <p>See the <a href="permissions">Permissions page</a> for details on the internal node permission system.</p>
 
         <h3><span style="display:inline-block;background:var(--brand-primary);color:var(--bg-page);width:26px;height:26px;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:8px;">3</span>Run the Auto-Config Wizard</h3>

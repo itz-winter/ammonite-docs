@@ -20,13 +20,13 @@ Ammonite is a feature-rich, Java-based Discord bot built with JDA (Java Discord 
 - **Levelling System**: XP and level tracking with rank cards and a leaderboard.
 - **Ticket System**: Support ticket creation and management.
 - **ModMail**: Let members opt in with `/modmail start`, choose a server, and contact its staff by DM; `/modmail stop` turns routing off.
-- **Games**: Blackjack, Poker, Chess, and more.
+- **Games**: Blackjack and poker with server-local virtual currency.
 - **Music Playback**: Stream music from YouTube and other sources in voice channels via LavaPlayer, including Spotify link support.
 - **Proxy System**: Multi-account proxy/character system for roleplay servers.
 - **Backup**: Server configuration backup and restore.
 - **Permissions Management**: Fine-grained command permission overrides per server.
 - **Server Stats**: Live server statistics display.
-- **Utility Commands**: Avatar, server info, echo, embed builder, pronoun tags, pride flags, jokes, dad jokes, rules, privacy, support, appearance customisation, and more.
+- **Utility Commands**: Avatar, server info, echo, embed builder, pride flags, jokes, dad jokes, rules, privacy, support, appearance customisation, and more.
 - **Prefix Commands**: Traditional text-based commands alongside slash commands.
 
 ## Prefix Commands

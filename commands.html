@@ -59,19 +59,21 @@
 <div class="site-body"><aside class="sidebar"></aside><div class="sidebar-backdrop"></div>
 <main class="content"><div class="content-inner">
   <div class="breadcrumb"><a href="/">Home</a> &#8250; Commands</div>
-  <div class="page-header"><h1>Command Reference</h1><p>All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots.</p></div>
+  <div class="page-header"><h1>Command Reference</h1><p>Commands are available through slash commands, with prefix versions listed where supported. Use <code>/help page:&lt;number&gt;</code> to browse the complete public command list in Discord. Prefix user targets accept mentions, IDs, and Discord profile links; message ID fields accept IDs or Discord message links. More than 10 commands in 10 seconds starts a one-minute cooldown. Click any command to see full details and examples.</p></div>
 
   <div class="cmd-controls">
     <input type="text" id="cmdSearch" class="cmd-search" placeholder="Search commands..." oninput="filterCommands()">
     <div class="legend">
-      <span><span class="req-dot">&lt;required&gt;</span> must be provided</span>
-      <span><span class="opt-dot">[optional]</span> can be omitted</span>
+        <span><strong>Legend:</strong></span>
+        <span><span class="req-dot">&lt;required&gt;</span> must be provided</span>
+        <span><span class="opt-dot">[optional]</span> can be omitted</span>
     </div>
     <div class="cat-nav">
       <a href="#cat-moderation">Moderation</a>
       <a href="#cat-economy">Economy</a>
       <a href="#cat-leveling">Levelling</a>
       <a href="#cat-games">Games</a>
+      <a href="#cat-music">Music</a>
       <a href="#cat-configuration">Configuration</a>
       <a href="#cat-proxy">Proxy System</a>
       <a href="#cat-tickets">Tickets &amp; ModMail</a>
@@ -135,15 +137,16 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/unban <span class="required">&lt;user&gt;</span> <span class="optional">[reason]</span></div>
+                <div class="syntax-block">/unban <span class="required">&lt;user-id-or-link&gt;</span> <span class="optional">[reason]</span></div>
                 <h4>Parameters</h4>
                 <table class="param-table">
                     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-                    <tr><td><code>user</code></td><td>User</td><td><span class="param-required">Yes</span></td><td>The user to unban</td></tr>
+                    <tr><td><code>user_id</code></td><td>String</td><td><span class="param-required">Yes</span></td><td>User ID, mention, or Discord user profile link</td></tr>
                     <tr><td><code>reason</code></td><td>String</td><td><span class="param-optional">No</span></td><td>Reason for unbanning</td></tr>
                 </table>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/unban @John Appeal approved</code></div>
+                <div class="example-block"><code>/unban user_id:123456789012345678 reason:Appeal approved</code></div>
+                <div class="example-block"><code>/unban user_id:https://discord.com/users/123456789012345678</code></div>
                 <h4>Details</h4>
                 <ul>
                     <li>Removes the user from the server's ban list, allowing them to rejoin.</li>
@@ -433,24 +436,31 @@
         <div class="cmd-row" data-cmd="purge">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/purge<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Bulk delete messages, reactions, replies, or threads</span>
+                <span class="cmd-desc">Bulk delete messages using optional composable filters</span>
                 <span class="cmd-perm">mod.purge</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/purge <span class="required">&lt;type&gt;</span></div>
+                <div class="syntax-block">/purge <span class="optional">[channel] [amount] [filters...]</span></div>
                 <h4>Parameters</h4>
                 <table class="param-table">
                     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-                    <tr><td><code>type</code></td><td>Choice</td><td><span class="param-required">Yes</span></td><td>What to purge: <code>messages</code>, <code>reactions</code>, <code>replies</code>, or <code>threads</code></td></tr>
+                    <tr><td><code>channel</code></td><td>Channel</td><td><span class="param-optional">No</span></td><td>Defaults to the current channel</td></tr>
+                    <tr><td><code>amount</code></td><td>Integer</td><td><span class="param-optional">No</span></td><td>Maximum messages to delete (defaults to 100; 1–1,000)</td></tr>
+                    <tr><td><code>user</code></td><td>User</td><td><span class="param-optional">No</span></td><td>Only delete messages from this user</td></tr>
+                    <tr><td><code>after</code> / <code>before</code></td><td>String</td><td><span class="param-optional">No</span></td><td>ISO date/time, message ID, or Discord message link</td></tr>
+                    <tr><td><code>from_msg</code> / <code>to_msg</code></td><td>String</td><td><span class="param-optional">No</span></td><td>Inclusive range anchors; accepts a message ID or Discord message link</td></tr>
+                    <tr><td><code>all</code>, <code>bots</code>, <code>humans</code>, <code>has_link</code>, <code>has_embed</code></td><td>Boolean</td><td><span class="param-optional">No</span></td><td>Optional message filters; <code>all:true</code> also includes messages older than 14 days</td></tr>
+                    <tr><td><code>contains</code></td><td>String</td><td><span class="param-optional">No</span></td><td>Only delete messages containing this text</td></tr>
                 </table>
                 <h4>Examples</h4>
-                <div class="example-block"><code>/purge messages</code> — Bulk delete recent messages</div>
-                <div class="example-block"><code>/purge reactions</code> — Clear all reactions from recent messages</div>
+                <div class="example-block"><code>/purge amount:50</code> — Delete up to 50 recent messages in the current channel</div>
+                <div class="example-block"><code>/purge from_msg:https://discord.com/channels/123456789012345678/234567890123456789/345678901234567890 amount:100</code> — Delete from the linked message onward in the selected/current channel</div>
                 <h4>Details</h4>
                 <ul>
                     <li>Requires <strong>Manage Messages</strong> and <strong>Read Message History</strong> bot permissions.</li>
-                    <li>Messages older than 14 days cannot be bulk-deleted (Discord limitation).</li>
+                    <li>All options are optional. With no amount, the command deletes up to 100 messages from the current channel.</li>
+                    <li>Messages older than 14 days require <code>all:true</code> and are deleted individually.</li>
                 </ul>
             </div>
         </div>
@@ -475,9 +485,24 @@
                 <div class="example-block"><code>/lockdown #general</code> — Lock/unlock a specific channel</div>
                 <h4>Details</h4>
                 <ul>
+                    <li>The bot needs the <strong>Manage Roles</strong> permission to edit this channel's permission overwrites.</li>
+                    <li>Users need <code>mod.lockdown</code>, granted by Manage Channels by default unless the server changes that permission mapping.</li>
                     <li>Toggles the channel's permission override for <code>@everyone</code> to deny sending messages.</li>
                     <li>Running the command again unlocks the channel.</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="check">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/check<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Review a member's account signals</span>
+                <span class="cmd-perm">mod.check</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/check user:&lt;user-id-or-link&gt; [ephemeral]</div>
+                <p>Shows account-creation time, username and avatar signals, and any shared-list entry for moderator review. It takes no action, and signals can be wrong. Users who opted out with <code>/preference suspicious-checks enabled:false</code> receive no report. Prefix: <code>!check &lt;mention|ID|profile link&gt;</code>.</p>
             </div>
         </div>
 
@@ -725,19 +750,7 @@
             </div>
         </div>
 
-        <div class="cmd-row" data-cmd="chargeback">
-            <div class="cmd-summary" onclick="toggleCmd(this)">
-                <span class="cmd-name">/chargeback<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Reverse a transaction and log the action (admin)</span>
-                <span class="cmd-perm">economy.admin.*</span>
-            </div>
-            <div class="cmd-detail">
-                <h4>Syntax</h4>
-                <div class="syntax-block">/chargeback <span class="required">&lt;id&gt;</span> <span class="required">&lt;reason&gt;</span></div>
-            </div>
-        </div>
-
-        <div class="cmd-row" data-cmd="add">
+                <div class="cmd-row" data-cmd="add">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/add<span class="cmd-expand-icon"></span></span>
                 <span class="cmd-desc">Add to a user's balance (admin)</span>
@@ -770,6 +783,22 @@
             <div class="cmd-detail">
                 <h4>Syntax</h4>
                 <div class="syntax-block">/set <span class="required">&lt;user&gt;</span> <span class="required">&lt;amount&gt;</span></div>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="currency">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/currency<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Set the server's currency name and icon</span>
+                <span class="cmd-perm">economy.admin.currency</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Subcommands</h4>
+                <ul>
+                    <li><code>name name:&lt;text&gt;</code> — set the currency name.</li>
+                    <li><code>icon icon:&lt;emoji&gt;</code> — set the currency icon.</li>
+                </ul>
+                <p>Requires the server economy currency permission.</p>
             </div>
         </div>
     </div>
@@ -846,30 +875,7 @@
     <div class="category-section" id="cat-games" data-category="games">
         <h2 class="category-title">Games</h2>
 
-        <div class="cmd-row" data-cmd="chess">
-            <div class="cmd-summary" onclick="toggleCmd(this)">
-                <span class="cmd-name">/chess<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Start a chess game against another player or the bot</span>
-                <span class="cmd-perm">—</span>
-            </div>
-            <div class="cmd-detail">
-                <h4>Syntax</h4>
-                <div class="syntax-block">/chess <span class="optional">[opponent]</span></div>
-                <h4>Parameters</h4>
-                <table class="param-table">
-                    <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-                    <tr><td><code>opponent</code></td><td>User</td><td><span class="param-optional">No</span></td><td>Player to challenge. Leave empty to play against the bot AI</td></tr>
-                </table>
-                <h4>Details</h4>
-                <ul>
-                    <li>Full chess with move validation, check/checkmate detection.</li>
-                    <li>Interactive button interface for moves, draw offers, and resignation.</li>
-                    <li>Board rendered with text and emoji pieces.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="cmd-row" data-cmd="poker">
+                <div class="cmd-row" data-cmd="poker">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/poker<span class="cmd-expand-icon"></span></span>
                 <span class="cmd-desc">Play five-card draw poker</span>
@@ -885,6 +891,25 @@
                 </ul>
             </div>
         </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MUSIC -->
+    <!-- ============================================================ -->
+    <div class="category-section" id="cat-music" data-category="music">
+        <h2 class="category-title">Music</h2>
+        <p>Music commands require the bot to have Connect and Speak access to the voice channel.</p>
+        <div class="cmd-row" data-cmd="join"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/join<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Join your voice channel</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/join</div><p>Connects the bot to your current voice channel.</p></div></div>
+        <div class="cmd-row" data-cmd="play"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/play<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Search for or play audio in voice chat</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/play query:&lt;URL-or-search&gt; [index]</div><p>Queues a track or playlist from a supported provider. Use <code>index</code> to choose a playlist range when offered.</p></div></div>
+        <div class="cmd-row" data-cmd="pause"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/pause<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Pause or resume the current track</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/pause</div></div></div>
+        <div class="cmd-row" data-cmd="skip"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/skip<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Skip one or more queued tracks</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/skip [count]</div></div></div>
+        <div class="cmd-row" data-cmd="stop"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/stop<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Stop playback and clear the queue</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/stop</div></div></div>
+        <div class="cmd-row" data-cmd="leave"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/leave<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Disconnect from the voice channel</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/leave</div></div></div>
+        <div class="cmd-row" data-cmd="queue"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/queue<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Show the current track and upcoming queue</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/queue [page]</div><p>Shows up to 10 tracks per page.</p></div></div>
+        <div class="cmd-row" data-cmd="repeat"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/repeat<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Toggle repeat for the current queue</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/repeat</div></div></div>
+        <div class="cmd-row" data-cmd="shuffle"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/shuffle<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Toggle shuffle for the current queue</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/shuffle</div></div></div>
+        <div class="cmd-row" data-cmd="volume"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/volume<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Set playback volume</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/volume [level:0-150]</div></div></div>
+        <div class="cmd-row" data-cmd="playlist"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/playlist<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Create, manage, import, export, and play saved playlists</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><p>Use <code>create</code>, <code>list</code>, <code>show</code>, <code>add</code>, <code>remove</code>, <code>reorder</code>, <code>rename</code>, <code>delete</code>, <code>play</code>, <code>import</code>, or <code>export</code>.</p></div></div>
     </div>
 
     <!-- ============================================================ -->
@@ -951,24 +976,6 @@
             </div>
         </div>
 
-        <div class="cmd-row" data-cmd="config">
-            <div class="cmd-summary" onclick="toggleCmd(this)">
-                <span class="cmd-name">/config<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Manage bot configuration</span>
-                <span class="cmd-perm">admin.config</span>
-            </div>
-            <div class="cmd-detail">
-                <h4>Syntax</h4>
-                <div class="syntax-block">/config <span class="required">show|reload</span></div>
-                <h4>Details</h4>
-                <ul>
-                    <li><code>show</code> reports the live feature switches, prefix configuration, join roles, and logging channels.</li>
-                    <li><code>reload</code> reloads the bot application's <code>config.json</code> and is restricted to the bot owner.</li>
-                    <li>Use <code>/automod</code>, <code>/antispam</code>, <code>/welcome</code>, and <code>/logging</code> to change the listed server settings.</li>
-                </ul>
-            </div>
-        </div>
-
         <div class="cmd-row" data-cmd="levels">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/levels<span class="cmd-expand-icon"></span></span>
@@ -1002,7 +1009,8 @@
             <div class="cmd-detail">
                 <h4>Syntax</h4>
                 <div class="syntax-block">/logging <span class="required">set|disable|view|exclude|reset</span> [options for that action]</div>
-                <p>Types include moderation, message, member, voice, server, channel, role, emoji, sticker, and webhook. Enable the bot's <strong>View Audit Log</strong> permission to include the user and ID responsible for server changes.</p>
+                <p>Types include moderation, message, member, voice, server, channel, role, emoji, sticker, webhook, and scheduled events. Enable the bot's <strong>View Audit Log</strong> permission to include the user and ID responsible for server changes.</p>
+                <p>Use <code>/logging exclude target_type:user target_id:&lt;user ID, mention, or profile link&gt; [type:&lt;type&gt;]</code> or <code>target_type:channel</code> to exclude a target from one log type. Use <code>target_type:all</code> to exclude its ID from every log type; a message link supplies its channel ID.</p>
             </div>
         </div>
 
@@ -1065,6 +1073,7 @@
                 <h4>Details</h4>
                 <ul>
                     <li>Use <code>toggle</code> for channel/DM welcomes, <code>set</code> for message, color, channel, and auto-role settings, <code>remove auto-role</code> to remove a role, and <code>test</code> for previews.</li>
+                    <li>Welcome DMs are sent only when the server enables them and the recipient has opted in with <code>/preference welcome-dms enabled:true</code>.</li>
                     <li>Variables: <code>{user}</code>, <code>{username}</code>, <code>{server}</code>, <code>{membercount}</code></li>
                     <li><strong>Multiple auto-roles</strong> are supported — add up to 10 with <code>/welcome set auto-role role:@Role</code>. Use <code>/welcome remove auto-role role:@Role</code> or <code>/welcome set clear-auto-roles</code> to remove roles.</li>
                     <li>Use <code>/welcome panel</code> to open the interactive GUI panel.</li>
@@ -1086,6 +1095,8 @@
                     <li><code>create</code>, <code>add</code>, <code>remove</code>, <code>list</code>, and <code>delete</code> manage reaction-role menus.</li>
                     <li><code>configure</code> sets a menu role limit, configures a locked emoji, or maps an emoji to multiple roles.</li>
                     <li><code>gui</code> opens the interactive manager for creating, listing, configuring, and deleting menus.</li>
+                    <li>The title for <code>create</code> is optional and defaults to <code>Reaction Roles</code>.</li>
+                    <li>Message ID fields accept either an ID or a Discord message link. A link also supplies the channel for an untracked text-channel message.</li>
                 </ul>
             </div>
         </div>
@@ -1175,22 +1186,69 @@
             </div>
         </div>
 
-        <div class="cmd-row" data-cmd="backup">
+        <div class="cmd-row" data-cmd="config">
             <div class="cmd-summary" onclick="toggleCmd(this)">
-                <span class="cmd-name">/backup<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Create and restore server configuration backups</span>
-                <span class="cmd-perm">admin.settings</span>
+                <span class="cmd-name">/config<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">View server settings or reload application configuration</span>
+                <span class="cmd-perm">admin.settings; reload is bot-owner only</span>
             </div>
             <div class="cmd-detail">
-                <h4>Syntax</h4>
-                <div class="syntax-block">/backup <span class="required">&lt;action&gt;</span> <span class="optional">[timestamp]</span></div>
-                <h4>Details</h4>
+                <h4>Subcommands</h4>
                 <ul>
-                    <li>Subcommands: <code>create</code>, <code>list</code>, <code>delete</code>, <code>restore</code></li>
-                    <li>Backups include settings, permissions, logging config, and more.</li>
+                    <li><code>show</code> — view this server's feature switches, prefixes, and configured channels (Manage Server required).</li>
+                    <li><code>reload</code> — reload the bot's application configuration (bot owners only).</li>
                 </ul>
             </div>
         </div>
+
+        <div class="cmd-row" data-cmd="backup">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/backup<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Create and restore typed server-setting backups</span>
+                <span class="cmd-perm">admin.backup</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Subcommands</h4>
+                <ul>
+                    <li><code>create</code> — save the current settings.</li>
+                    <li><code>list</code> — list saved backups.</li>
+                    <li><code>info timestamp:&lt;timestamp&gt;</code> — view a backup's setting count and size.</li>
+                    <li><code>restore timestamp:&lt;timestamp&gt;</code> — replace current settings with the saved snapshot.</li>
+                </ul>
+                <p>Requires Manage Server or an explicit <code>admin.backup</code> permission grant.</p>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="servermessages">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/servermessages<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Configure per-server work and daily response messages</span>
+                <span class="cmd-perm">admin.settings</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Subcommands</h4>
+                <ul>
+                    <li><code>list [type]</code> — list custom messages; types are <code>work</code>, <code>daily</code>, and <code>daily_claimed</code>.</li>
+                    <li><code>add type:&lt;type&gt; message:&lt;text&gt;</code> — add a custom response.</li>
+                    <li><code>remove type:&lt;type&gt; position:&lt;number&gt;</code> — remove one custom response.</li>
+                    <li><code>reset type:&lt;type&gt;</code> — return that message pool to its defaults.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="autolog">
+            <div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/autolog<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Configure automatic event logging</span><span class="cmd-perm">admin.logging</span></div>
+            <div class="cmd-detail"><div class="syntax-block">/autolog &lt;event-type|all|status&gt;</div><p>Enable, disable, or inspect automatic logging for supported server events.</p></div>
+        </div>
+        <div class="cmd-row" data-cmd="logchannel">
+            <div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/logchannel<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Assign log channels by event type</span><span class="cmd-perm">admin.logging</span></div>
+            <div class="cmd-detail"><div class="syntax-block">/logchannel &lt;set|add|remove|list|clear&gt;</div><p>Set one or more channels for moderation and server event logs.</p></div>
+        </div>
+        <div class="cmd-row" data-cmd="honeypot">
+            <div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/honeypot<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Configure an invite honeypot for ban-evasion detection</span><span class="cmd-perm">admin.honeypot</span></div>
+            <div class="cmd-detail"><div class="syntax-block">/honeypot &lt;setup|enable|disable|status|config|reset&gt;</div><p>Configure the honeypot channel and invite, action, and log channel. Setup needs the bot to manage channels and create invites.</p></div>
+        </div>
+
     </div>
 
     <!-- ============================================================ -->
@@ -1216,6 +1274,11 @@
                     <li>See <a href="features.html#proxy">Proxy Features</a> for a full guide.</li>
                 </ul>
             </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="system">
+            <div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/system<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Organise proxy members into systems</span><span class="cmd-perm">—</span></div>
+            <div class="cmd-detail"><div class="syntax-block">/system &lt;create|delete|info|list|add|remove|edit&gt;</div><p>Systems group your proxy members and set their ordering for proxy selection.</p></div>
         </div>
 
         <div class="cmd-row" data-cmd="systems">
@@ -1392,11 +1455,13 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/help <span class="optional">[command]</span></div>
+                <div class="syntax-block">/help [command] [page]</div>
                 <h4>Details</h4>
                 <ul>
                     <li>Without arguments: shows all commands by category.</li>
+                    <li>Use <code>page</code> to browse the complete list; each page is kept within Discord's embed limits.</li>
                     <li>With a command name: shows detailed help for that specific command.</li>
+                    <li>Prefix commands accept <code>-h</code> or <code>--help</code> to show command or subcommand help.</li>
                 </ul>
             </div>
         </div>
@@ -1484,8 +1549,29 @@
                 <h4>Examples</h4>
                 <div class="example-block"><code>/react emoji-or-emoji-id:✅</code> — react to the latest message</div>
                 <div class="example-block"><code>/react emoji-or-emoji-id:✅ message-id-or-link:123456789012345678</code></div>
-                <div class="example-block"><code>/react emoji-or-emoji-id:✅ message-id-or-link:https://discord.com/channels/123/456/789</code></div>
+                <div class="example-block"><code>/react emoji-or-emoji-id:✅ message-id-or-link:https://discord.com/channels/123456789012345678/234567890123456789/345678901234567890</code></div>
                 <p>Requires the same <code>utility.echo</code> permission as <code>/echo</code>. The bot also needs access to the channel and permission to add reactions. Leaving out the message target also requires Read Message History so the bot can find the latest message.</p>
+                <p><strong>Prefix:</strong> <code>!react &lt;emoji&gt; [message-id-or-link]</code>. Omit the message target to react to the latest message. Prefix commands use the server's configured prefix.</p>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="preference">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/preference<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Manage personal bot preferences</span>
+                <span class="cmd-perm">—</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/preference &lt;ephemeral|welcome-dms|suspicious-checks|view&gt; [enabled]</div>
+                <h4>Details</h4>
+                <ul>
+                    <li><code>ephemeral</code> configures whether slash command responses are private by default.</li>
+                    <li><code>welcome-dms</code> opts in or out of server welcome DMs. It is off until you opt in, and a server must also enable welcome DMs.</li>
+                    <li><code>suspicious-checks</code> controls future automatic join checks and manual <code>/check</code> reports about you. Checks are enabled by default; set <code>enabled:false</code> to opt out across servers. This does not recall prior alerts or remove an existing shared-list entry.</li>
+                    <li><code>view</code> displays your current preferences.</li>
+                    <li><strong>Prefix:</strong> <code>!preference ephemeral [true|false]</code>, <code>!preference welcome-dms [true|false]</code>, <code>!preference suspicious-checks [true|false]</code>, or <code>!preference view</code>.</li>
+                </ul>
             </div>
         </div>
 
@@ -1610,18 +1696,6 @@
             </div>
         </div>
 
-        <div class="cmd-row" data-cmd="pronouns">
-            <div class="cmd-summary" onclick="toggleCmd(this)">
-                <span class="cmd-name">/pronouns<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Set pronoun roles for yourself or another user</span>
-                <span class="cmd-perm">—</span>
-            </div>
-            <div class="cmd-detail">
-                <h4>Syntax</h4>
-                <div class="syntax-block">/pronouns <span class="required">&lt;action&gt;</span></div>
-            </div>
-        </div>
-
         <div class="cmd-row" data-cmd="joke">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/joke<span class="cmd-expand-icon"></span></span>
@@ -1691,6 +1765,11 @@
                 </ul>
             </div>
         </div>
+
+        <div class="cmd-row" data-cmd="avatar"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/avatar<span class="cmd-expand-icon"></span></span><span class="cmd-desc">View a user's avatar at full size</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/avatar [user]</div><p>Shows your avatar by default; optionally choose another user.</p></div></div>
+        <div class="cmd-row" data-cmd="bugreport"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/bugreport<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Send a bug report to the bot maintainers</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/bugreport</div><p>Opens a form for the report title, description, and optional reproduction steps.</p></div></div>
+        <div class="cmd-row" data-cmd="support"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/support<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Get the Ammonite support link</span><span class="cmd-perm">—</span></div><div class="cmd-detail"><div class="syntax-block">/support</div></div></div>
+        <div class="cmd-row" data-cmd="suspiciouslist"><div class="cmd-summary" onclick="toggleCmd(this)"><span class="cmd-name">/suspiciouslist<span class="cmd-expand-icon"></span></span><span class="cmd-desc">Manage or check the shared suspicious-account list</span><span class="cmd-perm">Bot-owner actions; ban requires Ban Members</span></div><div class="cmd-detail"><p>List management actions are restricted to bot owners. The <code>ban</code> action is available to server members with Ban Members and supports validated, pending, or all entries.</p></div></div>
     </div>
 
     <!-- ============================================================ -->

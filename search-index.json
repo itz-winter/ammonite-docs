@@ -2,74 +2,74 @@
   {
     "title": "Commands",
     "section": "",
-    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Levelling",
+    "snippet": "Public slash commands with details, required permissions, examples, and prefix syntax. The command list is grouped into Moderation, Economy, Levelling, Games, Music, Configuration, Proxy, Tickets, Global Chat, and Utility.",
     "href": "commands.html"
   },
   {
     "title": "Command Reference",
     "section": "Commands",
     "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Levelling",
-    "href": "commands.html#command-reference"
+    "href": "commands.html"
   },
   {
     "title": "Moderation",
     "section": "Commands",
-    "snippet": "/ban Ban a user from the server (permanent or timed) mod.ban Syntax /ban <user> [duration] [reason] Parameters Name Type Required Description user User Yes The user to ban duration String No Duration ",
-    "href": "commands.html#moderation"
+    "snippet": "/ban /unban /kick /mute /unmute /timeout /warn /warns /unwarn /hist /check /lockdown /purge /softban /wordfilter. /lockdown users need mod.lockdown; the bot needs Manage Roles for permission overwrites.",
+    "href": "commands.html#cat-moderation"
   },
   {
     "title": "Economy",
     "section": "Commands",
-    "snippet": "/balance Check your or another user's balance economy.balance Syntax /balance [user] Parameters Name Type Required Description user User No User to check. Defaults to yourself Examples /balance — Chec",
-    "href": "commands.html#economy"
+    "snippet": "/balance /daily /work /pay /rob /gamble /slots /dice /flip /blackjack /poker /bank /currency /add /subtract /set. Currency uses virtual server points with no cash value.",
+    "href": "commands.html#cat-economy"
   },
   {
     "title": "Levelling",
     "section": "Commands",
-    "snippet": "/rank Display rank information for a user leveling.rank Syntax /rank [user] Details Shows level, XP, XP needed for next level, and server rank position. /leaderboard Show the XP/level leaderboard leve",
-    "href": "commands.html#leveling"
+    "snippet": "/rank /leaderboard /lb /level /xp. View rank and leaderboard; moderators can adjust XP and levels.",
+    "href": "commands.html#cat-leveling"
   },
   {
     "title": "Games",
     "section": "Commands",
-    "snippet": "/chess Start a chess game against another player or the bot — Syntax /chess [opponent] Parameters Name Type Required Description opponent User No Player to challenge. Leave empty to play against the b",
-    "href": "commands.html#games"
+    "snippet": "/poker and /blackjack use the server’s virtual currency.",
+    "href": "commands.html#cat-games"
+  },
+  {
+    "title": "Music",
+    "section": "Commands",
+    "snippet": "/join /play /pause /skip /stop /leave /queue /repeat /shuffle /volume /playlist. Join a voice channel, queue audio, manage playback, and save playlists.",
+    "href": "commands.html#cat-music"
   },
   {
     "title": "Configuration",
     "section": "Commands",
-    "snippet": "/settings Configure server settings admin.settings Syntax /settings toggle|set|clear <setting> Examples /settings set daily-reward value:100 — Set the daily reward to 100 coins Details Central hub for all ",
-    "href": "commands.html#configuration"
+    "snippet": "/settings /welcome /automod /wordfilter /logging /logchannel /autolog /permissions /reactionrole /prefix /backup /config /servermessages /honeypot. Welcome DMs require both server enablement and member opt-in.",
+    "href": "commands.html#cat-configuration"
   },
   {
     "title": "Proxy System",
     "section": "Commands",
-    "snippet": "/proxy Manage proxy members (PluralKit-style) — create, edit, delete, list — /system manages ordered proxy systems and /systems lists them. Proxied messages remain in their original thread.",
-    "href": "commands.html#proxy-system"
+    "snippet": "/proxy /system /systems /proxysettings /autoproxy. Proxy messages are user-configured identities; see the command reference for controls.",
+    "href": "commands.html#cat-proxy"
   },
   {
     "title": "Tickets & ModMail",
     "section": "Commands",
-    "snippet": "/ticket Manage support tickets. /modmail start lets a member choose a server and opt in to private staff DM routing; /modmail stop turns it off. Server admins use setup, status, disable, close.",
-    "href": "commands.html#tickets"
+    "snippet": "/ticket and /modmail. Members initiate ModMail; they can stop it. Server admins configure and close conversations.",
+    "href": "commands.html#cat-tickets"
   },
   {
     "title": "Global Chat",
     "section": "Commands",
-    "snippet": "/globalchat Manage cross-server global chat channels globalchat.* Syntax /globalchat <subcommand> Subcommands Subcommand Description create Create a new global chat channel (name, description, visibil",
-    "href": "commands.html#global-chat"
+    "snippet": "/globalchat manages linked channels. Relayed content is sent by webhook and mention parsing is disabled.",
+    "href": "commands.html#cat-globalchat"
   },
   {
     "title": "Utility",
     "section": "Commands",
-    "snippet": "/help Get help with bot commands — Syntax /help [command] Details Without arguments: shows all commands by category. With a command name: shows detailed help for that specific command. /ping Check bot",
-    "href": "commands.html#utility"
-  },
-  {
-    "title": "Owner Only",
-    "section": "Commands",
-    "snippet": "/statusmsg Set bot custom status message Owner only Syntax /statusmsg [message] /announce Send a bot update announcement to all configured channels Owner only Syntax /announce <title> <message> [color] /rpc Set the bot's rich presence (activity) Owner only Syntax /rpc <activity> /appearance Set bot online appearance (onl",
-    "href": "commands.html#owner-only"
+    "snippet": "/help /ping /info /avatar /bugreport /support /preference /privacy /deletedata /echo /talkas /suspiciouslist /react. Welcome DMs default to opted out; users can stop future account checks with /preference suspicious-checks enabled:false.",
+    "href": "commands.html#cat-utility"
   },
   {
     "title": "Features",
@@ -134,14 +134,8 @@
   {
     "title": "Games",
     "section": "Features",
-    "snippet": "",
+    "snippet": "Poker: five-card draw with betting, hold and discard. Blackjack: hit, stand, and double with virtual currency.",
     "href": "features.html#games"
-  },
-  {
-    "title": "Chess",
-    "section": "Features",
-    "snippet": "Play against another member or the bot AI Full chess rules with move validation Interactive button-based interface for moves, draws, and resignation Board rendered as text with emoji pieces",
-    "href": "features.html#chess"
   },
   {
     "title": "Poker",
@@ -200,14 +194,14 @@
   {
     "title": "Welcome System",
     "section": "Features",
-    "snippet": "Welcome messages — customisable messages when members join Auto-roles — automatically assign roles to new members Variable support — placeholders for user names, server names, member counts Configure ",
+    "snippet": "Welcome messages, auto-roles, and member join handling. Configure with /welcome.",
     "href": "features.html#welcome-system"
   },
   {
     "title": "Suspicious Account Detection",
     "section": "Features",
-    "snippet": "Automated system that analyses new members and flags potentially suspicious accounts. Account age analysis — flags very new accounts Pattern detection — identifies bot-like username patterns Risk scor",
-    "href": "features.html#suspicious-account-detection"
+    "snippet": "Account age, join timing, default-avatar and username signals can be reviewed by staff. Users can stop future checks with /preference suspicious-checks enabled:false. Reports do not take action and can be wrong.",
+    "href": "features.html#suspicious"
   },
   {
     "title": "Role Persistence",
@@ -230,14 +224,8 @@
   {
     "title": "Pride & Inclusivity",
     "section": "Features",
-    "snippet": "/pride <flag> — apply pride flag borders/overlays to avatars or images /pride custom_flag:<upload> — use your own flag image /flags — list all available pride flags /pronouns — set pronoun roles for yourself",
+    "snippet": "/pride <flag> — apply pride flag borders/overlays to avatars or images /pride custom_flag:<upload> — use your own flag image /flags — list all available pride flags",
     "href": "features.html#pride-inclusivity"
-  },
-  {
-    "title": "Server Backups",
-    "section": "Features",
-    "snippet": "Create and restore snapshots of your server configuration with /backup create and /backup restore .",
-    "href": "features.html#server-backups"
   },
   {
     "title": "Privacy & Data",
@@ -350,13 +338,13 @@
   {
     "title": "Privacy Policy",
     "section": "",
-    "snippet": "Ammonite is committed to protecting your privacy. Last updated: February 2026.",
+    "snippet": "Ammonite is committed to protecting your privacy. Last updated: November 2026.",
     "href": "privacy.html"
   },
   {
     "title": "Data We Collect",
     "section": "Privacy Policy",
-    "snippet": "Ammonite collects only the minimum data necessary: User IDs — to track economy, levels, warnings, and permissions. Guild IDs — to store per-server configuration and settings. Message Content — process",
+    "snippet": "Account checks process account-creation time, current username, avatar state, and server join time. Shared suspicious-list records contain user IDs, reasons, and notes; /deletedata removes your entry.",
     "href": "privacy.html#data-we-collect"
   },
   {
@@ -368,19 +356,19 @@
   {
     "title": "Data Retention",
     "section": "Privacy Policy",
-    "snippet": "Economy, levelling, moderation, playlist and preference records remain until deleted with /deletedata or removed by the bot operator. Removing the bot does not erase local files. Role snapshots remain until cleared; closed ticket channels are deleted after 14 days unless archived.",
+    "snippet": "Economy, levelling, moderation, playlist and preference records remain until deleted with /deletedata or removed by the bot operator. Preferences include welcome-DM and account-check choices. Removing the bot does not erase local files.",
     "href": "privacy.html#data-retention"
   },
   {
     "title": "Your Rights",
     "section": "Privacy Policy",
-    "snippet": "View your data through bot commands. Request deletion with /deletedata to remove stored economy and levelling data, warnings, subject moderation records, linked reports, playlists, preferences, role snapshots and proxy members or groups.",
+    "snippet": "Use /preference suspicious-checks enabled:false to stop future automatic and manual account checks across servers. It cannot recall prior alerts or remove a shared-list entry.",
     "href": "privacy.html#your-rights"
   },
   {
     "title": "Privileged Gateway Intents",
     "section": "Privacy Policy",
-    "snippet": "Guild Members (GUILD_MEMBERS) — required for role persistence, suspicious account detection, welcome messages, and member cache for moderation. Message Content (MESSAGE_CONTENT) — required for proxy t",
+    "snippet": "Guild Members (GUILD_MEMBERS) — role persistence, member joins, welcome messages and moderation member cache. Message Content (MESSAGE_CONTENT) — proxy, prefix commands, global chat and auto-moderation. Presence intent is not used.",
     "href": "privacy.html#privileged-gateway-intents"
   },
   {
@@ -422,7 +410,7 @@
   {
     "title": "2 Grant the Right Permissions",
     "section": "Setup Guide",
-    "snippet": "When invited, Ammonite will request the permissions it needs. For full functionality, grant Administrator , or at minimum: Manage Roles, Manage Channels, Manage Messages Ban Members, Kick Members, Mod",
+    "snippet": "The invite does not request Administrator. Manage Roles is needed for channel permission overwrites such as /lockdown. Manage Server is only needed for honeypot invite-use detection.",
     "href": "setup.html#2-grant-the-right-permissions"
   },
   {
@@ -464,7 +452,7 @@
   {
     "title": "Build and Configure",
     "section": "Self-Hosting Guide",
-    "snippet": "Download ammonite.jar, create a Discord application and bot, enable the Server Members, Message Content and Presence privileged gateway intents, set bot_token in config.json, and run java -jar ammonite.jar.",
+    "snippet": "Download ammonite.jar, create a Discord application and bot, enable the Server Members and Message Content privileged gateway intents, set bot_token in config.json, and run java -jar ammonite.jar.",
     "href": "self-hosting.html#build-and-configure"
   },
   {
@@ -598,5 +586,137 @@
     "section": "Terms of Service",
     "snippet": "For questions about these Terms, contact the bot owner through the support server or Discord DM. See the Support page for contact options.",
     "href": "terms.html#13-contact"
+  },
+  {
+    "title": "/autolog",
+    "section": "Commands · Configuration",
+    "snippet": "Toggle automatic event logging by category.",
+    "href": "commands.html#cat-configuration"
+  },
+  {
+    "title": "/avatar",
+    "section": "Commands · Utility",
+    "snippet": "View your avatar or another user’s avatar at full size.",
+    "href": "commands.html#cat-utility"
+  },
+  {
+    "title": "/bugreport",
+    "section": "Commands · Utility",
+    "snippet": "Submit a bug report with a title, description, and optional steps.",
+    "href": "commands.html#cat-utility"
+  },
+  {
+    "title": "/check",
+    "section": "Commands · Moderation",
+    "snippet": "Review account-creation time, username, avatar and shared-list signals; reports take no action. Users can opt out with /preference suspicious-checks enabled:false.",
+    "href": "commands.html#cat-moderation"
+  },
+  {
+    "title": "/currency",
+    "section": "Commands · Economy",
+    "snippet": "Set the server currency name and icon.",
+    "href": "commands.html#cat-economy"
+  },
+  {
+    "title": "/honeypot",
+    "section": "Commands · Configuration",
+    "snippet": "Configure invite honeypot detection and alert handling.",
+    "href": "commands.html#cat-configuration"
+  },
+  {
+    "title": "/join",
+    "section": "Commands · Music",
+    "snippet": "Join your voice channel.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/leave",
+    "section": "Commands · Music",
+    "snippet": "Disconnect from the voice channel.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/logchannel",
+    "section": "Commands · Configuration",
+    "snippet": "Assign log channels to server event types.",
+    "href": "commands.html#cat-configuration"
+  },
+  {
+    "title": "/pause",
+    "section": "Commands · Music",
+    "snippet": "Pause or resume the current track.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/preference",
+    "section": "Commands · Utility",
+    "snippet": "Manage private responses, welcome-DM opt-in, and the account-check opt-out across servers. The opt-out stops future checks.",
+    "href": "commands.html#cat-utility"
+  },
+  {
+    "title": "/play",
+    "section": "Commands · Music",
+    "snippet": "Search for audio or play a supported URL in voice chat.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/playlist",
+    "section": "Commands · Music",
+    "snippet": "Create, manage, import, export, and play saved playlists.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/queue",
+    "section": "Commands · Music",
+    "snippet": "Show the current track and upcoming queue.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/repeat",
+    "section": "Commands · Music",
+    "snippet": "Toggle repeat for music playback.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/shuffle",
+    "section": "Commands · Music",
+    "snippet": "Toggle queue shuffling.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/skip",
+    "section": "Commands · Music",
+    "snippet": "Skip one or more queued tracks.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/stop",
+    "section": "Commands · Music",
+    "snippet": "Stop playback and clear the queue.",
+    "href": "commands.html#cat-music"
+  },
+  {
+    "title": "/support",
+    "section": "Commands · Utility",
+    "snippet": "Get the Ammonite support link.",
+    "href": "commands.html#cat-utility"
+  },
+  {
+    "title": "/suspiciouslist",
+    "section": "Commands · Utility",
+    "snippet": "Bot-owner-only list management; server Ban Members permission is required for its ban action.",
+    "href": "commands.html#cat-utility"
+  },
+  {
+    "title": "/system",
+    "section": "Commands · Proxy System",
+    "snippet": "Organise proxy members into systems.",
+    "href": "commands.html#cat-proxy"
+  },
+  {
+    "title": "/volume",
+    "section": "Commands · Music",
+    "snippet": "Set playback volume from 0 to 150.",
+    "href": "commands.html#cat-music"
   }
 ]
