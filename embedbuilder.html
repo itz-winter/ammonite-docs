@@ -16,22 +16,21 @@
 
     /* Layout */
     .eb-root {
-      display: flex;
-      gap: 2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+      gap: 1rem;
       align-items: flex-start;
-      padding: 1.5rem 1.5rem 3rem;
+      padding: 1rem 0 3rem;
       max-width: 1400px;
       margin: 0 auto;
     }
     .eb-form-col {
-      flex: 1 1 480px;
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1rem;
     }
     .eb-preview-col {
-      flex: 1 1 420px;
       min-width: 0;
       position: sticky;
       top: 1rem;
@@ -39,17 +38,16 @@
 
     /* Cards / sections */
     .eb-card {
-      background: var(--surface);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem 1.4rem;
+      border-radius: var(--radius);
+      padding: 1rem;
     }
     .eb-card h3 {
-      margin: 0 0 1rem;
-      font-size: .85rem;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--muted);
+      margin: 0 0 .75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     /* Form controls */
@@ -57,29 +55,24 @@
       display: flex;
       flex-direction: column;
       gap: .35rem;
-      margin-bottom: .85rem;
+      margin-bottom: .75rem;
     }
     .eb-field:last-child { margin-bottom: 0; }
     .eb-field label {
-      font-size: .8rem;
-      color: var(--muted);
+      color: var(--text-primary);
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
     }
     .eb-field input[type="text"],
     .eb-field input[type="url"],
     .eb-field textarea,
     .eb-field input[type="color"] {
-      background: var(--bg);
+      background: var(--bg-page);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      padding: .45rem .65rem;
-      font-family: inherit;
-      font-size: .9rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: .7rem;
+      font: inherit;
       width: 100%;
-      box-sizing: border-box;
       transition: border-color .15s;
     }
     .eb-field input:focus,
@@ -87,9 +80,10 @@
       outline: none;
       border-color: var(--brand-primary);
     }
+    .eb-root input[type="checkbox"] { accent-color: var(--brand-primary); }
     .eb-field textarea {
       resize: vertical;
-      min-height: 72px;
+      min-height: 9rem;
     }
     .eb-field input[type="color"] {
       padding: .2rem .35rem;
@@ -98,7 +92,7 @@
     }
     .eb-field-row {
       display: flex;
-      gap: .75rem;
+      gap: .5rem;
     }
     .eb-field-row .eb-field {
       flex: 1;
@@ -112,13 +106,13 @@
       margin-bottom: .5rem;
     }
     .eb-embed-field-row {
-      background: var(--bg);
+      background: var(--bg-page);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: .6rem .75rem;
+      border-radius: var(--radius-sm);
+      padding: .7rem;
       display: flex;
       flex-direction: column;
-      gap: .4rem;
+      gap: .5rem;
     }
     .eb-embed-field-row .ef-top {
       display: flex;
@@ -127,31 +121,30 @@
     }
     .eb-embed-field-row .ef-top input {
       flex: 1;
-      background: var(--surface);
+      background: var(--bg-page);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      padding: .35rem .55rem;
-      font-size: .85rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: .55rem .7rem;
+      font: inherit;
     }
     .eb-embed-field-row .ef-top input:focus { outline: none; border-color: var(--brand-primary); }
     .eb-embed-field-row .ef-inline-label {
-      font-size: .75rem;
-      color: var(--muted);
+      font-size: .875rem;
+      color: var(--text-secondary);
       white-space: nowrap;
       display: flex;
       align-items: center;
       gap: .25rem;
     }
     .eb-embed-field-row .ef-value {
-      background: var(--surface);
+      background: var(--bg-page);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      padding: .3rem .55rem;
-      font-size: .85rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: .55rem .7rem;
+      font: inherit;
       width: 100%;
-      box-sizing: border-box;
     }
     .eb-embed-field-row .ef-value:focus { outline: none; border-color: var(--brand-primary); }
     .eb-remove-field {
@@ -167,32 +160,34 @@
     /* Action buttons */
     .eb-actions {
       display: flex;
-      gap: .6rem;
+      gap: .5rem;
       flex-wrap: wrap;
     }
     .eb-btn {
-      padding: .5rem 1rem;
-      border-radius: 6px;
-      border: none;
-      font-weight: 600;
-      font-size: .875rem;
+      color: var(--text-primary);
+      background: var(--bg-inline);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .55rem .8rem;
+      font: inherit;
       cursor: pointer;
-      transition: opacity .15s;
+      transition: border-color .15s, background .15s;
     }
-    .eb-btn:hover { opacity: .85; }
-    .eb-btn-primary { background: var(--brand-primary); color: #fff; }
-    .eb-btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
-    .eb-btn-danger { background: var(--danger, #f04747); color: #fff; }
+    .eb-btn:hover,
+    .eb-btn:focus-visible { border-color: var(--brand-primary); }
+    .eb-btn-primary,
+    .eb-btn-secondary { color: var(--text-primary); }
+    .eb-btn-danger { color: #fca5a5; }
 
     /* JSON output */
     .eb-json-output {
-      background: #111;
+      background: var(--bg-inline);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #e2e2e2;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
       font-family: "Consolas", "Fira Code", monospace;
-      font-size: .8rem;
-      padding: .75rem 1rem;
+      font-size: .875rem;
+      padding: .7rem;
       white-space: pre;
       overflow-x: auto;
       min-height: 80px;
@@ -215,27 +210,27 @@
     }
     .eb-embed-tab {
       border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg);
-      color: var(--text);
-      padding: .35rem .7rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-inline);
+      color: var(--text-primary);
+      padding: .4rem .55rem;
       cursor: pointer;
-      font-size: .8rem;
+      font: inherit;
     }
+    .eb-embed-tab:hover,
+    .eb-embed-tab:focus-visible { border-color: var(--brand-primary); }
     .eb-embed-tab.active {
       border-color: var(--brand-primary);
-      color: var(--brand-primary);
-      box-shadow: 0 0 0 1px var(--brand-primary);
+      background: var(--brand-light);
     }
-    .eb-embed-actions { display: flex; gap: .4rem; }
+    .eb-embed-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
     .dc-embed-stack { display: flex; flex-direction: column; gap: .75rem; }
 
     /* Discord embed preview */
     .eb-preview-label {
-      font-size: .75rem;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
       margin-bottom: .5rem;
     }
     .dc-embed-wrapper {
@@ -412,8 +407,8 @@
     .eb-btn-row-item {
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: .7rem .85rem;
+      border-radius: var(--radius-sm);
+      padding: .7rem;
       display: flex;
       flex-direction: column;
       gap: .5rem;
@@ -427,13 +422,12 @@
     .eb-btn-row-item select,
     .eb-btn-row-item input[type="text"],
     .eb-btn-row-item input[type="url"] {
-      background: var(--surface);
+      background: var(--bg-page);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      padding: .35rem .55rem;
-      font-size: .85rem;
-      font-family: inherit;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: .55rem .7rem;
+      font: inherit;
     }
     .eb-btn-row-item select:focus,
     .eb-btn-row-item input:focus { outline: none; border-color: var(--brand-primary); }
@@ -448,8 +442,8 @@
     }
     .bri-url, .bri-custom-id { flex: 1; min-width: 120px; }
     .bri-disabled-label {
-      font-size: .78rem;
-      color: var(--muted);
+      font-size: .875rem;
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       gap: .3rem;
@@ -458,14 +452,17 @@
     }
     .eb-remove-btn {
       background: none;
-      border: none;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
       color: var(--danger, #f04747);
       cursor: pointer;
       font-size: 1rem;
-      padding: 0 .2rem;
+      padding: .2rem .45rem;
       line-height: 1;
       flex-shrink: 0;
     }
+    .eb-remove-btn:hover,
+    .eb-remove-btn:focus-visible { border-color: var(--border); }
 
     /* Discord button preview */
     .dc-components {
@@ -501,13 +498,14 @@
       bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%) translateY(3rem);
-      background: var(--brand-primary);
-      color: #fff;
-      padding: .55rem 1.2rem;
-      border-radius: 999px;
-      font-size: .875rem;
+      background: var(--bg-note);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: .6rem .8rem;
+      border-radius: var(--radius-sm);
+      font-size: .9rem;
       font-weight: 600;
-      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+      box-shadow: var(--shadow-md);
       transition: transform .25s ease, opacity .25s ease;
       opacity: 0;
       pointer-events: none;
@@ -520,7 +518,7 @@
 
     /* Responsive */
     @media (max-width: 860px) {
-      .eb-root { flex-direction: column; }
+      .eb-root { grid-template-columns: 1fr; }
       .eb-preview-col { position: static; }
     }
   </style>
@@ -535,7 +533,7 @@
   <div class="sidebar-backdrop"></div>
   <main class="content">
     <h1 class="page-title">Embed Builder</h1>
-    <p style="color:var(--muted);margin-top:-.5rem;margin-bottom:1.5rem;">
+    <p>
       Create, preview, and share up to 10 embeds in a Discord message. Export the message payload as JSON for <code>/embed</code> or another compatible integration.
     </p>
 
