@@ -14,7 +14,7 @@
   {
     "title": "Word Filter Regex Guide and Builder",
     "section": "Tools",
-    "snippet": "Build and test word filter patterns, use click-to-insert regex tokens, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, and see bulk add/delete usage.",
+    "snippet": "Build and test word filter patterns with highlighted matches, use a movable regex-token window, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, manage explicit role/member/channel AutoMod exemptions, and see bulk add/delete usage.",
     "href": "wordfilter.html"
   },
   {
@@ -50,7 +50,7 @@
   {
     "title": "Configuration",
     "section": "Commands",
-    "snippet": "/settings /welcome /automod /wordfilter /logging /logchannel /autolog /permissions /reactionrole /prefix /backup /config /servermessages /honeypot. Welcome DMs require both server enablement and member opt-in.",
+    "snippet": "/settings /welcome /automod /automod exempt-role /automod exempt-user /automod exempt-channel /wordfilter /logging /logchannel /autolog /permissions /reactionrole /prefix /backup /config /servermessages /honeypot. AutoMod checks everyone; only explicit role, member, or channel exemptions bypass them.",
     "href": "commands.html#cat-configuration"
   },
   {
@@ -278,7 +278,7 @@
   {
     "title": "Auto-Moderation ( automod.* )",
     "section": "Permissions",
-    "snippet": "Node Description automod.enable Enable auto-moderation automod.disable Disable auto-moderation automod.spam Configure spam protection automod.links Configure link protection automod.mentions Configure",
+    "snippet": "Node Description automod.enable Enable auto-moderation automod.disable Disable auto-moderation automod.spam Configure spam protection automod.links Configure link protection automod.mentions Configure. Permissions do not exempt members from enforcement; use /automod exempt-role, exempt-user, or exempt-channel.",
     "href": "permissions.html#auto-moderation-automod"
   },
   {

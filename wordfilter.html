@@ -13,8 +13,13 @@
     .builder-card textarea { min-height:9rem; resize:vertical; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
     .builder-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
     .builder-actions button { color:var(--text-primary); background:var(--bg-inline); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.55rem .8rem; font:inherit; cursor:pointer; }
-    .builder-actions button:hover { border-color:var(--brand-primary); }
+    .builder-actions button:hover,.builder-actions button:focus-visible { border-color:var(--brand-primary); }
     .builder-status { min-height:1.8rem; margin-top:.75rem; padding:.6rem; background:var(--bg-note); border-radius:var(--radius-sm); overflow-wrap:anywhere; }
+    .sample-preview { margin-top:.75rem; padding:.75rem; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-page); }
+    .sample-preview[hidden] { display:none; }
+    .sample-preview-label { display:block; margin-bottom:.45rem; color:var(--text-secondary); font-size:.9rem; font-weight:600; }
+    .sample-preview-text { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; }
+    .sample-preview-text mark { background:#ffd166; color:#202020; border-radius:3px; padding:0 .08em; }
     .token { color:var(--text-inline); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
     .code-sample { display:block; padding:.7rem; margin:.5rem 0 1rem; border-radius:var(--radius-sm); background:var(--bg-inline); overflow-x:auto; }
     .regex-insert-groups { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1rem; }
@@ -25,12 +30,20 @@
     .regex-insert:hover,.regex-insert:focus-visible { border-color:var(--brand-primary); }
     .regex-insert code { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
     .regex-insert small { color:var(--text-secondary); }
+    .regex-window { position:fixed; z-index:1000; right:1rem; bottom:1rem; display:flex; flex-direction:column; width:min(620px,calc(100vw - 2rem)); height:min(560px,calc(100vh - 2rem)); min-width:300px; min-height:250px; max-width:calc(100vw - 1rem); max-height:calc(100vh - 1rem); overflow:hidden; resize:both; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 12px 36px rgb(0 0 0 / 35%); }
+    .regex-window[hidden] { display:none; }
+    .regex-window-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.65rem .85rem; background:var(--bg-inline); border-bottom:1px solid var(--border); cursor:move; touch-action:none; user-select:none; }
+    .regex-window-header h3 { margin:0; font-size:1rem; }
+    .regex-window-close { flex:none; color:var(--text-primary); background:transparent; border:1px solid var(--border); border-radius:var(--radius-sm); padding:.25rem .55rem; font:inherit; cursor:pointer; }
+    .regex-window-close:hover,.regex-window-close:focus-visible { border-color:var(--brand-primary); }
+    .regex-window-content { min-height:0; flex:1; overflow:auto; padding:.85rem; }
+    .regex-window-content .regex-insert-groups { margin-top:0; }
+    .regex-window-content .builder-status { margin-top:1rem; }
     .regex-guide table { display:block; width:100%; overflow-x:auto; border-collapse:collapse; margin:.75rem 0 1.25rem; }
     .regex-guide th,.regex-guide td { padding:.55rem .7rem; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
     .regex-guide th { color:var(--text-primary); }
     .regex-guide td:first-child { white-space:nowrap; }
     .regex-note { padding:.75rem 1rem; background:var(--bg-note); border-radius:var(--radius-sm); }
-    mark.filter-hit { background:#ffd166; color:#202020; border-radius:3px; }
   </style>
 </head>
 <body>
@@ -43,7 +56,7 @@
   <div class="sidebar-backdrop"></div>
   <main class="content">
     <h1>Word Filter Regex Guide &amp; Builder</h1>
-    <p>Build and test patterns for <code>/wordfilter</code>. The tool runs in your browser; imports and share links stay in the URL or on your device.</p>
+    <p>Build and test patterns for <code>/wordfilter</code>. Test results highlight matching text in the sample. Open the movable, resizable regex token inserter with the <strong>Regex tokens</strong> button. Imports and share links stay in the URL or on your device.</p>
 
     <section class="doc-section" aria-labelledby="builder-title">
       <h2 id="builder-title">Test and share patterns</h2>
@@ -53,7 +66,12 @@
           <input id="pattern" maxlength="250" placeholder="badword or \\b(?:bad|awful)\\b">
           <label for="sample">Sample message</label>
           <textarea id="sample" placeholder="Paste a message to check against your patterns."></textarea>
+          <div id="sample-preview" class="sample-preview" role="region" aria-label="Sample message with matching text highlighted" hidden>
+            <span class="sample-preview-label">Highlighted sample</span>
+            <pre id="highlighted-sample" class="sample-preview-text"></pre>
+          </div>
           <div class="builder-actions">
+            <button id="open-regex-inserter" type="button" aria-haspopup="dialog" aria-controls="regex-inserter-window" aria-expanded="false">Regex tokens</button>
             <button id="add-pattern" type="button">Add pattern</button>
             <button id="test-patterns" type="button">Test patterns</button>
           </div>
@@ -75,6 +93,7 @@
     <section class="doc-section" aria-labelledby="usage-title">
       <h2 id="usage-title">Using the filter</h2>
       <p>Run <code>/wordfilter add pattern:&lt;text&gt;</code> for one pattern. For a list, use <code>/wordfilter bulk-add patterns_json:&lt;array&gt;</code>; remove several with <code>/wordfilter bulk-delete</code>. JSON import adds patterns without replacing the current list. Discord limits each JSON option to 6,000 characters, so split larger exports into batches; the server stores up to 100 patterns total.</p>
+      <p>The word filter and every AutoMod check apply to all members, including administrators and moderators. Discord permissions do not bypass enforcement. Use <code>/automod exempt-role</code>, <code>/automod exempt-user</code>, or <code>/automod exempt-channel</code> to add an explicit exemption; use the matching <code>unexempt-*</code> command to revoke it. Channel exemptions also cover threads under that channel. Run <code>/automod exemptions</code> to review the list.</p>
       <p>Plain text is matched as a whole word or phrase, without case sensitivity. If a pattern contains regex syntax such as <code>*</code>, <code>\</code>, <code>[ ]</code>, or parentheses, the bot treats it as a Java regular expression.</p>
       <p>Regex examples:</p>
       <code class="code-sample">\b(?:badword|awfulword)\b</code>
@@ -96,9 +115,15 @@
 
     <section class="doc-section regex-guide" aria-labelledby="regex-guide-title">
       <h2 id="regex-guide-title">Regular expression guide</h2>
-      <p>The bot uses Java regular expressions. Click any token below to insert it into the pattern field. Insertion uses the last cursor position in that field; if you have not placed the cursor there, the token is added at the end.</p>
+      <p>The bot uses Java regular expressions. Open the movable, resizable token inserter with the <strong>Regex tokens</strong> button in the builder.</p>
 
-      <div class="builder-card" role="group" aria-label="Insert regular expression tokens">
+      <div id="regex-inserter-window" class="regex-window" role="dialog" aria-labelledby="regex-window-title" aria-modal="false" hidden>
+        <div id="regex-window-header" class="regex-window-header">
+          <h3 id="regex-window-title">Regex token inserter</h3>
+          <button id="close-regex-inserter" class="regex-window-close" type="button" aria-label="Close regex token inserter">Close</button>
+        </div>
+        <div class="regex-window-content">
+          <p>Click a token to insert it at the last cursor position in the pattern field. Drag this title bar to move the window; resize it from the lower-right corner.</p>
         <div class="regex-insert-groups">
           <div class="regex-insert-group">
             <h3>Characters</h3>
@@ -160,6 +185,7 @@
           </div>
         </div>
         <div id="regex-insert-status" class="builder-status" role="status" aria-live="polite">Tokens will be inserted into the pattern field above.</div>
+        </div>
       </div>
 
       <h3>How the bot reads patterns</h3>
@@ -264,6 +290,12 @@
   const testStatus = document.getElementById("test-status");
   const jsonStatus = document.getElementById("json-status");
   const regexInsertStatus = document.getElementById("regex-insert-status");
+  const samplePreview = document.getElementById("sample-preview");
+  const highlightedSample = document.getElementById("highlighted-sample");
+  const regexWindow = document.getElementById("regex-inserter-window");
+  const regexWindowHeader = document.getElementById("regex-window-header");
+  const openRegexInserter = document.getElementById("open-regex-inserter");
+  const closeRegexInserter = document.getElementById("close-regex-inserter");
   let patterns = [];
   let rememberedSelectionStart = patternInput.value.length;
   let rememberedSelectionEnd = patternInput.value.length;
@@ -275,9 +307,59 @@
 
   function hasRegexSyntax(pattern) { return Array.from(pattern).some(character => "\\\\.^$|?*+()[]{}".includes(character)); }
   function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-  function compile(pattern) {
-    if (hasRegexSyntax(pattern)) return new RegExp(pattern, "iu");
-    return new RegExp("(^|[^\\p{L}\\p{N}_])(" + escapeRegExp(pattern) + ")(?:$|[^\\p{L}\\p{N}_])", "iu");
+  function compile(pattern, global = false) {
+    const flags = global ? "iug" : "iu";
+    if (hasRegexSyntax(pattern)) return new RegExp(pattern, flags);
+    return new RegExp("(^|[^\\p{L}\\p{N}_])(" + escapeRegExp(pattern) + ")(?:$|[^\\p{L}\\p{N}_])", flags);
+  }
+  function findPatternMatches(pattern, sample) {
+    const regexPattern = hasRegexSyntax(pattern);
+    const matcher = compile(pattern, true);
+    const matches = [];
+    let found;
+    while ((found = matcher.exec(sample)) !== null) {
+      const segment = regexPattern ? found[0] : found[2];
+      const start = regexPattern ? found.index : found.index + found[1].length;
+      const end = start + segment.length;
+      if (end > start) matches.push({ start, end, segment });
+
+      if (!regexPattern) {
+        // The literal matcher consumes its boundary character. Start at the end
+        // of the actual word so the next occurrence can reuse that boundary.
+        matcher.lastIndex = end;
+      } else if (found[0].length === 0) {
+        const codePoint = sample.codePointAt(found.index);
+        matcher.lastIndex = found.index + (codePoint > 0xffff ? 2 : 1);
+      }
+    }
+    return matches;
+  }
+  function renderHighlightedSample(sample, ranges) {
+    samplePreview.hidden = sample.length === 0;
+    highlightedSample.replaceChildren();
+    if (!sample.length) return;
+
+    ranges.sort((left, right) => left.start - right.start || right.end - left.end);
+    const merged = [];
+    ranges.forEach(range => {
+      const start = Math.max(0, Math.min(sample.length, range.start));
+      const end = Math.max(start, Math.min(sample.length, range.end));
+      const previous = merged[merged.length - 1];
+      if (previous && start <= previous.end) previous.end = Math.max(previous.end, end);
+      else if (end > start) merged.push({ start, end });
+    });
+
+    const fragment = document.createDocumentFragment();
+    let cursor = 0;
+    merged.forEach(range => {
+      if (range.start > cursor) fragment.append(document.createTextNode(sample.slice(cursor, range.start)));
+      const mark = document.createElement("mark");
+      mark.textContent = sample.slice(range.start, range.end);
+      fragment.append(mark);
+      cursor = range.end;
+    });
+    if (cursor < sample.length) fragment.append(document.createTextNode(sample.slice(cursor)));
+    highlightedSample.append(fragment);
   }
   function validate(list) {
     if (!Array.isArray(list) || list.length > 100 || list.some(item => typeof item !== "string" || !item.trim() || item.length > 250)) {
@@ -313,6 +395,47 @@
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
   }
 
+  function setRegexWindowOpen(open) {
+    regexWindow.hidden = !open;
+    openRegexInserter.setAttribute("aria-expanded", String(open));
+    if (open) closeRegexInserter.focus();
+    else openRegexInserter.focus();
+  }
+  openRegexInserter.addEventListener("click", () => setRegexWindowOpen(true));
+  closeRegexInserter.addEventListener("click", () => setRegexWindowOpen(false));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !regexWindow.hidden) {
+      event.preventDefault();
+      setRegexWindowOpen(false);
+    }
+  });
+
+  let dragState = null;
+  regexWindowHeader.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || event.target.closest("button")) return;
+    const rect = regexWindow.getBoundingClientRect();
+    regexWindow.style.left = rect.left + "px";
+    regexWindow.style.top = rect.top + "px";
+    regexWindow.style.right = "auto";
+    regexWindow.style.bottom = "auto";
+    dragState = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: rect.left, top: rect.top };
+    regexWindowHeader.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+  regexWindowHeader.addEventListener("pointermove", event => {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+    const rect = regexWindow.getBoundingClientRect();
+    const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
+    const maxTop = Math.max(8, window.innerHeight - rect.height - 8);
+    regexWindow.style.left = Math.max(8, Math.min(maxLeft, dragState.left + event.clientX - dragState.x)) + "px";
+    regexWindow.style.top = Math.max(8, Math.min(maxTop, dragState.top + event.clientY - dragState.y)) + "px";
+  });
+  function endRegexWindowDrag(event) {
+    if (dragState && event.pointerId === dragState.pointerId) dragState = null;
+  }
+  regexWindowHeader.addEventListener("pointerup", endRegexWindowDrag);
+  regexWindowHeader.addEventListener("pointercancel", endRegexWindowDrag);
+
   ["focus", "click", "keyup", "select", "input"].forEach(eventName =>
     patternInput.addEventListener(eventName, rememberPatternSelection));
   document.querySelectorAll("[data-regex-token]").forEach(button => {
@@ -346,17 +469,29 @@
         ? [draft].concat(patterns.filter(pattern => pattern.toLowerCase() !== draft.toLowerCase()))
         : patterns;
       if (!candidates.length) {
+        renderHighlightedSample(sample, []);
         testStatus.textContent = "Enter a pattern or add/import patterns first.";
         return;
       }
-      const matches = candidates.map(pattern => validate([pattern])[0]).map(pattern => {
-        const found = compile(pattern).exec(sample);
-        return found ? { pattern, segment: hasRegexSyntax(pattern) ? found[0] : found[2] } : null;
-      }).filter(Boolean);
-      testStatus.textContent = matches.length
-        ? matches.map(item => "Matched “" + item.segment + "” with " + item.pattern).join("; ")
+      const matchedPatterns = [];
+      const ranges = [];
+      candidates.forEach(candidate => {
+        const pattern = validate([candidate])[0];
+        const matches = findPatternMatches(pattern, sample);
+        if (matches.length) {
+          matchedPatterns.push({ pattern, first: matches[0].segment, count: matches.length });
+          ranges.push(...matches);
+        }
+      });
+      renderHighlightedSample(sample, ranges);
+      testStatus.textContent = matchedPatterns.length
+        ? matchedPatterns.map(item => "Matched “" + item.first + "” with " + item.pattern
+            + (item.count > 1 ? " (" + item.count + " matches)" : "")).join("; ")
         : "No patterns matched the sample text.";
-    } catch (error) { testStatus.textContent = "Could not test pattern: " + error.message; }
+    } catch (error) {
+      renderHighlightedSample(sample, []);
+      testStatus.textContent = "Could not test pattern: " + error.message;
+    }
   });
   document.getElementById("import-json").addEventListener("click", function () {
     try { setPatterns(JSON.parse(jsonInput.value)); }

@@ -530,7 +530,7 @@
                 <h4>Notes</h4>
                 <ul>
                     <li>Plain terms match whole words or phrases without case sensitivity. Regex metacharacters enable regex matching.</li>
-                    <li>Members with the <code>automod.wordfilter.bypass</code> permission are exempt</li>
+                    <li>All members are checked, including administrators. Explicit exemptions are managed with <code>/automod exempt-role</code>, <code>exempt-user</code>, and <code>exempt-channel</code>; permissions alone never bypass checks.</li>
                     <li>The master AutoMod switch in <code>/settings</code> pauses the word filter along with the other checks.</li>
                     <li>Action <code>delete+warn</code> removes the message <em>and</em> issues an automatic warn logged to the moderation log channel</li>
                     <li>Repeated filter violations use the anti-spam message limit, time window, and punishment action even when anti-spam is disabled.</li>
@@ -1033,8 +1033,8 @@
         <div class="cmd-row" data-cmd="automod">
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/automod<span class="cmd-expand-icon"></span></span>
-                <span class="cmd-desc">Configure auto-moderation filters</span>
-                <span class="cmd-perm">automod.*</span>
+                <span class="cmd-desc">Configure auto-moderation and explicit exemptions</span>
+                <span class="cmd-perm">admin.automod</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
@@ -1045,7 +1045,15 @@
                     <li><code>view</code> shows whether the selected check and master switch are enabled, its threshold and units, and its enforcement action.</li>
                     <li>Thresholds can be set when enabling: anti-spam 1–50 messages, caps 1–100%, repeated text 2–20 messages, and mass mentions 1–30.</li>
                     <li>Bad-word patterns and enforcement actions are managed with <code>/wordfilter</code>.</li>
+                    <li><code>exempt-role</code>, <code>exempt-user</code>, and <code>exempt-channel</code> add explicit exemptions from all AutoMod and word-filter checks; matching <code>unexempt-*</code> actions revoke them, and <code>exemptions</code> lists them.</li>
+                    <li>Everyone is checked regardless of Discord permissions. Channel exemptions cover the selected channel and its threads.</li>
                 </ul>
+                <h4>Exemption examples</h4>
+                <div class="example-block"><code>/automod exempt-role role:@Trusted</code></div>
+                <div class="example-block"><code>/automod unexempt-user user:@Member</code></div>
+                <div class="example-block"><code>/automod exempt-channel channel:#announcements</code></div>
+                <div class="example-block"><code>/automod exemptions</code> — list the configured exemptions</div>
+                <p>Prefix examples: <code>!automod exempt-role @Trusted</code> and <code>!automod unexempt-channel #announcements</code>.</p>
             </div>
         </div>
 
