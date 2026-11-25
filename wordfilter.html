@@ -94,6 +94,7 @@
       <h2 id="usage-title">Using the filter</h2>
       <p>Run <code>/wordfilter add pattern:&lt;text&gt;</code> for one pattern. For a list, use <code>/wordfilter bulk-add patterns_json:&lt;array&gt;</code>; remove several with <code>/wordfilter bulk-delete</code>. JSON import adds patterns without replacing the current list. Discord limits each JSON option to 6,000 characters, so split larger exports into batches; the server stores up to 100 patterns total.</p>
       <p>The word filter and every AutoMod check apply to all members, including administrators and moderators. Discord permissions do not bypass enforcement. Open the interactive filter manager with <code>/wordfilter panel</code>. Use <code>/automod exempt-role</code>, <code>/automod exempt-user</code>, or <code>/automod exempt-channel</code> to add an explicit exemption; use the matching <code>unexempt-*</code> command to revoke it. Channel exemptions also cover threads under that channel. Run <code>/automod exemptions</code> to review the list.</p>
+      <p>Messages are checked when sent and again whenever their text is edited.</p>
       <p>Plain text is matched as a whole word or phrase, without case sensitivity. If a pattern contains regex syntax such as <code>*</code>, <code>\</code>, <code>[ ]</code>, or parentheses, the bot treats it as a Java regular expression.</p>
       <p>Regex examples:</p>
       <code class="code-sample">\b(?:badword|awfulword)\b</code>

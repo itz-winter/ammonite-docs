@@ -8,13 +8,13 @@
   {
     "title": "Command Reference",
     "section": "Commands",
-    "snippet": "All slash commands with details, required permissions, examples, and prefix syntax. Interactive configuration panels include /automod panel, /wordfilter panel, /antispam panel, /settings panel, and /welcome panel.",
+    "snippet": "All slash commands with details, required permissions, examples, and prefix syntax. Interactive configuration panels include /automod panel, /wordfilter panel, /antispam panel, /settings panel, and /welcome panel. The /updates channel:#channel shortcut sets the announcement channel.",
     "href": "commands.html"
   },
   {
     "title": "Word Filter Regex Guide and Builder",
     "section": "Tools",
-    "snippet": "Build and test word-filter patterns with highlighted matches, use the interactive /wordfilter panel to edit patterns and responses, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, and manage explicit AutoMod exemptions.",
+    "snippet": "Build and test word-filter patterns with highlighted matches, use the interactive /wordfilter panel to edit patterns and responses, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, and manage explicit AutoMod exemptions. Messages are checked when posted and when their text is edited.",
     "href": "wordfilter.html"
   },
   {
@@ -50,7 +50,7 @@
   {
     "title": "Configuration",
     "section": "Commands",
-    "snippet": "/settings /welcome /automod /automod exempt-role /automod exempt-user /automod exempt-channel /wordfilter /logging /logchannel /autolog /permissions /reactionrole /prefix /backup /config /servermessages /honeypot. AutoMod checks everyone; only explicit role, member, or channel exemptions bypass them.",
+    "snippet": "/settings /updates /welcome /automod /automod exempt-role /automod exempt-user /automod exempt-channel /wordfilter /logging /logchannel /autolog /permissions /reactionrole /prefix /backup /config /servermessages /honeypot. AutoMod checks everyone; only explicit role, member, or channel exemptions bypass them.",
     "href": "commands.html#cat-configuration"
   },
   {

@@ -535,6 +535,7 @@
                     <li>Plain terms match whole words or phrases without case sensitivity. Regex metacharacters enable regex matching.</li>
                     <li>All members are checked, including administrators. Explicit exemptions are managed with <code>/automod exempt-role</code>, <code>exempt-user</code>, and <code>exempt-channel</code>; permissions alone never bypass checks.</li>
                     <li>The master AutoMod switch in <code>/settings</code> pauses the word filter along with the other checks.</li>
+                    <li>Messages are checked when posted and again when their text is edited.</li>
                     <li>Action <code>delete+warn</code> removes the message <em>and</em> issues an automatic warn logged to the moderation log channel</li>
                     <li>Repeated filter violations use the anti-spam message limit, time window, and punishment action even when anti-spam is disabled.</li>
                 </ul>
@@ -942,6 +943,22 @@
                     <li>Central hub for all server configuration — economy, levelling, moderation, and general settings.</li>
                     <li>Use <code>/settings toggle &lt;feature&gt;</code>, <code>/settings set &lt;setting&gt;</code>, or <code>/settings clear &lt;setting&gt;</code>. Use <code>/settings panel</code> for the interactive panel.</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="cmd-row" data-cmd="updates">
+            <div class="cmd-summary" onclick="toggleCmd(this)">
+                <span class="cmd-name">/updates<span class="cmd-expand-icon"></span></span>
+                <span class="cmd-desc">Set the bot update announcement channel</span>
+                <span class="cmd-perm">admin.settings</span>
+            </div>
+            <div class="cmd-detail">
+                <h4>Syntax</h4>
+                <div class="syntax-block">/updates channel:<span class="required">&lt;channel&gt;</span></div>
+                <h4>Example</h4>
+                <div class="example-block"><code>/updates channel:#announcements</code> — Send bot update announcements to this channel</div>
+                <h4>Details</h4>
+                <p>The bot owner’s <code>/announce</code> broadcasts are sent here. You can also set this in <code>/settings panel</code> using the 📢 Announce Ch button. Text and announcement channels are supported.</p>
             </div>
         </div>
 
