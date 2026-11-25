@@ -44,11 +44,31 @@
       padding: 1rem;
     }
     .eb-card h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
       margin: 0 0 .75rem;
       font-size: 1rem;
       font-weight: 600;
       color: var(--text-primary);
     }
+    .eb-card-title { flex: 1; min-width: 0; }
+    .eb-card-collapsed h3 { margin-bottom: 0; }
+    .eb-section-toggle {
+      flex: none;
+      margin-left: auto;
+      color: var(--text-primary);
+      background: var(--bg-inline);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .25rem .45rem;
+      font: 600 .875rem/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+      cursor: pointer;
+    }
+    .eb-section-toggle:hover,
+    .eb-section-toggle:focus-visible { border-color: var(--brand-primary); }
+    .eb-card-body[hidden] { display: none; }
 
     /* Form controls */
     .eb-field {
@@ -181,19 +201,35 @@
 
     /* JSON output */
     .eb-json-output {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
       background: var(--bg-inline);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       color: var(--text-primary);
       font-family: "Consolas", "Fira Code", monospace;
       font-size: .875rem;
+      line-height: 1.5;
       padding: .7rem;
       white-space: pre;
-      overflow-x: auto;
-      min-height: 80px;
-      max-height: 280px;
-      overflow-y: auto;
+      tab-size: 2;
+      overflow: auto;
+      min-height: 22rem;
+      max-height: 65vh;
       resize: vertical;
+    }
+    .eb-json-output:focus { outline: none; border-color: var(--brand-primary); }
+    .eb-json-help { margin: .75rem 0 0; font-size: .9rem; }
+    .eb-json-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .eb-json-status {
+      min-height: 1.8rem;
+      margin-top: .75rem;
+      padding: .6rem;
+      background: var(--bg-note);
+      border-radius: var(--radius-sm);
+      overflow-wrap: anywhere;
+      color: var(--text-primary);
     }
     .eb-embed-toolbar {
       display: flex;
@@ -227,12 +263,6 @@
     .dc-embed-stack { display: flex; flex-direction: column; gap: .75rem; }
 
     /* Discord embed preview */
-    .eb-preview-label {
-      font-size: .9rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: .5rem;
-    }
     .dc-embed-wrapper {
       background: #313338;
       border-radius: 8px;
@@ -631,26 +661,34 @@
 
         <!-- Actions -->
         <div class="eb-actions">
-          <button class="eb-btn eb-btn-primary" id="btn-copy-json">Copy JSON</button>
           <button class="eb-btn eb-btn-secondary" id="btn-share-link">Copy share link</button>
-          <button class="eb-btn eb-btn-secondary" id="btn-import-json">Import JSON</button>
           <button class="eb-btn eb-btn-danger" id="btn-clear">Clear All</button>
         </div>
 
-        <!-- JSON output -->
+        <!-- JSON editor -->
         <div class="eb-card">
-          <h3>JSON Output</h3>
-          <div class="eb-json-output" id="json-output"></div>
+          <h3>JSON Editor</h3>
+          <textarea class="eb-json-output" id="json-output" spellcheck="false" wrap="off"
+              aria-label="Editable embed message JSON"></textarea>
+          <p class="eb-json-help">Edit or paste a message payload, then apply it to update the form and preview.</p>
+          <div class="eb-json-actions">
+            <button class="eb-btn eb-btn-primary" id="btn-apply-json" type="button">Apply JSON</button>
+            <button class="eb-btn eb-btn-secondary" id="btn-copy-json" type="button">Copy JSON</button>
+            <button class="eb-btn eb-btn-secondary" id="btn-sync-json" type="button">Sync from form</button>
+          </div>
+          <div class="eb-json-status" id="json-status" role="status" aria-live="polite">JSON stays in sync with the form until you edit it.</div>
         </div>
 
       </div><!-- /eb-form-col -->
 
       <!--  RIGHT: PREVIEW  -->
       <div class="eb-preview-col">
-        <div class="eb-preview-label">Live Preview</div>
-        <div class="dc-embed-wrapper" id="dc-preview">
-          <div class="dc-embed-empty">Start filling in fields to see a preview.</div>
-          <div class="dc-components" id="dc-btn-preview"></div>
+        <div class="eb-card">
+          <h3>Live Preview</h3>
+          <div class="dc-embed-wrapper" id="dc-preview">
+            <div class="dc-embed-empty">Start filling in fields to see a preview.</div>
+            <div class="dc-components" id="dc-btn-preview"></div>
+          </div>
         </div>
       </div>
 
@@ -676,10 +714,60 @@
   let btnCount   = 0;
   let embedStates = [{}];
   let activeEmbedIndex = 0;
+  let jsonEditorDirty = false;
 
   /* Shorthand helpers */
   function $i(id) { return document.getElementById(id); }
   function val(id) { return $i(id) ? $i(id).value.trim() : ""; }
+  function setJsonStatus(message) { $i("json-status").textContent = message; }
+
+  function initializeSectionToggles() {
+    document.querySelectorAll(".eb-card").forEach(function (card, index) {
+      const heading = card.querySelector(":scope > h3");
+      if (!heading) return;
+
+      const sectionName = Array.from(heading.childNodes)
+        .filter(function (node) { return node.nodeType === Node.TEXT_NODE; })
+        .map(function (node) { return node.textContent; })
+        .join(" ").trim().replace(/\s+/g, " ") || "section";
+      const title = document.createElement("span");
+      title.className = "eb-card-title";
+      while (heading.firstChild) title.appendChild(heading.firstChild);
+      heading.appendChild(title);
+
+      const body = document.createElement("div");
+      body.className = "eb-card-body";
+      body.id = "eb-section-" + (index + 1);
+
+      let sibling = heading.nextSibling;
+      while (sibling) {
+        const next = sibling.nextSibling;
+        body.appendChild(sibling);
+        sibling = next;
+      }
+      card.appendChild(body);
+
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "eb-section-toggle";
+      toggle.textContent = "[-]";
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-controls", body.id);
+      toggle.setAttribute("aria-label", "Collapse " + sectionName);
+      toggle.title = "Hide " + sectionName;
+      toggle.addEventListener("click", function () {
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!expanded));
+        toggle.setAttribute("aria-label", (expanded ? "Expand " : "Collapse ") + sectionName);
+        toggle.title = (expanded ? "Show " : "Hide ") + sectionName;
+        toggle.textContent = expanded ? "[+]" : "[-]";
+        body.hidden = expanded;
+        card.classList.toggle("eb-card-collapsed", expanded);
+      });
+      heading.classList.add("eb-card-heading");
+      heading.appendChild(toggle);
+    });
+  }
 
   /* Toast */
   function showToast(msg) {
@@ -1063,7 +1151,9 @@
     return s;
   }
   function renderJson(payload) {
-    $i("json-output").textContent = JSON.stringify(payload, null, 2);
+    if (jsonEditorDirty) return;
+    $i("json-output").value = JSON.stringify(payload, null, 2);
+    setJsonStatus("JSON is synced with the form. Edit it and choose Apply JSON to load your changes.");
   }
 
   /* Full update */
@@ -1254,10 +1344,18 @@
 
   /* Import JSON */
   function importJson(raw) {
-    if (raw === undefined) raw = prompt("Paste embed JSON (message payload, embed array, or bare embed):");
-    if (!raw) return;
+    if (raw === undefined) raw = $i("json-output").value;
+    if (typeof raw !== "string" || !raw.trim()) {
+      setJsonStatus("Paste a message payload, embed array, or embed object into the editor first.");
+      showToast("No JSON to apply.");
+      return;
+    }
     let parsed;
-    try { parsed = JSON.parse(raw); } catch (e) { showToast("Invalid JSON."); return; }
+    try { parsed = JSON.parse(raw); } catch (e) {
+      setJsonStatus("Invalid JSON. Correct the text and choose Apply JSON again.");
+      showToast("Invalid JSON.");
+      return;
+    }
 
     let importedEmbeds;
     let components = [];
@@ -1265,15 +1363,17 @@
       importedEmbeds = parsed;
     } else if (parsed && Array.isArray(parsed.embeds)) {
       importedEmbeds = parsed.embeds;
-      components = parsed.components || [];
+      components = Array.isArray(parsed.components) ? parsed.components : [];
     } else if (parsed && typeof parsed === "object") {
       importedEmbeds = [parsed];
     } else {
+      setJsonStatus("JSON must be a message payload, an embed array, or an embed object.");
       showToast("JSON must contain one or more embed objects.");
       return;
     }
     if (!importedEmbeds.length || importedEmbeds.length > 10 ||
         importedEmbeds.some(function (embed) { return !embed || typeof embed !== "object" || Array.isArray(embed); })) {
+      setJsonStatus("Provide between 1 and 10 embed objects, then choose Apply JSON.");
       showToast("Provide between 1 and 10 embed objects.");
       return;
     }
@@ -1299,7 +1399,9 @@
       });
     });
 
+    jsonEditorDirty = false;
     update();
+    setJsonStatus("JSON applied and synced with the form.");
     showToast("Message JSON imported!");
   }
 
@@ -1313,21 +1415,36 @@
     el.addEventListener("change", update);
   });
 
+  initializeSectionToggles();
+  $i("json-output").addEventListener("input", function () {
+    jsonEditorDirty = true;
+    setJsonStatus("JSON edits are pending. Apply JSON to load them, or Sync from form to discard them.");
+  });
+
   $i("btn-add-field").addEventListener("click", function () { addField("", "", true); });
   $i("btn-add-button").addEventListener("click", function () { addButton(); });
   $i("btn-add-embed").addEventListener("click", addEmbed);
   $i("btn-remove-embed").addEventListener("click", removeEmbed);
 
   $i("btn-copy-json").addEventListener("click", function () {
-    const text = $i("json-output").textContent;
+    const text = $i("json-output").value;
     if (!text) { showToast("Nothing to copy yet."); return; }
     navigator.clipboard.writeText(text).then(function () {
       showToast("JSON copied to clipboard!");
     }).catch(function () { prompt("Copy this JSON:", text); });
   });
 
-  $i("btn-import-json").addEventListener("click", importJson);
+  $i("btn-apply-json").addEventListener("click", function () { importJson(); });
+  $i("btn-sync-json").addEventListener("click", function () {
+    jsonEditorDirty = false;
+    update();
+    showToast("JSON synced from the form.");
+  });
   $i("btn-share-link").addEventListener("click", function () {
+    if (jsonEditorDirty) {
+      showToast("Apply or sync your JSON before sharing.");
+      return;
+    }
     const payload = buildPayload();
     const shareUrl = window.location.href.split("#")[0] + "#data=" + encodeURIComponent(JSON.stringify(payload));
     navigator.clipboard.writeText(shareUrl).then(function () {
@@ -1339,6 +1456,7 @@
 
   $i("btn-clear").addEventListener("click", function () {
     if (!confirm("Clear all fields?")) return;
+    jsonEditorDirty = false;
     embedStates = [{ color: 0x5865F2 }];
     activeEmbedIndex = 0;
     clearEmbedForm();
