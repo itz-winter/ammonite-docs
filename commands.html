@@ -310,6 +310,7 @@
                 <ul>
                     <li>Displays each warning with the reason, moderator who issued it, and timestamp.</li>
                     <li>Shows total warning count.</li>
+                    <li>Warning details are returned privately for both your own record and moderator lookups.</li>
                 </ul>
                 <h4>Screenshot</h4>
                 <img src="assets/warns-example.png" alt="Warns command example" class="cmd-screenshot">
@@ -422,6 +423,7 @@
                     <li>Shows the last 20 moderation actions for the user (bans, kicks, warns, mutes, etc.).</li>
                     <li>Each entry includes the action type, reason, moderator, and timestamp.</li>
                     <li>Useful for reviewing a user's track record before taking further action.</li>
+                    <li>The moderation history response is private.</li>
                 </ul>
                 <h4>Screenshot</h4>
                 <img src="assets/hist-example.png" alt="Hist command example" class="cmd-screenshot">
@@ -498,8 +500,8 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/check user:&lt;user-id-or-link&gt; [ephemeral]</div>
-                <p>Shows account-creation time, username and avatar signals, and any shared-list entry for moderator review. It takes no action, and signals can be wrong. Users who opted out with <code>/preference suspicious-checks enabled:false</code> receive no report. Prefix: <code>!check &lt;mention|ID|profile link&gt;</code>.</p>
+                <div class="syntax-block">/check user:&lt;user-id-or-link&gt; [ephemeral:false]</div>
+                <p>Shows account-creation time, username and avatar signals, and any shared-list entry for moderator review. Slash reports are private by default; set <code>ephemeral:false</code> to make one public. Prefix replies appear in the invoking channel. It takes no action, and signals can be wrong. Users who opted out with <code>/preference suspicious-checks enabled:false</code> receive no report. Prefix: <code>!check &lt;mention|ID|profile link&gt;</code>.</p>
             </div>
         </div>
 
@@ -514,6 +516,7 @@
                 <h4>Subcommands</h4>
                 <table class="param-table">
                     <tr><th>Subcommand</th><th>Description</th></tr>
+                    <tr><td><code>panel</code></td><td>Open the interactive filter panel to manage status, patterns, response action, and warning message</td></tr>
                     <tr><td><code>add &lt;pattern&gt;</code></td><td>Add a plain word or regex pattern to the filter (max 100 patterns)</td></tr>
                     <tr><td><code>remove &lt;pattern&gt;</code></td><td>Remove a pattern by text, ignoring letter case</td></tr>
                     <tr><td><code>removeat &lt;index&gt;</code></td><td>Remove a pattern by its 1-based list index</td></tr>
@@ -537,6 +540,7 @@
                 </ul>
                 <h4>Examples</h4>
                 <div class="example-block"><code>/wordfilter add badword</code></div>
+                <div class="example-block"><code>/wordfilter panel</code> — Open the interactive configuration panel</div>
                 <div class="example-block"><code>/wordfilter add \b(bad|terrible)\s+word\b</code> — regex pattern</div>
                 <div class="example-block"><code>/wordfilter bulk-add patterns_json:["badword","\\bphrase\\b"]</code></div>
                 <div class="example-block"><code>/wordfilter action delete+warn</code></div>
@@ -1038,9 +1042,10 @@
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>
-                <div class="syntax-block">/automod <span class="required">enable|disable|view</span> feature:<span class="required">&lt;feature&gt;</span></div>
+                <div class="syntax-block">/automod <span class="required">panel|enable|disable|view|exemptions|exempt-*</span> [feature or target]</div>
                 <h4>Details</h4>
                 <ul>
+                    <li><code>panel</code> opens a dashboard with master and per-feature toggles, threshold controls, and exemption counts.</li>
                     <li>Features: anti-spam, bad words, caps lock, repeated text, mass mentions, and link filtering.</li>
                     <li><code>view</code> shows whether the selected check and master switch are enabled, its threshold and units, and its enforcement action.</li>
                     <li>Thresholds can be set when enabling: anti-spam 1–50 messages, caps 1–100%, repeated text 2–20 messages, and mass mentions 1–30.</li>
@@ -1049,6 +1054,7 @@
                     <li>Everyone is checked regardless of Discord permissions. Channel exemptions cover the selected channel and its threads.</li>
                 </ul>
                 <h4>Exemption examples</h4>
+                <div class="example-block"><code>/automod panel</code> — Open the AutoMod dashboard</div>
                 <div class="example-block"><code>/automod exempt-role role:@Trusted</code></div>
                 <div class="example-block"><code>/automod unexempt-user user:@Member</code></div>
                 <div class="example-block"><code>/automod exempt-channel channel:#announcements</code></div>
@@ -1061,7 +1067,7 @@
             <div class="cmd-summary" onclick="toggleCmd(this)">
                 <span class="cmd-name">/antispam<span class="cmd-expand-icon"></span></span>
                 <span class="cmd-desc">Configure anti-spam protection</span>
-                <span class="cmd-perm">automod.spam</span>
+                <span class="cmd-perm">admin.antispam</span>
             </div>
             <div class="cmd-detail">
                 <h4>Syntax</h4>

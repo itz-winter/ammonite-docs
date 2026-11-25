@@ -8,13 +8,13 @@
   {
     "title": "Command Reference",
     "section": "Commands",
-    "snippet": "All commands use Discord slash command syntax. Click any command to see full details, usage examples, and screenshots. <required> must be provided [optional] can be omitted Moderation Economy Levelling",
+    "snippet": "All slash commands with details, required permissions, examples, and prefix syntax. Interactive configuration panels include /automod panel, /wordfilter panel, /antispam panel, /settings panel, and /welcome panel.",
     "href": "commands.html"
   },
   {
     "title": "Word Filter Regex Guide and Builder",
     "section": "Tools",
-    "snippet": "Build and test word filter patterns with highlighted matches, use a movable regex-token window, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, manage explicit role/member/channel AutoMod exemptions, and see bulk add/delete usage.",
+    "snippet": "Build and test word-filter patterns with highlighted matches, use the interactive /wordfilter panel to edit patterns and responses, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, and manage explicit AutoMod exemptions.",
     "href": "wordfilter.html"
   },
   {
