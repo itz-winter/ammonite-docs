@@ -17,6 +17,19 @@
     .builder-status { min-height:1.8rem; margin-top:.75rem; padding:.6rem; background:var(--bg-note); border-radius:var(--radius-sm); overflow-wrap:anywhere; }
     .token { color:var(--text-inline); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
     .code-sample { display:block; padding:.7rem; margin:.5rem 0 1rem; border-radius:var(--radius-sm); background:var(--bg-inline); overflow-x:auto; }
+    .regex-insert-groups { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1rem; }
+    .regex-insert-group { min-width:0; }
+    .regex-insert-group h3 { margin:.25rem 0 .5rem; font-size:1rem; }
+    .regex-buttons { display:flex; flex-wrap:wrap; gap:.4rem; }
+    .regex-insert { display:inline-flex; align-items:center; gap:.4rem; color:var(--text-primary); background:var(--bg-inline); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.4rem .55rem; font:inherit; cursor:pointer; }
+    .regex-insert:hover,.regex-insert:focus-visible { border-color:var(--brand-primary); }
+    .regex-insert code { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .regex-insert small { color:var(--text-secondary); }
+    .regex-guide table { display:block; width:100%; overflow-x:auto; border-collapse:collapse; margin:.75rem 0 1.25rem; }
+    .regex-guide th,.regex-guide td { padding:.55rem .7rem; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
+    .regex-guide th { color:var(--text-primary); }
+    .regex-guide td:first-child { white-space:nowrap; }
+    .regex-note { padding:.75rem 1rem; background:var(--bg-note); border-radius:var(--radius-sm); }
     mark.filter-hit { background:#ffd166; color:#202020; border-radius:3px; }
   </style>
 </head>
@@ -81,6 +94,161 @@
       <p>For example: <code>/wordfilter message template:{user}, “{segment}” matched the filter {filter}.</code> Reset it with <code>/wordfilter message-reset</code>. Repeated filtered messages use the anti-spam message limit, time window, and punishment setting even when anti-spam detection is disabled.</p>
     </section>
 
+    <section class="doc-section regex-guide" aria-labelledby="regex-guide-title">
+      <h2 id="regex-guide-title">Regular expression guide</h2>
+      <p>The bot uses Java regular expressions. Click any token below to insert it into the pattern field. Insertion uses the last cursor position in that field; if you have not placed the cursor there, the token is added at the end.</p>
+
+      <div class="builder-card" role="group" aria-label="Insert regular expression tokens">
+        <div class="regex-insert-groups">
+          <div class="regex-insert-group">
+            <h3>Characters</h3>
+            <div class="regex-buttons">
+              <button class="regex-insert" type="button" data-regex-token="\s" aria-label="Insert whitespace token"><code>\s</code><small>space</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\S" aria-label="Insert non-whitespace token"><code>\S</code><small>not space</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\t" aria-label="Insert tab token"><code>\t</code><small>tab</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\n" aria-label="Insert line-feed token"><code>\n</code><small>line feed</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\r" aria-label="Insert carriage-return token"><code>\r</code><small>carriage return</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\w" aria-label="Insert word-character token"><code>\w</code><small>word char</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\W" aria-label="Insert non-word-character token"><code>\W</code><small>not word</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\d" aria-label="Insert digit token"><code>\d</code><small>digit</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\D" aria-label="Insert non-digit token"><code>\D</code><small>not digit</small></button>
+              <button class="regex-insert" type="button" data-regex-token="." aria-label="Insert any-character token"><code>.</code><small>any char</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\R" aria-label="Insert Java line-break token"><code>\R</code><small>line break</small></button>
+            </div>
+          </div>
+          <div class="regex-insert-group">
+            <h3>Sets and Unicode</h3>
+            <div class="regex-buttons">
+              <button class="regex-insert" type="button" data-regex-token="[a-z]" aria-label="Insert lowercase letter range"><code>[a-z]</code><small>range</small></button>
+              <button class="regex-insert" type="button" data-regex-token="[^0-9]" aria-label="Insert negated digit set"><code>[^0-9]</code><small>not in set</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\p{L}" aria-label="Insert Unicode letter class"><code>\p{L}</code><small>letter</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\p{N}" aria-label="Insert Unicode number class"><code>\p{N}</code><small>number</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\Qtext\E" data-cursor-back="2" aria-label="Insert a literal-text quote"><code>\Q...\E</code><small>literal text</small></button>
+            </div>
+          </div>
+          <div class="regex-insert-group">
+            <h3>Boundaries</h3>
+            <div class="regex-buttons">
+              <button class="regex-insert" type="button" data-regex-token="\b" aria-label="Insert word boundary"><code>\b</code><small>word edge</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\B" aria-label="Insert non-word boundary"><code>\B</code><small>not edge</small></button>
+              <button class="regex-insert" type="button" data-regex-token="^" aria-label="Insert start anchor"><code>^</code><small>start</small></button>
+              <button class="regex-insert" type="button" data-regex-token="$" aria-label="Insert end anchor"><code>$</code><small>end</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\A" aria-label="Insert absolute start anchor"><code>\A</code><small>absolute start</small></button>
+              <button class="regex-insert" type="button" data-regex-token="\z" aria-label="Insert absolute end anchor"><code>\z</code><small>absolute end</small></button>
+            </div>
+          </div>
+          <div class="regex-insert-group">
+            <h3>Repetition</h3>
+            <div class="regex-buttons">
+              <button class="regex-insert" type="button" data-regex-token="?" aria-label="Insert optional quantifier"><code>?</code><small>zero or one</small></button>
+              <button class="regex-insert" type="button" data-regex-token="*" aria-label="Insert zero-or-more quantifier"><code>*</code><small>zero or more</small></button>
+              <button class="regex-insert" type="button" data-regex-token="+" aria-label="Insert one-or-more quantifier"><code>+</code><small>one or more</small></button>
+              <button class="regex-insert" type="button" data-regex-token="{2,5}" aria-label="Insert bounded repetition"><code>{2,5}</code><small>range</small></button>
+              <button class="regex-insert" type="button" data-regex-token="+?" aria-label="Insert lazy one-or-more quantifier"><code>+?</code><small>lazy</small></button>
+            </div>
+          </div>
+          <div class="regex-insert-group">
+            <h3>Groups and lookarounds</h3>
+            <div class="regex-buttons">
+              <button class="regex-insert" type="button" data-regex-token="(?:)" data-cursor-back="1" aria-label="Insert non-capturing group"><code>(?:...)</code><small>group</small></button>
+              <button class="regex-insert" type="button" data-regex-token="(?=)" data-cursor-back="1" aria-label="Insert positive lookahead"><code>(?=...)</code><small>lookahead</small></button>
+              <button class="regex-insert" type="button" data-regex-token="(?!)" data-cursor-back="1" aria-label="Insert negative lookahead"><code>(?!...)</code><small>not ahead</small></button>
+              <button class="regex-insert" type="button" data-regex-token="(?&lt;=)" data-cursor-back="1" aria-label="Insert positive lookbehind"><code>(?&lt;=...)</code><small>lookbehind</small></button>
+              <button class="regex-insert" type="button" data-regex-token="(?&lt;!)" data-cursor-back="1" aria-label="Insert negative lookbehind"><code>(?&lt;!...)</code><small>not behind</small></button>
+              <button class="regex-insert" type="button" data-regex-token="a|b" aria-label="Insert alternation example"><code>a|b</code><small>either</small></button>
+            </div>
+          </div>
+        </div>
+        <div id="regex-insert-status" class="builder-status" role="status" aria-live="polite">Tokens will be inserted into the pattern field above.</div>
+      </div>
+
+      <h3>How the bot reads patterns</h3>
+      <p>A pattern with no regex metacharacters is treated as plain text: it matches a whole word or phrase, without case sensitivity. For example, <code>bad word</code> matches that phrase but not <code>bad wording</code>. If the pattern contains regex syntax such as a backslash, dot, quantifier, parenthesis, or character set, it is treated as a raw Java regex. Raw regexes do not get automatic word boundaries, so add them yourself when needed.</p>
+      <p>The bot rejects patterns that match an empty string, allows up to 100 patterns per server, and limits each pattern to 250 characters. Regex matching is case-insensitive, with Unicode-aware character classes.</p>
+
+      <h3>1. Literal text and escaping</h3>
+      <p>Most characters match themselves. Regex metacharacters have special meanings; escape one with a backslash to match it literally. A dot means “any character,” while <code>\.</code> means an actual period. The slash character <code>/</code> does not need escaping because patterns are entered without slash delimiters.</p>
+      <p>Use <code>\Qtext\E</code> in Java regex to quote a block as literal text. A plain pattern such as <code>free gift</code> is already treated literally by the bot.</p>
+
+      <h3>2. Character shortcuts and sets</h3>
+      <table>
+        <thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>\s</code> / <code>\S</code></td><td>Whitespace / non-whitespace.</td><td><code>free\s+gift</code></td></tr>
+          <tr><td><code>\w</code> / <code>\W</code></td><td>Word character / non-word character. With the bot's Unicode mode, word characters include Unicode letters, marks, digits, and connector characters such as underscore.</td><td><code>\w{3,}</code></td></tr>
+          <tr><td><code>\d</code> / <code>\D</code></td><td>Unicode decimal digit / any character that is not a decimal digit.</td><td><code>\d{4}</code></td></tr>
+          <tr><td><code>.</code></td><td>Any character except a line terminator by default.</td><td><code>free.*gift</code></td></tr>
+          <tr><td><code>[abc]</code></td><td>One character from the set.</td><td><code>gr[ae]y</code> matches “gray” or “grey”.</td></tr>
+          <tr><td><code>[a-z]</code></td><td>One character in a range.</td><td><code>[A-F0-9]</code></td></tr>
+          <tr><td><code>[^abc]</code></td><td>One character not in the set.</td><td><code>[^0-9]+</code></td></tr>
+          <tr><td><code>\p{L}</code> / <code>\p{N}</code></td><td>Unicode letter / Unicode number categories.</td><td><code>\p{L}+</code></td></tr>
+          <tr><td><code>\t</code>, <code>\n</code>, <code>\r</code>, <code>\f</code></td><td>Tab, line feed, carriage return, and form feed.</td><td><code>first\nsecond</code></td></tr>
+          <tr><td><code>\R</code></td><td>Any Unicode line-break sequence (Java-specific).</td><td><code>first\Rsecond</code></td></tr>
+        </tbody>
+      </table>
+      <p>Inside a character set, most metacharacters lose their special meaning. A hyphen makes a range when placed between characters; put it first or last, or escape it, to match a literal hyphen.</p>
+
+      <h3>3. Repetition and optional text</h3>
+      <table>
+        <thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>?</code></td><td>Zero or one occurrence.</td><td><code>colou?r</code> matches “color” or “colour”.</td></tr>
+          <tr><td><code>*</code></td><td>Zero or more occurrences.</td><td><code>ab*c</code></td></tr>
+          <tr><td><code>+</code></td><td>One or more occurrences.</td><td><code>\s+</code></td></tr>
+          <tr><td><code>{n}</code></td><td>Exactly n occurrences.</td><td><code>\d{4}</code></td></tr>
+          <tr><td><code>{n,}</code></td><td>At least n occurrences.</td><td><code>a{2,}</code></td></tr>
+          <tr><td><code>{n,m}</code></td><td>Between n and m occurrences.</td><td><code>\d{2,5}</code></td></tr>
+          <tr><td><code>*?</code>, <code>+?</code>, <code>??</code></td><td>Lazy forms: match as little as possible while still allowing the rest of the pattern to match.</td><td><code>&lt;.+?&gt;</code></td></tr>
+          <tr><td><code>*+</code>, <code>++</code>, <code>?+</code></td><td>Possessive forms (Java-specific): do not give characters back to later parts of the pattern.</td><td><code>\d++</code></td></tr>
+        </tbody>
+      </table>
+      <p>Quantifiers apply to the character or group immediately before them. For example, <code>(ab)+</code> repeats the pair; <code>ab+</code> repeats only the <code>b</code>.</p>
+
+      <h3>4. Groups and alternatives</h3>
+      <p>Parentheses group parts of a pattern. A normal group also captures its matched text; <code>(?:...)</code> groups without capturing. The vertical bar means “or,” and its scope is controlled by groups.</p>
+      <code class="code-sample">free\s+(?:gift|nitro)</code>
+      <p>This matches “free gift” or “free nitro”. A named capture uses <code>(?&lt;name&gt;...)</code>; numbered captures can be referenced with <code>\1</code>, while named captures can be referenced with <code>\k&lt;name&gt;</code>. Captures are usually unnecessary for a word filter unless a later part of the same pattern needs to refer back to them.</p>
+
+      <h3>5. Boundaries and anchors</h3>
+      <table>
+        <thead><tr><th>Syntax</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>\b</code> / <code>\B</code></td><td>Word boundary / position that is not a word boundary.</td></tr>
+          <tr><td><code>^</code> / <code>$</code></td><td>Start / end of the input. Inline multiline mode can make them work at line boundaries too.</td></tr>
+          <tr><td><code>\A</code> / <code>\z</code></td><td>Absolute start / absolute end of the input (Java syntax).</td></tr>
+          <tr><td><code>\Z</code></td><td>End of input, allowing a final line terminator (Java syntax).</td></tr>
+        </tbody>
+      </table>
+      <p>Because regex patterns are raw, <code>bad</code> can match inside <code>badminton</code>. Use <code>\bbad\b</code> to require word boundaries, or use the plain pattern <code>bad</code> to get the bot's automatic whole-word behavior.</p>
+
+      <h3>6. Lookarounds</h3>
+      <p>Lookarounds check nearby text without including that text in the matched segment:</p>
+      <ul>
+        <li><code>(?=text)</code> — positive lookahead: the next text must match.</li>
+        <li><code>(?!text)</code> — negative lookahead: the next text must not match.</li>
+        <li><code>(?&lt;=text)</code> — positive lookbehind: the previous text must match.</li>
+        <li><code>(?&lt;!text)</code> — negative lookbehind: the previous text must not match.</li>
+      </ul>
+      <p>Example: <code>free(?!\s+trial)</code> matches “free” unless it is followed by “trial”. Java lookbehind has restrictions on the expressions it can contain; test it with the bot before relying on it.</p>
+
+      <h3>7. Inline flags</h3>
+      <p>Flags change how a regex is interpreted. Put an inline flag near the start, for example <code>(?s)first.*last</code> to let a dot cross line breaks, or <code>(?m)^word$</code> to anchor to each line. Java also supports <code>(?x)</code> for whitespace and comments in a regex, and scoped flags such as <code>(?s:...)</code>.</p>
+      <p>The bot already applies case-insensitive Unicode matching, so <code>(?i)</code> is normally redundant. A scoped flag such as <code>(?-i:ABC)</code> can turn case-insensitive matching off for one group. The browser preview uses JavaScript regexes while the bot uses Java regexes; Java-only syntax (for example <code>\R</code>, <code>\A</code>, possessive quantifiers, and <code>\Q...\E</code>) may not work in the preview. The preview also cannot prove how the bot will behave, so test complex patterns in Discord.</p>
+
+      <h3>8. Practical examples</h3>
+      <table>
+        <thead><tr><th>Goal</th><th>Pattern</th></tr></thead>
+        <tbody>
+          <tr><td>Free gift or nitro offers, allowing extra spaces or line breaks</td><td><code>free\s+(?:gift|nitro)</code></td></tr>
+          <tr><td>Whole-word “bad” or “awful”</td><td><code>\b(?:bad|awful)\b</code></td></tr>
+          <tr><td>Four to six digits as a whole token</td><td><code>\b\d{4,6}\b</code></td></tr>
+          <tr><td>HTTP or HTTPS links to example.com</td><td><code>https?://(?:www\.)?example\.com(?:/\S*)?</code></td></tr>
+          <tr><td>Several spaces or tabs between two words</td><td><code>first\s+second</code></td></tr>
+        </tbody>
+      </table>
+      <p class="regex-note"><strong>Keep patterns specific.</strong> Broad expressions such as <code>.*</code> can match too much, and nested repetition such as <code>(a+)+</code> can be expensive to evaluate. Test the exact phrases you want to catch and a few similar phrases you want to allow.</p>
+    </section>
+
     <nav class="page-nav"></nav>
     <footer class="site-footer">&copy; 2026 Ammonite &bull; <a href="privacy">Privacy</a> &bull; <a href="terms">Terms</a> &bull; <a href="support">Support</a></footer>
   </main>
@@ -95,7 +263,15 @@
   const jsonInput = document.getElementById("patterns-json");
   const testStatus = document.getElementById("test-status");
   const jsonStatus = document.getElementById("json-status");
+  const regexInsertStatus = document.getElementById("regex-insert-status");
   let patterns = [];
+  let rememberedSelectionStart = patternInput.value.length;
+  let rememberedSelectionEnd = patternInput.value.length;
+
+  function rememberPatternSelection() {
+    rememberedSelectionStart = patternInput.selectionStart ?? patternInput.value.length;
+    rememberedSelectionEnd = patternInput.selectionEnd ?? rememberedSelectionStart;
+  }
 
   function hasRegexSyntax(pattern) { return Array.from(pattern).some(character => "\\\\.^$|?*+()[]{}".includes(character)); }
   function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
@@ -136,6 +312,22 @@
     bytes.forEach(byte => binary += String.fromCharCode(byte));
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
   }
+
+  ["focus", "click", "keyup", "select", "input"].forEach(eventName =>
+    patternInput.addEventListener(eventName, rememberPatternSelection));
+  document.querySelectorAll("[data-regex-token]").forEach(button => {
+    button.addEventListener("click", function () {
+      const token = button.dataset.regexToken;
+      const start = Math.min(rememberedSelectionStart, patternInput.value.length);
+      const end = Math.min(Math.max(rememberedSelectionEnd, start), patternInput.value.length);
+      patternInput.setRangeText(token, start, end, "preserve");
+      const cursor = start + token.length - Number(button.dataset.cursorBack || 0);
+      rememberedSelectionStart = cursor;
+      rememberedSelectionEnd = cursor;
+      patternInput.setSelectionRange(cursor, cursor);
+      regexInsertStatus.textContent = "Inserted " + token + ". Current pattern: " + patternInput.value;
+    });
+  });
 
   document.getElementById("add-pattern").addEventListener("click", function () {
     const value = patternInput.value.trim();

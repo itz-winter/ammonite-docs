@@ -14,7 +14,7 @@
   {
     "title": "Word Filter Regex Guide and Builder",
     "section": "Tools",
-    "snippet": "Test regex word filter patterns, import and export JSON arrays, share patterns in a URL, configure {filter}, {user}, and {segment} warning placeholders, and see bulk add/delete usage.",
+    "snippet": "Build and test word filter patterns, use click-to-insert regex tokens, read a Java regex guide, import and export JSON arrays, share patterns in a URL, configure warning placeholders, and see bulk add/delete usage.",
     "href": "wordfilter.html"
   },
   {
