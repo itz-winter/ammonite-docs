@@ -12,6 +12,12 @@
     "href": "commands.html"
   },
   {
+    "title": "Word Filter Regex Guide and Builder",
+    "section": "Tools",
+    "snippet": "Test regex word filter patterns, import and export JSON arrays, share patterns in a URL, configure {filter}, {user}, and {segment} warning placeholders, and see bulk add/delete usage.",
+    "href": "wordfilter.html"
+  },
+  {
     "title": "Moderation",
     "section": "Commands",
     "snippet": "/ban /unban /kick /mute /unmute /timeout /warn /warns /unwarn /hist /check /lockdown /purge /softban /wordfilter. /lockdown users need mod.lockdown; the bot needs Manage Roles for permission overwrites.",

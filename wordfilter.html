@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Filter Regex Guide & Builder — Ammonite</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    .builder-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin:1rem 0; }
+    .builder-card { background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; }
+    .builder-card label { display:block; font-weight:600; margin:.75rem 0 .35rem; }
+    .builder-card input,.builder-card textarea { width:100%; color:var(--text-primary); background:var(--bg-page); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.7rem; font:inherit; }
+    .builder-card textarea { min-height:9rem; resize:vertical; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .builder-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+    .builder-actions button { color:var(--text-primary); background:var(--bg-inline); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.55rem .8rem; font:inherit; cursor:pointer; }
+    .builder-actions button:hover { border-color:var(--brand-primary); }
+    .builder-status { min-height:1.8rem; margin-top:.75rem; padding:.6rem; background:var(--bg-note); border-radius:var(--radius-sm); overflow-wrap:anywhere; }
+    .token { color:var(--text-inline); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .code-sample { display:block; padding:.7rem; margin:.5rem 0 1rem; border-radius:var(--radius-sm); background:var(--bg-inline); overflow-x:auto; }
+    mark.filter-hit { background:#ffd166; color:#202020; border-radius:3px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar"></button>
+  <a class="site-logo" href="/">Ammonite</a>
+</header>
+<div class="site-body">
+  <aside class="sidebar"></aside>
+  <div class="sidebar-backdrop"></div>
+  <main class="content">
+    <h1>Word Filter Regex Guide &amp; Builder</h1>
+    <p>Build and test patterns for <code>/wordfilter</code>. The tool runs in your browser; imports and share links stay in the URL or on your device.</p>
+
+    <section class="doc-section" aria-labelledby="builder-title">
+      <h2 id="builder-title">Test and share patterns</h2>
+      <div class="builder-grid">
+        <div class="builder-card">
+          <label for="pattern">Pattern to add or test</label>
+          <input id="pattern" maxlength="250" placeholder="badword or \\b(?:bad|awful)\\b">
+          <label for="sample">Sample message</label>
+          <textarea id="sample" placeholder="Paste a message to check against your patterns."></textarea>
+          <div class="builder-actions">
+            <button id="add-pattern" type="button">Add pattern</button>
+            <button id="test-patterns" type="button">Test patterns</button>
+          </div>
+          <div id="test-status" class="builder-status" role="status" aria-live="polite">Add a pattern and sample text to begin.</div>
+        </div>
+        <div class="builder-card">
+          <label for="patterns-json">Pattern list (JSON array of strings)</label>
+          <textarea id="patterns-json" spellcheck="false">[]</textarea>
+          <div class="builder-actions">
+            <button id="import-json" type="button">Validate / import JSON</button>
+            <button id="export-json" type="button">Export JSON</button>
+            <button id="share-link" type="button">Copy share link</button>
+          </div>
+          <div id="json-status" class="builder-status" role="status" aria-live="polite">Up to 100 patterns, 250 characters each.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" aria-labelledby="usage-title">
+      <h2 id="usage-title">Using the filter</h2>
+      <p>Run <code>/wordfilter add pattern:&lt;text&gt;</code> for one pattern. For a list, use <code>/wordfilter bulk-add patterns_json:&lt;array&gt;</code>; remove several with <code>/wordfilter bulk-delete</code>. JSON import adds patterns without replacing the current list. Discord limits each JSON option to 6,000 characters, so split larger exports into batches; the server stores up to 100 patterns total.</p>
+      <p>Plain text is matched as a whole word or phrase, without case sensitivity. If a pattern contains regex syntax such as <code>*</code>, <code>\</code>, <code>[ ]</code>, or parentheses, the bot treats it as a Java regular expression.</p>
+      <p>Regex examples:</p>
+      <code class="code-sample">\b(?:badword|awfulword)\b</code>
+      <code class="code-sample">free\s+(?:gift|nitro)</code>
+      <code class="code-sample">https?://(?:www\.)?example\.com(?:/\S*)?</code>
+      <p>Patterns are case-insensitive. A pattern must not match an empty string. The live preview uses your browser's regular-expression engine; the bot uses Java regex, so test complex expressions in Discord before enabling them.</p>
+    </section>
+
+    <section class="doc-section" aria-labelledby="message-title">
+      <h2 id="message-title">Custom warning messages</h2>
+      <p>Set the text sent for a word-filter match with <code>/wordfilter message template:&lt;text&gt;</code>. Use these placeholders:</p>
+      <ul>
+        <li><span class="token">{filter}</span> — the configured pattern that matched.</li>
+        <li><span class="token">{user}</span> — the member mention.</li>
+        <li><span class="token">{segment}</span> — the matched text from the message.</li>
+      </ul>
+      <p>For example: <code>/wordfilter message template:{user}, “{segment}” matched the filter {filter}.</code> Reset it with <code>/wordfilter message-reset</code>. Repeated filtered messages use the anti-spam message limit, time window, and punishment setting even when anti-spam detection is disabled.</p>
+    </section>
+
+    <nav class="page-nav"></nav>
+    <footer class="site-footer">&copy; 2026 Ammonite &bull; <a href="privacy">Privacy</a> &bull; <a href="terms">Terms</a> &bull; <a href="support">Support</a></footer>
+  </main>
+</div>
+<script src="site.js"></script>
+<script>AmDoc.init("wordfilter");</script>
+<script>
+(function () {
+  "use strict";
+  const patternInput = document.getElementById("pattern");
+  const sampleInput = document.getElementById("sample");
+  const jsonInput = document.getElementById("patterns-json");
+  const testStatus = document.getElementById("test-status");
+  const jsonStatus = document.getElementById("json-status");
+  let patterns = [];
+
+  function hasRegexSyntax(pattern) { return Array.from(pattern).some(character => "\\\\.^$|?*+()[]{}".includes(character)); }
+  function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function compile(pattern) {
+    if (hasRegexSyntax(pattern)) return new RegExp(pattern, "iu");
+    return new RegExp("(^|[^\\p{L}\\p{N}_])(" + escapeRegExp(pattern) + ")(?:$|[^\\p{L}\\p{N}_])", "iu");
+  }
+  function validate(list) {
+    if (!Array.isArray(list) || list.length > 100 || list.some(item => typeof item !== "string" || !item.trim() || item.length > 250)) {
+      throw new Error("Use a JSON array with up to 100 non-empty strings, each no longer than 250 characters.");
+    }
+    list.forEach(item => {
+      const matcher = compile(item.trim());
+      if (matcher.test("")) throw new Error("Patterns cannot match an empty string: " + item);
+    });
+    return list.map(item => item.trim());
+  }
+  function setPatterns(list) {
+    patterns = validate(list);
+    jsonInput.value = JSON.stringify(patterns, null, 2);
+    jsonStatus.textContent = patterns.length + " pattern(s) ready to export or share.";
+  }
+  function decodeShare() {
+    const match = location.hash.match(/^#data=([A-Za-z0-9_-]+)$/);
+    if (!match) return;
+    try {
+      const binary = atob(match[1].replace(/-/g, "+").replace(/_/g, "/"));
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+      const state = JSON.parse(new TextDecoder().decode(bytes));
+      setPatterns(state.patterns || []);
+      sampleInput.value = state.sample || "";
+      jsonStatus.textContent = "Loaded patterns from this share link.";
+    } catch (error) { jsonStatus.textContent = "This share link is invalid: " + error.message; }
+  }
+  function toBase64Url(value) {
+    const bytes = new TextEncoder().encode(value);
+    let binary = "";
+    bytes.forEach(byte => binary += String.fromCharCode(byte));
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  }
+
+  document.getElementById("add-pattern").addEventListener("click", function () {
+    const value = patternInput.value.trim();
+    if (!value) { testStatus.textContent = "Enter a pattern first."; return; }
+    try {
+      setPatterns(patterns.concat(value));
+      patternInput.value = "";
+      testStatus.textContent = "Pattern added to the JSON list.";
+    } catch (error) { testStatus.textContent = error.message; }
+  });
+  document.getElementById("test-patterns").addEventListener("click", function () {
+    const sample = sampleInput.value;
+    try {
+      const matches = patterns.map(pattern => {
+        const found = compile(pattern).exec(sample);
+        return found ? { pattern, segment: hasRegexSyntax(pattern) ? found[0] : found[2] } : null;
+      }).filter(Boolean);
+      testStatus.textContent = matches.length
+        ? matches.map(item => "Matched “" + item.segment + "” with " + item.pattern).join("; ")
+        : "No patterns matched the sample text.";
+    } catch (error) { testStatus.textContent = "Could not test pattern: " + error.message; }
+  });
+  document.getElementById("import-json").addEventListener("click", function () {
+    try { setPatterns(JSON.parse(jsonInput.value)); }
+    catch (error) { jsonStatus.textContent = "JSON was not imported: " + error.message; }
+  });
+  document.getElementById("export-json").addEventListener("click", function () {
+    try { setPatterns(patterns); jsonInput.focus(); jsonInput.select(); }
+    catch (error) { jsonStatus.textContent = error.message; }
+  });
+  document.getElementById("share-link").addEventListener("click", async function () {
+    try {
+      setPatterns(patterns);
+      const url = new URL(location.href);
+      url.hash = "data=" + toBase64Url(JSON.stringify({ patterns, sample: sampleInput.value }));
+      const shareUrl = url.toString();
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        jsonStatus.textContent = "Share link copied. Anyone with the link can view the patterns and sample text.";
+      } catch (_) {
+        jsonStatus.textContent = "Copy it manually: " + shareUrl;
+      }
+    } catch (error) { jsonStatus.textContent = "Could not create a share link: " + error.message; }
+  });
+  jsonInput.addEventListener("input", function () {
+    try { patterns = validate(JSON.parse(jsonInput.value)); jsonStatus.textContent = patterns.length + " valid pattern(s)."; }
+    catch (_) { jsonStatus.textContent = "Edit JSON, then choose Validate / import JSON."; }
+  });
+  decodeShare();
+})();
+</script>
+</body>
+</html>

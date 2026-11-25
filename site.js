@@ -9,6 +9,7 @@
     { slug: "self-hosting", title: "Self-Hosting Guide", href: "self-hosting" },
     { slug: "permissions",  title: "Permissions",       href: "permissions" },
     { slug: "embedbuilder", title: "Embed Builder",     href: "embedbuilder" },
+    { slug: "wordfilter",  title: "Regex & Word Filter", href: "wordfilter" },
     { slug: "privacy",      title: "Privacy Policy",    href: "privacy" },
     { slug: "terms",        title: "Terms of Service",  href: "terms" },
     { slug: "support",      title: "Support & FAQ",     href: "support" },

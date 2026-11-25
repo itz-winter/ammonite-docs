@@ -517,11 +517,15 @@
                     <tr><td><code>add &lt;pattern&gt;</code></td><td>Add a plain word or regex pattern to the filter (max 100 patterns)</td></tr>
                     <tr><td><code>remove &lt;pattern&gt;</code></td><td>Remove a pattern by text, ignoring letter case</td></tr>
                     <tr><td><code>removeat &lt;index&gt;</code></td><td>Remove a pattern by its 1-based list index</td></tr>
+                    <tr><td><code>bulk-add &lt;patterns_json&gt;</code></td><td>Add a JSON array of patterns without replacing the current list</td></tr>
+                    <tr><td><code>bulk-delete &lt;patterns_json&gt;</code></td><td>Remove patterns listed in a JSON array</td></tr>
                     <tr><td><code>list</code></td><td>Show all current filter patterns, status, and action</td></tr>
                     <tr><td><code>clear</code></td><td>Remove all patterns</td></tr>
                     <tr><td><code>enable</code></td><td>Enable the word filter</td></tr>
                     <tr><td><code>disable</code></td><td>Disable the word filter</td></tr>
                     <tr><td><code>action &lt;delete|warn|delete+warn&gt;</code></td><td>Set what happens when a message matches</td></tr>
+                    <tr><td><code>message &lt;template&gt;</code></td><td>Set a warning template using <code>{filter}</code>, <code>{user}</code>, and <code>{segment}</code></td></tr>
+                    <tr><td><code>message-reset</code></td><td>Restore the default warning message</td></tr>
                 </table>
                 <h4>Notes</h4>
                 <ul>
@@ -529,11 +533,14 @@
                     <li>Members with the <code>automod.wordfilter.bypass</code> permission are exempt</li>
                     <li>The master AutoMod switch in <code>/settings</code> pauses the word filter along with the other checks.</li>
                     <li>Action <code>delete+warn</code> removes the message <em>and</em> issues an automatic warn logged to the moderation log channel</li>
+                    <li>Repeated filter violations use the anti-spam message limit, time window, and punishment action even when anti-spam is disabled.</li>
                 </ul>
                 <h4>Examples</h4>
                 <div class="example-block"><code>/wordfilter add badword</code></div>
                 <div class="example-block"><code>/wordfilter add \b(bad|terrible)\s+word\b</code> — regex pattern</div>
+                <div class="example-block"><code>/wordfilter bulk-add patterns_json:["badword","\\bphrase\\b"]</code></div>
                 <div class="example-block"><code>/wordfilter action delete+warn</code></div>
+                <div class="example-block"><a href="wordfilter">Open the regex guide and builder</a></div>
             </div>
         </div>
     </div>
