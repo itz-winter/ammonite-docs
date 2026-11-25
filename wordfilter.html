@@ -149,7 +149,15 @@
   document.getElementById("test-patterns").addEventListener("click", function () {
     const sample = sampleInput.value;
     try {
-      const matches = patterns.map(pattern => {
+      const draft = patternInput.value.trim();
+      const candidates = draft
+        ? [draft].concat(patterns.filter(pattern => pattern.toLowerCase() !== draft.toLowerCase()))
+        : patterns;
+      if (!candidates.length) {
+        testStatus.textContent = "Enter a pattern or add/import patterns first.";
+        return;
+      }
+      const matches = candidates.map(pattern => validate([pattern])[0]).map(pattern => {
         const found = compile(pattern).exec(sample);
         return found ? { pattern, segment: hasRegexSyntax(pattern) ? found[0] : found[2] } : null;
       }).filter(Boolean);
